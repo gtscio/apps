@@ -1,0 +1,5 @@
+{
+	"verbose": true,
+	"watch": ["dist/", ".env", ".env.dev"],
+	"ext": "*"
+}

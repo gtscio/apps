@@ -1,0 +1,6 @@
+{
+	"apiServer": {
+		"terminateSignal": "Server terminating",
+		"debuggingEnabled": "Debugging Enabled"
+	}
+}
