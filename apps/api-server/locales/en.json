@@ -1,6 +1,18 @@
 {
+	"error": {
+		"apiServer": {
+			"serviceUnknownType": "Unknown type \"{type}\" specified for \"{serviceType}\"",
+			"processorUnknownType": "Unknown processor \"{type}\" specified for \"{processorType}\""
+		}
+	},
 	"apiServer": {
 		"terminateSignal": "Server terminating",
-		"debuggingEnabled": "Debugging Enabled"
+		"debuggingEnabled": "Debugging Enabled",
+		"configuring": "Configuring {element}",
+		"configuringEntityStorage": "Configuring {element} with name \"{storageName}\" using \"{storageType}\" connector",
+		"starting": "Starting {element}",
+		"stopping": "Stopping {element}",
+		"bootstrapMode": "Bootstrapping mode",
+		"bootstrapping": "Bootstrap {element}"
 	}
 }

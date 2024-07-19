@@ -1,0 +1,6 @@
+POST http://localhost:3000/identity/profile HTTP/1.1
+content-type: application/json
+
+{
+	"identity": "did:gtsc:0xe1e9becc654936863bf4805be0dc4d42f3aeafe9a478de849bf4a8346d25e0e8"
+}

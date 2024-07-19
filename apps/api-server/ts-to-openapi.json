@@ -7,7 +7,10 @@
 	"servers": ["https://localhost"],
 	"restRoutes": [
 		{
-			"package": "@gtsc/api-core"
+			"package": "@gtsc/api-service"
+		},
+		{
+			"package": "@gtsc/identity-service"
 		}
 	]
 }

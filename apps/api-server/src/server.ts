@@ -1,13 +1,9 @@
 // Copyright 2024 IOTA Stiftung.
 // SPDX-License-Identifier: Apache-2.0.
-import {
-	localeProcessor,
-	requestLoggingProcessor,
-	responseLoggingProcessor,
-	routeProcessor
-} from "@gtsc/api-core";
-import type { HttpRestRouteProcessor, IRestRoute, IWebServerOptions } from "@gtsc/api-models";
+import type { IHttpRestRouteProcessor, IRestRoute, IWebServerOptions } from "@gtsc/api-models";
 import { FastifyWebServer } from "@gtsc/api-server-fastify";
+import { Is } from "@gtsc/core";
+import { LoggingConnectorFactory } from "@gtsc/logging-models";
 
 /**
  * Starts the web server.
@@ -15,35 +11,36 @@ import { FastifyWebServer } from "@gtsc/api-server-fastify";
  * @param options.webServerOptions The options for the web server.
  * @param options.rootPackageFolder The root package folder.
  * @param options.debug Whether to run in debug mode.
+ * @param options.envVars The environment variables.
+ * @param restRouteProcessors The REST route processors.
  * @param routes The routes to serve.
+ * @param systemLoggingConnectorName The name of the connector to use for system logging.
+ * @param stopCallback Callback to call when the server is stopped.
  */
-export async function startWebServer(options: {
-	webServerOptions: IWebServerOptions;
-	rootPackageFolder: string;
-	debug: boolean;
-}, routes: IRestRoute[]): Promise<void> {
-	const webServer = new FastifyWebServer();
-
-	const restRouteProcessors: HttpRestRouteProcessor[] = [
-		localeProcessor,
-		async (requestContext, request, response, route, state): Promise<void> =>
-			requestLoggingProcessor(requestContext, request, response, route, state, {
-				includeBody: options.debug
-			}),
-		async (requestContext, request, response, route, state): Promise<void> =>
-			routeProcessor(requestContext, request, response, route, state, {
-				includeErrorStack: options.debug
-			}),
-		async (requestContext, request, response, route, state): Promise<void> =>
-			responseLoggingProcessor(requestContext, request, response, route, state, {
-				includeBody: options.debug
-			})
-	];
+export async function startWebServer(
+	options: {
+		webServerOptions: IWebServerOptions;
+		rootPackageFolder: string;
+		debug: boolean;
+		envVars: { [id: string]: string };
+	},
+	restRouteProcessors: IHttpRestRouteProcessor[],
+	routes: IRestRoute[],
+	systemLoggingConnectorName: string,
+	stopCallback?: () => Promise<void>
+): Promise<void> {
+	const logging = LoggingConnectorFactory.get(systemLoggingConnectorName);
+	const webServer = new FastifyWebServer(logEntry => logging.log(logEntry));
 
 	await webServer.build(restRouteProcessors, routes, options.webServerOptions);
 	await webServer.start();
 
 	for (const signal of ["SIGHUP", "SIGINT", "SIGTERM"]) {
-		process.on(signal, () => webServer.stop());
+		process.on(signal, async () => {
+			webServer.stop();
+			if (Is.function(stopCallback)) {
+				await stopCallback();
+			}
+		});
 	}
 }

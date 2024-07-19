@@ -5,7 +5,7 @@ import path from "node:path";
 import { I18n, type ILocaleDictionary } from "@gtsc/core";
 
 /**
- * Initialises the locales for the application.
+ * Initialise the locales for the application.
  * @param rootPackageFolder The root package folder.
  */
 export async function initialiseLocales(rootPackageFolder: string): Promise<void> {
