@@ -6,18 +6,13 @@ import type { IWebServerOptions } from "@gtsc/api-models";
 import { Coerce, Is } from "@gtsc/core";
 import type { HttpMethod } from "@gtsc/web";
 import * as dotenv from "dotenv";
+import type { IOptions } from "./models/IOptions";
 
 /**
  * Handles the configuration of the application.
  * @returns The configuration options.
  */
-export function configure(): {
-	webServerOptions: IWebServerOptions;
-	rootPackageFolder: string;
-	debug: boolean;
-	envVars: { [id: string]: string };
-	systemPartitionId: string;
-} {
+export function configure(): IOptions {
 	// Find the root package folder.
 	const rootPackageFolder = path.resolve(
 		path.join(path.dirname(fileURLToPath(import.meta.url)), "..", "..")
@@ -54,7 +49,10 @@ export function configure(): {
 		webServerOptions,
 		rootPackageFolder,
 		debug: Coerce.boolean(envVars.GTSC_DEBUG) ?? false,
+		bootstrap: Coerce.boolean(envVars.GTSC_BOOTSTRAP) ?? false,
 		envVars,
-		systemPartitionId: envVars.GTSC_SYSTEM_PARTITION_ID ?? "system"
+		systemIdentity: envVars.GTSC_SYSTEM_IDENTITY ?? "",
+		systemPartitionId: envVars.GTSC_SYSTEM_PARTITION_ID ?? "system",
+		systemLoggingConnectorName: envVars.GTSC_SYSTEM_LOGGING_CONNECTOR_NAME ?? "system"
 	};
 }

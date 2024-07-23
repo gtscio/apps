@@ -1,0 +1,18 @@
+### Fails with no API Key
+POST http://localhost:3000/authentication/login
+content-type: application/json
+
+{
+	"email": "a@example.com"
+}
+
+
+### Login
+POST http://localhost:3000/authentication/login
+x-api-key: /5+vX5oyjBPvthKyNf/Ou1P+3IR1P/ehP0lkjlD00pk=
+content-type: application/json
+
+{
+	"email": "system@system",
+	"password": "d#2a=b$DmZAnMpgR"
+}

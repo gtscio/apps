@@ -1,5 +1,6 @@
 // Copyright 2024 IOTA Stiftung.
 // SPDX-License-Identifier: Apache-2.0.
+import { generateRestRoutesAuthentication } from "@gtsc/api-auth-entity-storage-service";
 import type { IRestRoute } from "@gtsc/api-models";
 import { generateRestRoutesInformation } from "@gtsc/api-service";
 import {
@@ -14,6 +15,7 @@ import {
 export function buildRoutes(): IRestRoute[] {
 	return [
 		...generateRestRoutesInformation("", "information"),
+		...generateRestRoutesAuthentication("authentication", "authentication"),
 		...generateRestRoutesIdentity("identity", "identity"),
 		...generateRestRoutesIdentityProfile("identity/profile", "identity-profile")
 	];

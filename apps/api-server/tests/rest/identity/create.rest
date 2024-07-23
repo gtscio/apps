@@ -1,7 +1,17 @@
-POST http://localhost:3000/identity HTTP/1.1
+### Fails with no API Key
+POST http://localhost:3000/identity
 content-type: application/json
 
 {
-	"controller": "tst1qrvkjfl2eex7hz4ylqxulq2aeyht8jadwmlcjzjfp2g0vzjd2aue54fx9w5",
-	"role": "organization"
+	"controller": "tst1qrvkjfl2eex7hz4ylqxulq2aeyht8jadwmlcjzjfp2g0vzjd2aue54fx9w5"
+}
+
+
+### Creates an identity
+POST http://localhost:3000/identity
+x-api-key: /5+vX5oyjBPvthKyNf/Ou1P+3IR1P/ehP0lkjlD00pk=
+content-type: application/json
+
+{
+	"controller": "tst1qrvkjfl2eex7hz4ylqxulq2aeyht8jadwmlcjzjfp2g0vzjd2aue54fx9w5"
 }

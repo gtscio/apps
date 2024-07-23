@@ -12,36 +12,36 @@ import {
 import { type IVaultConnector, VaultConnectorFactory } from "@gtsc/vault-models";
 import { initialiseEntityStorageConnector } from "./entityStorage.js";
 import type { EntityStorageTypes } from "../models/entityStorage/entityStorageTypes.js";
-import { logInfo } from "../progress.js";
+import type { IOptions } from "../models/IOptions.js";
+import { systemLogInfo } from "../progress.js";
 
 /**
  * Initialise the vault connector factory.
- * @param envVars The environment variables.
+ * @param options The options for the web server.
  * @param services The services.
  * @throws GeneralError if the connector type is unknown.
  */
-export function initialiseVaultConnectorFactory(
-	envVars: { [id: string]: string },
-	services: IService[]
-): void {
-	logInfo(I18n.formatMessage("apiServer.configuring", { element: "Vault Connector Factory" }));
+export function initialiseVaultConnectorFactory(options: IOptions, services: IService[]): void {
+	systemLogInfo(
+		I18n.formatMessage("apiServer.configuring", { element: "Vault Connector Factory" })
+	);
 
-	const type = envVars.GTSC_VAULT_CONNECTOR;
+	const type = options.envVars.GTSC_VAULT_CONNECTOR;
 
 	let connector: IVaultConnector;
 	if (type === "entity-storage") {
 		initSchema();
-		initialiseEntityStorageConnector(envVars, services, {
-			type: envVars.GTSC_VAULT_CONNECTOR_ENTITY_STORAGE_TYPE as EntityStorageTypes,
+		initialiseEntityStorageConnector(options, services, {
+			type: options.envVars.GTSC_VAULT_ENTITY_STORAGE_TYPE as EntityStorageTypes,
 			schema: nameof<VaultKey>(),
 			storageName: "vault-key",
-			config: Coerce.object(envVars.GTSC_VAULT_CONNECTOR_ENTITY_STORAGE_OPTIONS)
+			config: Coerce.object(options.envVars.GTSC_VAULT_CONNECTOR_ENTITY_STORAGE_OPTIONS)
 		});
-		initialiseEntityStorageConnector(envVars, services, {
-			type: envVars.GTSC_VAULT_CONNECTOR_ENTITY_STORAGE_TYPE as EntityStorageTypes,
+		initialiseEntityStorageConnector(options, services, {
+			type: options.envVars.GTSC_VAULT_ENTITY_STORAGE_TYPE as EntityStorageTypes,
 			schema: nameof<VaultSecret>(),
 			storageName: "vault-secret",
-			config: Coerce.object(envVars.GTSC_VAULT_CONNECTOR_ENTITY_STORAGE_OPTIONS)
+			config: Coerce.object(options.envVars.GTSC_VAULT_CONNECTOR_ENTITY_STORAGE_OPTIONS)
 		});
 		connector = new EntityStorageVaultConnector();
 	} else {

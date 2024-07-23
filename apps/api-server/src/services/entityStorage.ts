@@ -12,21 +12,22 @@ import {
 } from "@gtsc/entity-storage-models";
 import type { IService } from "@gtsc/services";
 import type { EntityStorageConfigTypes } from "../models/entityStorage/entityStorageConfigTypes.js";
-import { logInfo } from "../progress.js";
+import type { IOptions } from "../models/IOptions.js";
+import { systemLogInfo } from "../progress.js";
 
 /**
  * Initialise the entity storage connector.
- * @param envVars The environment variables.
+ * @param options The options for the web server.
  * @param services The services.
  * @param entityStorageConfig The entity storage connector config.
  * @throws GeneralError if the connector type is unknown.
  */
 export function initialiseEntityStorageConnector(
-	envVars: { [id: string]: string },
+	options: IOptions,
 	services: IService[],
 	entityStorageConfig: EntityStorageConfigTypes
 ): void {
-	logInfo(
+	systemLogInfo(
 		I18n.formatMessage("apiServer.configuringEntityStorage", {
 			element: "Entity Storage",
 			storageName: entityStorageConfig.storageName,
@@ -43,7 +44,6 @@ export function initialiseEntityStorageConnector(
 	} else if (type === "file") {
 		entityStorageConnector = new FileEntityStorageConnector({
 			entitySchema: entityStorageConfig.schema,
-			loggingConnectorType: entityStorageConfig.loggingConnectorType,
 			config: entityStorageConfig.config as IFileEntityStorageConnectorConfig
 		});
 	} else {

@@ -2,12 +2,12 @@
 // SPDX-License-Identifier: Apache-2.0.
 import type { IServerInfo } from "@gtsc/api-models";
 import { CLIDisplay } from "@gtsc/cli-core";
-import { BaseError, I18n, Is } from "@gtsc/core";
-import type { IService } from "@gtsc/services";
+import { BaseError, GeneralError, I18n, Is } from "@gtsc/core";
+import type { IService, IServiceRequestContext } from "@gtsc/services";
 import { configure } from "./configure.js";
 import { initialiseLocales } from "./locales.js";
 import { buildProcessors } from "./processors.js";
-import { logError, logInfo, logInit } from "./progress.js";
+import { systemLogError, systemLogInfo, systemLogInit } from "./progress.js";
 import { buildRoutes } from "./routes.js";
 import { startWebServer } from "./server.js";
 import {
@@ -30,9 +30,11 @@ try {
 
 	await initialiseLocales(options.rootPackageFolder);
 
-	const isBootstrap = process.argv.length > 2 && process.argv[2] === "--bootstrap";
+	if (!Is.stringValue(options.systemIdentity)) {
+		throw new GeneralError("apiServer", "missingSystemIdentity");
+	}
 
-	if (isBootstrap) {
+	if (options.bootstrap) {
 		CLIDisplay.task(I18n.formatMessage("apiServer.bootstrapMode"));
 		CLIDisplay.break();
 	} else if (options.debug) {
@@ -40,25 +42,30 @@ try {
 		CLIDisplay.break();
 	}
 
-	const systemLoggingConnectorName = "system-logging";
-
 	const services: IService[] = [];
-	initialiseLoggingConnector(options.envVars, services, systemLoggingConnectorName);
-	logInit(systemLoggingConnectorName, options.debug);
+	initialiseLoggingConnector(options, services);
+	systemLogInit(options);
 
-	initialiseInformationService(options.envVars, services, serverInfo, options.rootPackageFolder);
+	initialiseInformationService(options, services, serverInfo);
 
-	initialiseVaultConnectorFactory(options.envVars, services);
-	initialiseIdentityConnectorFactory(options.envVars, services);
-	initialiseIdentityService(options.envVars, services);
+	initialiseVaultConnectorFactory(options, services);
+	initialiseIdentityConnectorFactory(options, services);
+	initialiseIdentityService(options, services);
 
-	const processors = buildProcessors(options, services, systemLoggingConnectorName);
+	const processors = buildProcessors(options, services);
 
-	if (isBootstrap) {
+	const systemRequestContext: IServiceRequestContext = {
+		partitionId: options.systemPartitionId,
+		identity: options.systemIdentity
+	};
+
+	if (options.bootstrap) {
 		for (const service of services) {
 			if (Is.function(service.bootstrap)) {
-				logInfo(I18n.formatMessage("apiServer.bootstrapping", { element: service.CLASS_NAME }));
-				await service.bootstrap(options.systemPartitionId);
+				systemLogInfo(
+					I18n.formatMessage("apiServer.bootstrapping", { element: service.CLASS_NAME })
+				);
+				await service.bootstrap(systemRequestContext, options.systemLoggingConnectorName);
 			}
 		}
 
@@ -67,26 +74,22 @@ try {
 	} else {
 		for (const service of services) {
 			if (Is.function(service.start)) {
-				logInfo(I18n.formatMessage("apiServer.starting", { element: service.CLASS_NAME }));
-				await service.start(options.systemPartitionId);
+				systemLogInfo(I18n.formatMessage("apiServer.starting", { element: service.CLASS_NAME }));
+				await service.start(systemRequestContext, options.systemLoggingConnectorName);
 			}
 		}
 
-		await startWebServer(
-			options,
-			processors,
-			buildRoutes(),
-			systemLoggingConnectorName,
-			async () => {
-				for (const service of services) {
-					if (Is.function(service.stop)) {
-						logInfo(I18n.formatMessage("apiServer.stopping", { element: service.CLASS_NAME }));
-						await service.stop(options.systemPartitionId);
-					}
+		await startWebServer(options, processors, buildRoutes(), async () => {
+			for (const service of services) {
+				if (Is.function(service.stop)) {
+					systemLogInfo(I18n.formatMessage("apiServer.stopping", { element: service.CLASS_NAME }));
+					await service.stop(systemRequestContext, options.systemLoggingConnectorName);
 				}
 			}
-		);
+		});
 	}
 } catch (err) {
-	logError(BaseError.fromError(err));
+	systemLogError(BaseError.fromError(err));
+	// eslint-disable-next-line unicorn/no-process-exit
+	process.exit(1);
 }

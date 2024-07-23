@@ -28,13 +28,13 @@
 		"docs": "npm run docs:clean && npm run docs:copy-overview && npm run docs:rename-overview && npm run docs:remove-header && npm run docs:api",
 		"dist": "npm run clean && npm run build && npm run merge-locales && npm run test && npm run docs",
 		"start": "node dist/es/index.js",
-		"start:bootstrap": "node dist/es/index.js --bootstrap"
+		"start:bootstrap": "cross-env GTSC_BOOTSTRAP=true node dist/es/index.js"
 	},
 	"dependencies": {
 		"@gtsc/attestation-models": "next",
 		"@gtsc/attestation-connector-iota": "next",
 		"@gtsc/attestation-service": "next",
-		"@gtsc/api-auth-entity-storage": "next",
+		"@gtsc/api-auth-entity-storage-service": "next",
 		"@gtsc/api-core": "next",
 		"@gtsc/api-models": "next",
 		"@gtsc/api-processors": "next",
@@ -68,6 +68,7 @@
 		"@types/node": "20.14.8",
 		"concurrently": "8.2.2",
 		"copyfiles": "2.4.1",
+		"cross-env": "7.0.3",
 		"nodemon": "3.1.4",
 		"replace-in-files-cli": "2.2.0",
 		"rimraf": "5.0.7",

@@ -11,13 +11,17 @@
     },
     "servers": [
         {
-            "url": "https://localhost"
+            "url": "http://localhost:3000"
         }
     ],
     "tags": [
         {
             "name": "Info",
             "description": "Information endpoints for the REST server."
+        },
+        {
+            "name": "Authentication",
+            "description": "Authentication endpoints for the REST server."
         },
         {
             "name": "Identity",
@@ -35,6 +39,11 @@
                 "summary": "Get the information for the server",
                 "tags": [
                     "Info"
+                ],
+                "security": [
+                    {
+                        "apiKeyHeaderAuthScheme": []
+                    }
                 ],
                 "responses": {
                     "200": {
@@ -57,7 +66,7 @@
                         }
                     },
                     "400": {
-                        "description": "Something went wrong with the request see the error field for more details.",
+                        "description": "The server cannot process the request, see the error field for more details.",
                         "content": {
                             "application/json": {
                                 "schema": {
@@ -76,6 +85,42 @@
                                 }
                             }
                         }
+                    },
+                    "401": {
+                        "description": "You are not authorized to use the API or no credentials were supplied, see the error field for more details.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                },
+                                "examples": {
+                                    "exampleResponse": {
+                                        "value": {
+                                            "name": "UnauthorizedError",
+                                            "message": "component.error"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "The server has encountered a situation it does not know how to handle, see the error field for more details.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                },
+                                "examples": {
+                                    "exampleResponse": {
+                                        "value": {
+                                            "name": "InternalServerError",
+                                            "message": "component.error"
+                                        }
+                                    }
+                                }
+                            }
+                        }
                     }
                 }
             }
@@ -86,6 +131,11 @@
                 "summary": "Get the health for the server",
                 "tags": [
                     "Info"
+                ],
+                "security": [
+                    {
+                        "apiKeyHeaderAuthScheme": []
+                    }
                 ],
                 "responses": {
                     "200": {
@@ -151,7 +201,7 @@
                         }
                     },
                     "400": {
-                        "description": "Something went wrong with the request see the error field for more details.",
+                        "description": "The server cannot process the request, see the error field for more details.",
                         "content": {
                             "application/json": {
                                 "schema": {
@@ -170,6 +220,42 @@
                                 }
                             }
                         }
+                    },
+                    "401": {
+                        "description": "You are not authorized to use the API or no credentials were supplied, see the error field for more details.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                },
+                                "examples": {
+                                    "exampleResponse": {
+                                        "value": {
+                                            "name": "UnauthorizedError",
+                                            "message": "component.error"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "The server has encountered a situation it does not know how to handle, see the error field for more details.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                },
+                                "examples": {
+                                    "exampleResponse": {
+                                        "value": {
+                                            "name": "InternalServerError",
+                                            "message": "component.error"
+                                        }
+                                    }
+                                }
+                            }
+                        }
                     }
                 }
             }
@@ -180,6 +266,11 @@
                 "summary": "Get the OpenAPI specification for the endpoints",
                 "tags": [
                     "Info"
+                ],
+                "security": [
+                    {
+                        "apiKeyHeaderAuthScheme": []
+                    }
                 ],
                 "responses": {
                     "200": {
@@ -203,7 +294,7 @@
                         }
                     },
                     "400": {
-                        "description": "Something went wrong with the request see the error field for more details.",
+                        "description": "The server cannot process the request, see the error field for more details.",
                         "content": {
                             "application/json": {
                                 "schema": {
@@ -222,6 +313,133 @@
                                 }
                             }
                         }
+                    },
+                    "401": {
+                        "description": "You are not authorized to use the API or no credentials were supplied, see the error field for more details.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                },
+                                "examples": {
+                                    "exampleResponse": {
+                                        "value": {
+                                            "name": "UnauthorizedError",
+                                            "message": "component.error"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "The server has encountered a situation it does not know how to handle, see the error field for more details.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                },
+                                "examples": {
+                                    "exampleResponse": {
+                                        "value": {
+                                            "name": "InternalServerError",
+                                            "message": "component.error"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/authentication/login": {
+            "post": {
+                "operationId": "authenticationLogin",
+                "summary": "Login to the server",
+                "tags": [
+                    "Authentication"
+                ],
+                "security": [
+                    {
+                        "apiKeyHeaderAuthScheme": []
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Response from a login on the server.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/LoginResponse"
+                                },
+                                "examples": {
+                                    "loginResponse": {
+                                        "summary": "The response for the login request.",
+                                        "value": {
+                                            "token": "eyJhbGciOiJIU...sw5c"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "The server cannot process the request, see the error field for more details.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                },
+                                "examples": {
+                                    "exampleResponse": {
+                                        "value": {
+                                            "name": "GeneralError",
+                                            "message": "component.error",
+                                            "properties": {
+                                                "foo": "bar"
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "You are not authorized to use the API or no credentials were supplied, see the error field for more details.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                },
+                                "examples": {
+                                    "exampleResponse": {
+                                        "value": {
+                                            "name": "UnauthorizedError",
+                                            "message": "component.error"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "The server has encountered a situation it does not know how to handle, see the error field for more details.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                },
+                                "examples": {
+                                    "exampleResponse": {
+                                        "value": {
+                                            "name": "InternalServerError",
+                                            "message": "component.error"
+                                        }
+                                    }
+                                }
+                            }
+                        }
                     }
                 }
             }
@@ -232,6 +450,14 @@
                 "summary": "Create a new identity",
                 "tags": [
                     "Identity"
+                ],
+                "security": [
+                    {
+                        "jwtBearerAuthScheme": []
+                    },
+                    {
+                        "apiKeyHeaderAuthScheme": []
+                    }
                 ],
                 "responses": {
                     "201": {
@@ -246,7 +472,7 @@
                         }
                     },
                     "400": {
-                        "description": "Something went wrong with the request see the error field for more details.",
+                        "description": "The server cannot process the request, see the error field for more details.",
                         "content": {
                             "application/json": {
                                 "schema": {
@@ -260,6 +486,42 @@
                                             "properties": {
                                                 "foo": "bar"
                                             }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "You are not authorized to use the API or no credentials were supplied, see the error field for more details.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                },
+                                "examples": {
+                                    "exampleResponse": {
+                                        "value": {
+                                            "name": "UnauthorizedError",
+                                            "message": "component.error"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "The server has encountered a situation it does not know how to handle, see the error field for more details.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                },
+                                "examples": {
+                                    "exampleResponse": {
+                                        "value": {
+                                            "name": "InternalServerError",
+                                            "message": "component.error"
                                         }
                                     }
                                 }
@@ -294,12 +556,20 @@
                 "tags": [
                     "Identity Profile"
                 ],
+                "security": [
+                    {
+                        "jwtBearerAuthScheme": []
+                    },
+                    {
+                        "apiKeyHeaderAuthScheme": []
+                    }
+                ],
                 "responses": {
                     "204": {
                         "description": "The rest request ended in success with no data."
                     },
                     "400": {
-                        "description": "Something went wrong with the request see the error field for more details.",
+                        "description": "The server cannot process the request, see the error field for more details.",
                         "content": {
                             "application/json": {
                                 "schema": {
@@ -313,6 +583,24 @@
                                             "properties": {
                                                 "foo": "bar"
                                             }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "You are not authorized to use the API or no credentials were supplied, see the error field for more details.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                },
+                                "examples": {
+                                    "exampleResponse": {
+                                        "value": {
+                                            "name": "UnauthorizedError",
+                                            "message": "component.error"
                                         }
                                     }
                                 }
@@ -336,6 +624,24 @@
                                                     "1"
                                                 ]
                                             }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "The server has encountered a situation it does not know how to handle, see the error field for more details.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                },
+                                "examples": {
+                                    "exampleResponse": {
+                                        "value": {
+                                            "name": "InternalServerError",
+                                            "message": "component.error"
                                         }
                                     }
                                 }
@@ -426,6 +732,14 @@
                         }
                     }
                 ],
+                "security": [
+                    {
+                        "jwtBearerAuthScheme": []
+                    },
+                    {
+                        "apiKeyHeaderAuthScheme": []
+                    }
+                ],
                 "responses": {
                     "200": {
                         "description": "Response to get a list of identities.",
@@ -460,7 +774,7 @@
                         }
                     },
                     "400": {
-                        "description": "Something went wrong with the request see the error field for more details.",
+                        "description": "The server cannot process the request, see the error field for more details.",
                         "content": {
                             "application/json": {
                                 "schema": {
@@ -474,6 +788,42 @@
                                             "properties": {
                                                 "foo": "bar"
                                             }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "You are not authorized to use the API or no credentials were supplied, see the error field for more details.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                },
+                                "examples": {
+                                    "exampleResponse": {
+                                        "value": {
+                                            "name": "UnauthorizedError",
+                                            "message": "component.error"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "The server has encountered a situation it does not know how to handle, see the error field for more details.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                },
+                                "examples": {
+                                    "exampleResponse": {
+                                        "value": {
+                                            "name": "InternalServerError",
+                                            "message": "component.error"
                                         }
                                     }
                                 }
@@ -511,6 +861,14 @@
                             "type": "string"
                         },
                         "example": "role,email,name"
+                    }
+                ],
+                "security": [
+                    {
+                        "jwtBearerAuthScheme": []
+                    },
+                    {
+                        "apiKeyHeaderAuthScheme": []
                     }
                 ],
                 "responses": {
@@ -551,7 +909,7 @@
                         }
                     },
                     "400": {
-                        "description": "Something went wrong with the request see the error field for more details.",
+                        "description": "The server cannot process the request, see the error field for more details.",
                         "content": {
                             "application/json": {
                                 "schema": {
@@ -565,6 +923,24 @@
                                             "properties": {
                                                 "foo": "bar"
                                             }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "You are not authorized to use the API or no credentials were supplied, see the error field for more details.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                },
+                                "examples": {
+                                    "exampleResponse": {
+                                        "value": {
+                                            "name": "UnauthorizedError",
+                                            "message": "component.error"
                                         }
                                     }
                                 }
@@ -586,6 +962,24 @@
                                             "properties": {
                                                 "notFoundId": "1"
                                             }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "The server has encountered a situation it does not know how to handle, see the error field for more details.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                },
+                                "examples": {
+                                    "exampleResponse": {
+                                        "value": {
+                                            "name": "InternalServerError",
+                                            "message": "component.error"
                                         }
                                     }
                                 }
@@ -613,12 +1007,20 @@
                         "example": "did:gtsc:0xc57d94b088f4c6d2cb32ded014813d0c786aa00134c8ee22f84b1e2545602a70"
                     }
                 ],
+                "security": [
+                    {
+                        "jwtBearerAuthScheme": []
+                    },
+                    {
+                        "apiKeyHeaderAuthScheme": []
+                    }
+                ],
                 "responses": {
                     "204": {
                         "description": "The rest request ended in success with no data."
                     },
                     "400": {
-                        "description": "Something went wrong with the request see the error field for more details.",
+                        "description": "The server cannot process the request, see the error field for more details.",
                         "content": {
                             "application/json": {
                                 "schema": {
@@ -632,6 +1034,24 @@
                                             "properties": {
                                                 "foo": "bar"
                                             }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "You are not authorized to use the API or no credentials were supplied, see the error field for more details.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                },
+                                "examples": {
+                                    "exampleResponse": {
+                                        "value": {
+                                            "name": "UnauthorizedError",
+                                            "message": "component.error"
                                         }
                                     }
                                 }
@@ -653,6 +1073,24 @@
                                             "properties": {
                                                 "notFoundId": "1"
                                             }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "The server has encountered a situation it does not know how to handle, see the error field for more details.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                },
+                                "examples": {
+                                    "exampleResponse": {
+                                        "value": {
+                                            "name": "InternalServerError",
+                                            "message": "component.error"
                                         }
                                     }
                                 }
@@ -716,12 +1154,20 @@
                         "example": "did:gtsc:0xc57d94b088f4c6d2cb32ded014813d0c786aa00134c8ee22f84b1e2545602a70"
                     }
                 ],
+                "security": [
+                    {
+                        "jwtBearerAuthScheme": []
+                    },
+                    {
+                        "apiKeyHeaderAuthScheme": []
+                    }
+                ],
                 "responses": {
                     "204": {
                         "description": "The rest request ended in success with no data."
                     },
                     "400": {
-                        "description": "Something went wrong with the request see the error field for more details.",
+                        "description": "The server cannot process the request, see the error field for more details.",
                         "content": {
                             "application/json": {
                                 "schema": {
@@ -735,6 +1181,24 @@
                                             "properties": {
                                                 "foo": "bar"
                                             }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "You are not authorized to use the API or no credentials were supplied, see the error field for more details.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                },
+                                "examples": {
+                                    "exampleResponse": {
+                                        "value": {
+                                            "name": "UnauthorizedError",
+                                            "message": "component.error"
                                         }
                                     }
                                 }
@@ -756,6 +1220,24 @@
                                             "properties": {
                                                 "notFoundId": "1"
                                             }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "The server has encountered a situation it does not know how to handle, see the error field for more details.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                },
+                                "examples": {
+                                    "exampleResponse": {
+                                        "value": {
+                                            "name": "InternalServerError",
+                                            "message": "component.error"
                                         }
                                     }
                                 }
@@ -954,6 +1436,20 @@
             "ServerSpecResponse": {
                 "description": "The spec for the server."
             },
+            "LoginResponse": {
+                "type": "object",
+                "properties": {
+                    "token": {
+                        "type": "string",
+                        "description": "The access token for future requests."
+                    }
+                },
+                "required": [
+                    "token"
+                ],
+                "additionalProperties": false,
+                "description": "The login response details."
+            },
             "IdentityCreateRequest": {
                 "type": "object",
                 "properties": {
@@ -1097,6 +1593,17 @@
                 "description": "The response payload."
             }
         },
-        "securitySchemes": {}
+        "securitySchemes": {
+            "jwtBearerAuthScheme": {
+                "type": "http",
+                "scheme": "bearer",
+                "bearerFormat": "JWT"
+            },
+            "apiKeyHeaderAuthScheme": {
+                "type": "apiKey",
+                "in": "header",
+                "name": "X-Api-Key"
+            }
+        }
     }
 }

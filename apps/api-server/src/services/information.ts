@@ -5,24 +5,25 @@ import type { IServerInfo } from "@gtsc/api-models";
 import { InformationService } from "@gtsc/api-service";
 import { I18n } from "@gtsc/core";
 import { type IService, ServiceFactory } from "@gtsc/services";
-import { logInfo } from "../progress.js";
+import type { IOptions } from "../models/IOptions.js";
+import { systemLogInfo } from "../progress.js";
 
 /**
  * Initialise the information service.
- * @param envVars The environment variables.
+ * @param options The options for the web server.
  * @param services The services.
  * @param serverInfo The server information.
- * @param rootPackageFolder The root package folder.
  */
 export function initialiseInformationService(
-	envVars: { [id: string]: string },
+	options: IOptions,
 	services: IService[],
-	serverInfo: IServerInfo,
-	rootPackageFolder: string
+	serverInfo: IServerInfo
 ): void {
-	logInfo(I18n.formatMessage("apiServer.configuring", { element: "Information Service" }));
+	systemLogInfo(I18n.formatMessage("apiServer.configuring", { element: "Information Service" }));
 
-	const specFile = path.resolve(path.join(rootPackageFolder, "docs", "open-api", "spec.json"));
+	const specFile = path.resolve(
+		path.join(options.rootPackageFolder, "docs", "open-api", "spec.json")
+	);
 
 	const informationService = new InformationService(serverInfo, specFile);
 	services.push(informationService);
