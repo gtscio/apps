@@ -1,0 +1,7 @@
+### With no API Key should auth fail with apiKeyMissing
+GET http://localhost:3000/health
+
+### With API Key should return
+GET http://localhost:3000/health
+x-api-key: RIBJU/z/ADk2+OZTvgmYtMLoNhwVoDAXyFVWzbBEfQ8=
+

@@ -1,0 +1,10 @@
+### Creates an identity profile
+
+POST http://localhost:3000/identity/profile HTTP/1.1
+x-api-key: RIBJU/z/ADk2+OZTvgmYtMLoNhwVoDAXyFVWzbBEfQ8=
+authorization: Bearer eyJhbGciOiJFZERTQSIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJkaWQ6aW90YTp0c3Q6MHhlMzA4OGJhOWFhOGMyOGUxZDEzOTcwOGExNGU4YzBmZGZmMTFlZTgyMjNiYWFjNGFhNWJjZjMzMjFlNGJmYzZhIiwiZXhwIjoxNzIxODkyMzI2fQ.WDQV-ZVX_yw-22mP17XzZ7reetcznyTKzt9SnltLheb2qvctgfknZPIWrgfX73yHjOU2TWiQJ71uiUYwmIPLCQ
+content-type: application/json
+
+{
+	"identity": "did:iota:tst:0xe3088ba9aa8c28e1d139708a14e8c0fdff11ee8223baac4aa5bcf3321e4bfc6a"
+}

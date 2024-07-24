@@ -4,10 +4,18 @@
 	"description": "REST API for Global Trade and Supply Chain - API Server.",
 	"licenseName": "Apache 2.0 License",
 	"licenseUrl": "https://opensource.org/licenses/Apache-2.0",
-	"servers": ["https://localhost"],
+	"servers": ["http://localhost:3000"],
 	"restRoutes": [
 		{
-			"package": "@gtsc/api-core"
+			"package": "@gtsc/api-service"
+		},
+		{
+			"package": "@gtsc/api-auth-entity-storage-service"
+		},
+		{
+			"package": "@gtsc/identity-service"
 		}
-	]
+	],
+	"partitionMethods": ["apiKeyHeader"],
+	"authMethods": ["jwtBearer"]
 }
