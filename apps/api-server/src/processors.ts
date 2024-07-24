@@ -1,5 +1,6 @@
 // Copyright 2024 IOTA Stiftung.
 // SPDX-License-Identifier: Apache-2.0.
+import path from "node:path";
 import {
 	type AuthenticationUser,
 	EntityStorageAuthenticationProcessor,
@@ -90,7 +91,7 @@ function buildAuthProcessors(
 		restRouteProcessors.push(
 			new StaticIdentityProcessor({
 				config: Coerce.object(
-					options.envVars.GTSC_AUTH_PROCESSOR_OPTIONS
+					options.envVars.GTSC_AUTH_USER_STATIC_OPTIONS
 				) as IStaticIdentityProcessorConfig
 			})
 		);
@@ -100,7 +101,9 @@ function buildAuthProcessors(
 			type: options.envVars.GTSC_AUTH_USER_ENTITY_STORAGE_TYPE as EntityStorageTypes,
 			schema: nameof<AuthenticationUser>(),
 			storageName: "authentication-user",
-			config: Coerce.object(options.envVars.GTSC_AUTH_USER_CONNECTOR_ENTITY_STORAGE_OPTIONS)
+			config: {
+				directory: path.join(options.envVars.GTSC_ENTITY_STORAGE_FILE_ROOT, "auth-user")
+			}
 		});
 
 		const authenticationService = new EntityStorageAuthenticationService();
@@ -133,23 +136,21 @@ function buildPartitionProcessors(
 		restRouteProcessors.push(
 			new StaticPartitionProcessor({
 				config: Coerce.object(
-					options.envVars.GTSC_PARTITION_PROCESSOR_OPTIONS
+					options.envVars.GTSC_PARTITION_STATIC_OPTIONS
 				) as IStaticPartitionProcessorConfig
 			})
 		);
 	} else if (options.envVars.GTSC_PARTITION_PROCESSOR_TYPE === "api-key") {
 		initSchemaApi();
 		initialiseEntityStorageConnector(options, services, {
-			type: options.envVars.GTSC_API_KEY_ENTITY_STORAGE_TYPE as EntityStorageTypes,
+			type: options.envVars.GTSC_PARTITION_API_KEY_ENTITY_STORAGE_TYPE as EntityStorageTypes,
 			schema: nameof<ApiKey>(),
 			storageName: "api-key",
-			config: Coerce.object(options.envVars.GTSC_API_KEY_CONNECTOR_ENTITY_STORAGE_OPTIONS)
+			config: {
+				directory: path.join(options.envVars.GTSC_ENTITY_STORAGE_FILE_ROOT, "api-key")
+			}
 		});
-		restRouteProcessors.push(
-			new ApiKeyPartitionProcessor(
-				Coerce.object(options.envVars.GTSC_PARTITION_PROCESSOR_OPTIONS) ?? {}
-			)
-		);
+		restRouteProcessors.push(new ApiKeyPartitionProcessor());
 	} else {
 		throw new GeneralError("apiServer", "processorUnknownType", {
 			type: options.envVars.GTSC_PARTITION_PROCESSOR_TYPE,

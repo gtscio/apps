@@ -9,10 +9,10 @@ content-type: application/json
 
 ### Login
 POST http://localhost:3000/authentication/login
-x-api-key: /5+vX5oyjBPvthKyNf/Ou1P+3IR1P/ehP0lkjlD00pk=
+x-api-key: RIBJU/z/ADk2+OZTvgmYtMLoNhwVoDAXyFVWzbBEfQ8=
 content-type: application/json
 
 {
 	"email": "system@system",
-	"password": "d#2a=b$DmZAnMpgR"
+	"password": "qWtq!#iVWgI4£522"
 }

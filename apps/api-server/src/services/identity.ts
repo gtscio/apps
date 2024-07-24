@@ -1,6 +1,7 @@
 // Copyright 2024 IOTA Stiftung.
 // SPDX-License-Identifier: Apache-2.0.
-import { Coerce, GeneralError, I18n } from "@gtsc/core";
+import path from "node:path";
+import { GeneralError, I18n } from "@gtsc/core";
 import {
 	EntityStorageIdentityConnector,
 	type IdentityDocument,
@@ -35,7 +36,9 @@ export function initialiseIdentityService(options: IOptions, services: IService[
 		type: options.envVars.GTSC_IDENTITY_PROFILE_ENTITY_STORAGE_TYPE as EntityStorageTypes,
 		schema: nameof<IdentityProfile>(),
 		storageName: "identity-profile",
-		config: Coerce.object(options.envVars.GTSC_IDENTITY_PROFILE_ENTITY_STORAGE_OPTIONS)
+		config: {
+			directory: path.join(options.envVars.GTSC_ENTITY_STORAGE_FILE_ROOT, "identity-profile")
+		}
 	});
 
 	const service = new IdentityService();
@@ -76,7 +79,9 @@ export function initialiseIdentityConnectorFactory(options: IOptions, services: 
 			type: options.envVars.GTSC_IDENTITY_ENTITY_STORAGE_TYPE as EntityStorageTypes,
 			schema: nameof<IdentityDocument>(),
 			storageName: "identity-document",
-			config: Coerce.object(options.envVars.GTSC_IDENTITY_CONNECTOR_ENTITY_STORAGE_OPTIONS)
+			config: {
+				directory: path.join(options.envVars.GTSC_ENTITY_STORAGE_FILE_ROOT, "identity")
+			}
 		});
 		connector = new EntityStorageIdentityConnector();
 	} else {
