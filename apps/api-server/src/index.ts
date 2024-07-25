@@ -11,11 +11,16 @@ import { systemLogError, systemLogInfo, systemLogInit } from "./progress.js";
 import { buildRoutes } from "./routes.js";
 import { startWebServer } from "./server.js";
 import {
+	initialiseBlobStorageConnectorFactory,
+	initialiseBlobStorageService
+} from "./services/blobStorage.js";
+import {
 	initialiseIdentityConnectorFactory,
 	initialiseIdentityService
 } from "./services/identity.js";
 import { initialiseInformationService } from "./services/information.js";
 import { initialiseLoggingConnector } from "./services/logging.js";
+import { initialiseNftConnectorFactory, initialiseNftService } from "./services/nft.js";
 import { initialiseVaultConnectorFactory } from "./services/vault.js";
 
 try {
@@ -49,8 +54,15 @@ try {
 	initialiseInformationService(options, services, serverInfo);
 
 	initialiseVaultConnectorFactory(options, services);
+
 	initialiseIdentityConnectorFactory(options, services);
 	initialiseIdentityService(options, services);
+
+	initialiseBlobStorageConnectorFactory(options, services);
+	initialiseBlobStorageService(options, services);
+
+	initialiseNftConnectorFactory(options, services);
+	initialiseNftService(options, services);
 
 	const processors = buildProcessors(options, services);
 

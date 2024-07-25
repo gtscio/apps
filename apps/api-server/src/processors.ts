@@ -27,6 +27,8 @@ import type { EntityStorageTypes } from "./models/entityStorage/entityStorageTyp
 import type { IOptions } from "./models/IOptions.js";
 import { initialiseEntityStorageConnector } from "./services/entityStorage.js";
 
+export const AUTH_SERVICE_NAME = "authentication";
+
 /**
  * Build the processor for the REST routes.
  * @param options The options for the web server.
@@ -109,7 +111,7 @@ function buildAuthProcessors(
 		const authenticationService = new EntityStorageAuthenticationService();
 		services.push(authenticationService);
 
-		ServiceFactory.register("authentication", () => authenticationService);
+		ServiceFactory.register(AUTH_SERVICE_NAME, () => authenticationService);
 
 		restRouteProcessors.push(new EntityStorageAuthenticationProcessor());
 	} else {

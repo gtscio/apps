@@ -1,5 +1,10 @@
-### Delete an identity profile
+### Creates a blob
 
-DELETE http://localhost:3000/identity/profile/did:iota:tst:0xe3088ba9aa8c28e1d139708a14e8c0fdff11ee8223baac4aa5bcf3321e4bfc6a
+POST http://localhost:3000/blob-storage
 x-api-key: RIBJU/z/ADk2+OZTvgmYtMLoNhwVoDAXyFVWzbBEfQ8=
 authorization: Bearer eyJhbGciOiJFZERTQSIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJkaWQ6aW90YTp0c3Q6MHhlMzA4OGJhOWFhOGMyOGUxZDEzOTcwOGExNGU4YzBmZGZmMTFlZTgyMjNiYWFjNGFhNWJjZjMzMjFlNGJmYzZhIiwiZXhwIjoxNzIxOTgzMDgyfQ.VphjheFmM_q5WNzQI8gVi-zkis_tPEvjbgz_82oTny6DHvdoq7nr4OD0Z0K6KhPUgHEu4u5hCvWGeBGKNq-TAQ
+content-type: application/json
+
+{
+	"blob": "SGVsbG8gV29ybGQh"
+}

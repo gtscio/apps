@@ -8,6 +8,8 @@ import { type IService, ServiceFactory } from "@gtsc/services";
 import type { IOptions } from "../models/IOptions.js";
 import { systemLogInfo } from "../progress.js";
 
+export const INFORMATION_SERVICE_NAME = "information";
+
 /**
  * Initialise the information service.
  * @param options The options for the web server.
@@ -27,5 +29,5 @@ export function initialiseInformationService(
 
 	const informationService = new InformationService(serverInfo, specFile);
 	services.push(informationService);
-	ServiceFactory.register("information", () => informationService);
+	ServiceFactory.register(INFORMATION_SERVICE_NAME, () => informationService);
 }

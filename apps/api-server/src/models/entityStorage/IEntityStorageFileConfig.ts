@@ -13,11 +13,6 @@ export interface IEntityStorageFileConfig extends IEntityStorageConfig {
 	type: "file";
 
 	/**
-	 * The type of logging connector to use.
-	 */
-	loggingConnectorType?: string;
-
-	/**
 	 * The configuration for the connector.
 	 */
 	config?: IFileEntityStorageConnectorConfig;

@@ -22,6 +22,9 @@ import type { EntityStorageTypes } from "../models/entityStorage/entityStorageTy
 import type { IOptions } from "../models/IOptions.js";
 import { systemLogInfo } from "../progress.js";
 
+export const IDENTITY_SERVICE_NAME = "identity";
+export const IDENTITY_PROFILE_SERVICE_NAME = "identity-profile";
+
 /**
  * Initialise the identity service.
  * @param options The options for the web server.
@@ -43,11 +46,11 @@ export function initialiseIdentityService(options: IOptions, services: IService[
 
 	const service = new IdentityService();
 	services.push(service);
-	ServiceFactory.register("identity", () => service);
+	ServiceFactory.register(IDENTITY_SERVICE_NAME, () => service);
 
 	const serviceProfile = new IdentityProfileService();
 	services.push(serviceProfile);
-	ServiceFactory.register("identity-profile", () => serviceProfile);
+	ServiceFactory.register(IDENTITY_PROFILE_SERVICE_NAME, () => serviceProfile);
 }
 
 /**
@@ -64,6 +67,7 @@ export function initialiseIdentityConnectorFactory(options: IOptions, services: 
 	const type = options.envVars.GTSC_IDENTITY_CONNECTOR;
 
 	let connector: IIdentityConnector;
+	let namespace: string;
 	if (type === "iota") {
 		connector = new IotaIdentityConnector({
 			config: {
@@ -73,6 +77,7 @@ export function initialiseIdentityConnectorFactory(options: IOptions, services: 
 				}
 			}
 		});
+		namespace = IotaIdentityConnector.NAMESPACE;
 	} else if (type === "entity-storage") {
 		initSchemaIdentityStorage();
 		initialiseEntityStorageConnector(options, services, {
@@ -83,7 +88,10 @@ export function initialiseIdentityConnectorFactory(options: IOptions, services: 
 				directory: path.join(options.envVars.GTSC_ENTITY_STORAGE_FILE_ROOT, "identity")
 			}
 		});
-		connector = new EntityStorageIdentityConnector();
+		connector = new EntityStorageIdentityConnector({
+			vaultConnectorType: options.envVars.GTSC_VAULT_CONNECTOR
+		});
+		namespace = EntityStorageIdentityConnector.NAMESPACE;
 	} else {
 		throw new GeneralError("apiServer", "serviceUnknownType", {
 			type,
@@ -92,5 +100,5 @@ export function initialiseIdentityConnectorFactory(options: IOptions, services: 
 	}
 
 	services.push(connector);
-	IdentityConnectorFactory.register("identity", () => connector);
+	IdentityConnectorFactory.register(namespace, () => connector);
 }

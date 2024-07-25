@@ -30,6 +30,8 @@ export function initialiseVaultConnectorFactory(options: IOptions, services: ISe
 	const type = options.envVars.GTSC_VAULT_CONNECTOR;
 
 	let connector: IVaultConnector;
+	let namespace: string;
+
 	if (type === "entity-storage") {
 		initSchema();
 		initialiseEntityStorageConnector(options, services, {
@@ -49,6 +51,7 @@ export function initialiseVaultConnectorFactory(options: IOptions, services: ISe
 			}
 		});
 		connector = new EntityStorageVaultConnector();
+		namespace = EntityStorageVaultConnector.NAMESPACE;
 	} else {
 		throw new GeneralError("apiServer", "serviceUnknownType", {
 			type,
@@ -57,5 +60,5 @@ export function initialiseVaultConnectorFactory(options: IOptions, services: ISe
 	}
 
 	services.push(connector);
-	VaultConnectorFactory.register("vault", () => connector);
+	VaultConnectorFactory.register(namespace, () => connector);
 }

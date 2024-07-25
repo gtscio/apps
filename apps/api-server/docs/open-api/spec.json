@@ -30,6 +30,14 @@
         {
             "name": "Identity Profile",
             "description": "Service to provide all features related to digital identity profiles."
+        },
+        {
+            "name": "Blob Storage",
+            "description": "Endpoints which are modelled to access a blob storage contract."
+        },
+        {
+            "name": "NFT",
+            "description": "Endpoints which are modelled to access an NFT contract."
         }
     ],
     "paths": {
@@ -541,6 +549,119 @@
                                 "identityCreateRequestExample": {
                                     "value": {
                                         "controller": "tst1qrtks2qycm4al8lqw4wxxcvz8sdsrkf7xdxlvgtpcf8ve8gwzsvux44jd7n"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/identity/{id}": {
+            "get": {
+                "operationId": "identityResolve",
+                "summary": "Resolve an identity",
+                "tags": [
+                    "Identity"
+                ],
+                "parameters": [
+                    {
+                        "name": "id",
+                        "description": "The identity to get the document for.",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        },
+                        "style": "simple",
+                        "example": "did:iota:tst:0xe3088ba9aa8c28e1d139708a14e8c0fdff11ee8223baac4aa5bcf3321e4bfc6a"
+                    }
+                ],
+                "security": [
+                    {
+                        "jwtBearerAuthScheme": []
+                    },
+                    {
+                        "apiKeyHeaderAuthScheme": []
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Response to resolving an identity.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/DidDocument"
+                                },
+                                "examples": {
+                                    "identityResolveResponseExample": {
+                                        "value": {
+                                            "id": "did:iota:tst:0xe3088ba9aa8c28e1d139708a14e8c0fdff11ee8223baac4aa5bcf3321e4bfc6a",
+                                            "service": [
+                                                {
+                                                    "id": "did:iota:tst:0xe3088ba9aa8c28e1d139708a14e8c0fdff11ee8223baac4aa5bcf3321e4bfc6a#revocation",
+                                                    "type": "RevocationBitmap2022",
+                                                    "serviceEndpoint": "data:application/octet-stream;base64,eJyzMmAAAwABr"
+                                                }
+                                            ]
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "The server cannot process the request, see the error field for more details.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                },
+                                "examples": {
+                                    "exampleResponse": {
+                                        "value": {
+                                            "name": "GeneralError",
+                                            "message": "component.error",
+                                            "properties": {
+                                                "foo": "bar"
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "You are not authorized to use the API or no credentials were supplied, see the error field for more details.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                },
+                                "examples": {
+                                    "exampleResponse": {
+                                        "value": {
+                                            "name": "UnauthorizedError",
+                                            "message": "component.error"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "The server has encountered a situation it does not know how to handle, see the error field for more details.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                },
+                                "examples": {
+                                    "exampleResponse": {
+                                        "value": {
+                                            "name": "InternalServerError",
+                                            "message": "component.error"
+                                        }
                                     }
                                 }
                             }
@@ -1246,6 +1367,892 @@
                     }
                 }
             }
+        },
+        "/blob-storage": {
+            "post": {
+                "operationId": "blobStorageSet",
+                "summary": "Set a blob in to storage",
+                "tags": [
+                    "Blob Storage"
+                ],
+                "security": [
+                    {
+                        "jwtBearerAuthScheme": []
+                    },
+                    {
+                        "apiKeyHeaderAuthScheme": []
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "The rest request ended in created response.",
+                        "headers": {
+                            "location": {
+                                "schema": {
+                                    "type": "string"
+                                },
+                                "description": "e.g. blob-memory:c57d94b088f4c6d2cb32ded014813d0c786aa00134c8ee22f84b1e2545602a70"
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "The server cannot process the request, see the error field for more details.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                },
+                                "examples": {
+                                    "exampleResponse": {
+                                        "value": {
+                                            "name": "GeneralError",
+                                            "message": "component.error",
+                                            "properties": {
+                                                "foo": "bar"
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "You are not authorized to use the API or no credentials were supplied, see the error field for more details.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                },
+                                "examples": {
+                                    "exampleResponse": {
+                                        "value": {
+                                            "name": "UnauthorizedError",
+                                            "message": "component.error"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "The server has encountered a situation it does not know how to handle, see the error field for more details.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                },
+                                "examples": {
+                                    "exampleResponse": {
+                                        "value": {
+                                            "name": "InternalServerError",
+                                            "message": "component.error"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "requestBody": {
+                    "description": "Request to set an entry in blob storage.",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/BlobStorageSetRequest"
+                            },
+                            "examples": {
+                                "blobStorageSetExample": {
+                                    "value": {
+                                        "blob": "VGhlIHF1aWNrIGJyb3duIGZveCBqdW1wcyBvdmVyIHRoZSBsYXp5IGRvZw=="
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/blob-storage/{id}": {
+            "get": {
+                "operationId": "blobStorageGet",
+                "summary": "Get the blob from storage",
+                "tags": [
+                    "Blob Storage"
+                ],
+                "parameters": [
+                    {
+                        "name": "id",
+                        "description": "The id of the blob to get in urn format.",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        },
+                        "style": "simple",
+                        "example": "blob-memory:c57d94b088f4c6d2cb32ded014813d0c786aa00134c8ee22f84b1e2545602a70"
+                    }
+                ],
+                "security": [
+                    {
+                        "jwtBearerAuthScheme": []
+                    },
+                    {
+                        "apiKeyHeaderAuthScheme": []
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Response to get an entry from blob storage.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/BlobStorageGetResponse"
+                                },
+                                "examples": {
+                                    "blobStorageGetResponseExample": {
+                                        "value": {
+                                            "blob": "VGhlIHF1aWNrIGJyb3duIGZveCBqdW1wcyBvdmVyIHRoZSBsYXp5IGRvZw=="
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "The server cannot process the request, see the error field for more details.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                },
+                                "examples": {
+                                    "exampleResponse": {
+                                        "value": {
+                                            "name": "GeneralError",
+                                            "message": "component.error",
+                                            "properties": {
+                                                "foo": "bar"
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "You are not authorized to use the API or no credentials were supplied, see the error field for more details.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                },
+                                "examples": {
+                                    "exampleResponse": {
+                                        "value": {
+                                            "name": "UnauthorizedError",
+                                            "message": "component.error"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "The resource you tried to access does not exist, see the error field for more details.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/NotFoundResponse"
+                                },
+                                "examples": {
+                                    "exampleResponse": {
+                                        "value": {
+                                            "name": "NotFoundError",
+                                            "message": "component.error",
+                                            "properties": {
+                                                "notFoundId": "1"
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "The server has encountered a situation it does not know how to handle, see the error field for more details.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                },
+                                "examples": {
+                                    "exampleResponse": {
+                                        "value": {
+                                            "name": "InternalServerError",
+                                            "message": "component.error"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "operationId": "blobStorageRemove",
+                "summary": "Remove the blob from storage",
+                "tags": [
+                    "Blob Storage"
+                ],
+                "parameters": [
+                    {
+                        "name": "id",
+                        "description": "The id of the blob to remove in urn format.",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        },
+                        "style": "simple",
+                        "example": "blob-memory:c57d94b088f4c6d2cb32ded014813d0c786aa00134c8ee22f84b1e2545602a70"
+                    }
+                ],
+                "security": [
+                    {
+                        "jwtBearerAuthScheme": []
+                    },
+                    {
+                        "apiKeyHeaderAuthScheme": []
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "The rest request ended in success with no data."
+                    },
+                    "400": {
+                        "description": "The server cannot process the request, see the error field for more details.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                },
+                                "examples": {
+                                    "exampleResponse": {
+                                        "value": {
+                                            "name": "GeneralError",
+                                            "message": "component.error",
+                                            "properties": {
+                                                "foo": "bar"
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "You are not authorized to use the API or no credentials were supplied, see the error field for more details.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                },
+                                "examples": {
+                                    "exampleResponse": {
+                                        "value": {
+                                            "name": "UnauthorizedError",
+                                            "message": "component.error"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "The resource you tried to access does not exist, see the error field for more details.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/NotFoundResponse"
+                                },
+                                "examples": {
+                                    "exampleResponse": {
+                                        "value": {
+                                            "name": "NotFoundError",
+                                            "message": "component.error",
+                                            "properties": {
+                                                "notFoundId": "1"
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "The server has encountered a situation it does not know how to handle, see the error field for more details.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                },
+                                "examples": {
+                                    "exampleResponse": {
+                                        "value": {
+                                            "name": "InternalServerError",
+                                            "message": "component.error"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/nft": {
+            "post": {
+                "operationId": "nftMint",
+                "summary": "Mint an NFT",
+                "tags": [
+                    "NFT"
+                ],
+                "security": [
+                    {
+                        "jwtBearerAuthScheme": []
+                    },
+                    {
+                        "apiKeyHeaderAuthScheme": []
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "The rest request ended in created response.",
+                        "headers": {
+                            "location": {
+                                "schema": {
+                                    "type": "string"
+                                },
+                                "description": "e.g. nft:iota:aW90YS1uZnQ6dHN0OjB4NzYyYjljNDllYTg2OWUwZWJkYTliYmZhNzY5Mzk0NDdhNDI4ZGNmMTc4YzVkMTVhYjQ0N2UyZDRmYmJiNGViMg=="
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "The server cannot process the request, see the error field for more details.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                },
+                                "examples": {
+                                    "exampleResponse": {
+                                        "value": {
+                                            "name": "GeneralError",
+                                            "message": "component.error",
+                                            "properties": {
+                                                "foo": "bar"
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "You are not authorized to use the API or no credentials were supplied, see the error field for more details.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                },
+                                "examples": {
+                                    "exampleResponse": {
+                                        "value": {
+                                            "name": "UnauthorizedError",
+                                            "message": "component.error"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "The server has encountered a situation it does not know how to handle, see the error field for more details.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                },
+                                "examples": {
+                                    "exampleResponse": {
+                                        "value": {
+                                            "name": "InternalServerError",
+                                            "message": "component.error"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "requestBody": {
+                    "description": "Mint the data and return the NFT id.",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/NftMintRequest"
+                            },
+                            "examples": {
+                                "nftMintExample": {
+                                    "value": {
+                                        "issuer": "tst1prctjk5ck0dutnsunnje6u90jk5htx03qznjjmkd6843pzltlgz87srjzzv",
+                                        "tag": "MY-NFT",
+                                        "immutableMetadata": {
+                                            "docName": "bill-of-lading",
+                                            "mimeType": "application/pdf",
+                                            "fingerprint": "0xf0b95a98b3dbc5ce1c9ce59d70af95a97599f100a7296ecdd1eb108bebfa047f"
+                                        },
+                                        "metadata": {
+                                            "data": "tst1prctjk5ck0dutnsunnje6u90jk5htx03qznjjmkd6843pzltlgz87srjzzv"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/nft/{id}": {
+            "get": {
+                "operationId": "nftResolve",
+                "summary": "Resolve an NFT",
+                "tags": [
+                    "NFT"
+                ],
+                "parameters": [
+                    {
+                        "name": "id",
+                        "description": "The id of the NFT to resolve.",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        },
+                        "style": "simple",
+                        "example": "nft:iota:aW90YS1uZnQ6dHN0OjB4NzYyYjljNDllYTg2OWUwZWJkYTliYmZhNzY5Mzk0NDdhNDI4ZGNmMTc4YzVkMTVhYjQ0N2UyZDRmYmJiNGViMg=="
+                    }
+                ],
+                "security": [
+                    {
+                        "jwtBearerAuthScheme": []
+                    },
+                    {
+                        "apiKeyHeaderAuthScheme": []
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Response to resolving the NFT.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/NftResolveResponse"
+                                },
+                                "examples": {
+                                    "nftResolveResponseExample": {
+                                        "value": {
+                                            "issuer": "tst1prctjk5ck0dutnsunnje6u90jk5htx03qznjjmkd6843pzltlgz87srjzzv",
+                                            "owner": "tst1prctjk5ck0dutnsunnje6u90jk5htx03qznjjmkd6843pzltlgz87srjzzv",
+                                            "tag": "MY-NFT",
+                                            "immutableMetadata": {
+                                                "docName": "bill-of-lading",
+                                                "mimeType": "application/pdf",
+                                                "fingerprint": "0xf0b95a98b3dbc5ce1c9ce59d70af95a97599f100a7296ecdd1eb108bebfa047f"
+                                            },
+                                            "metadata": {
+                                                "data": "AAAAA"
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "The server cannot process the request, see the error field for more details.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                },
+                                "examples": {
+                                    "exampleResponse": {
+                                        "value": {
+                                            "name": "GeneralError",
+                                            "message": "component.error",
+                                            "properties": {
+                                                "foo": "bar"
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "You are not authorized to use the API or no credentials were supplied, see the error field for more details.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                },
+                                "examples": {
+                                    "exampleResponse": {
+                                        "value": {
+                                            "name": "UnauthorizedError",
+                                            "message": "component.error"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "The server has encountered a situation it does not know how to handle, see the error field for more details.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                },
+                                "examples": {
+                                    "exampleResponse": {
+                                        "value": {
+                                            "name": "InternalServerError",
+                                            "message": "component.error"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "operationId": "nftBurn",
+                "summary": "Burn an NFT",
+                "tags": [
+                    "NFT"
+                ],
+                "parameters": [
+                    {
+                        "name": "id",
+                        "description": "The id of the NFT to burn.",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        },
+                        "style": "simple",
+                        "example": "nft:iota:aW90YS1uZnQ6dHN0OjB4NzYyYjljNDllYTg2OWUwZWJkYTliYmZhNzY5Mzk0NDdhNDI4ZGNmMTc4YzVkMTVhYjQ0N2UyZDRmYmJiNGViMg=="
+                    }
+                ],
+                "security": [
+                    {
+                        "jwtBearerAuthScheme": []
+                    },
+                    {
+                        "apiKeyHeaderAuthScheme": []
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "The rest request ended in success with no data."
+                    },
+                    "400": {
+                        "description": "The server cannot process the request, see the error field for more details.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                },
+                                "examples": {
+                                    "exampleResponse": {
+                                        "value": {
+                                            "name": "GeneralError",
+                                            "message": "component.error",
+                                            "properties": {
+                                                "foo": "bar"
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "You are not authorized to use the API or no credentials were supplied, see the error field for more details.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                },
+                                "examples": {
+                                    "exampleResponse": {
+                                        "value": {
+                                            "name": "UnauthorizedError",
+                                            "message": "component.error"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "The server has encountered a situation it does not know how to handle, see the error field for more details.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                },
+                                "examples": {
+                                    "exampleResponse": {
+                                        "value": {
+                                            "name": "InternalServerError",
+                                            "message": "component.error"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "put": {
+                "operationId": "nftUpdate",
+                "summary": "Update an NFT",
+                "tags": [
+                    "NFT"
+                ],
+                "parameters": [
+                    {
+                        "name": "id",
+                        "description": "The id of the NFT to transfer in urn format.",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        },
+                        "style": "simple",
+                        "example": "nft:iota:aW90YS1uZnQ6dHN0OjB4NzYyYjljNDllYTg2OWUwZWJkYTliYmZhNzY5Mzk0NDdhNDI4ZGNmMTc4YzVkMTVhYjQ0N2UyZDRmYmJiNGViMg=="
+                    }
+                ],
+                "security": [
+                    {
+                        "jwtBearerAuthScheme": []
+                    },
+                    {
+                        "apiKeyHeaderAuthScheme": []
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "The rest request ended in success with no data."
+                    },
+                    "400": {
+                        "description": "The server cannot process the request, see the error field for more details.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                },
+                                "examples": {
+                                    "exampleResponse": {
+                                        "value": {
+                                            "name": "GeneralError",
+                                            "message": "component.error",
+                                            "properties": {
+                                                "foo": "bar"
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "You are not authorized to use the API or no credentials were supplied, see the error field for more details.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                },
+                                "examples": {
+                                    "exampleResponse": {
+                                        "value": {
+                                            "name": "UnauthorizedError",
+                                            "message": "component.error"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "The server has encountered a situation it does not know how to handle, see the error field for more details.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                },
+                                "examples": {
+                                    "exampleResponse": {
+                                        "value": {
+                                            "name": "InternalServerError",
+                                            "message": "component.error"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "requestBody": {
+                    "description": "Update the mutable data for the NFT.",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/NftUpdateRequest"
+                            },
+                            "examples": {
+                                "nftUpdateExample": {
+                                    "value": {
+                                        "metadata": {
+                                            "data": "AAAAA"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/nft/{id}/transfer": {
+            "post": {
+                "operationId": "nftTransfer",
+                "summary": "Transfer an NFT",
+                "tags": [
+                    "NFT"
+                ],
+                "parameters": [
+                    {
+                        "name": "id",
+                        "description": "The id of the NFT to transfer in urn format.",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        },
+                        "style": "simple",
+                        "example": "nft:iota:aW90YS1uZnQ6dHN0OjB4NzYyYjljNDllYTg2OWUwZWJkYTliYmZhNzY5Mzk0NDdhNDI4ZGNmMTc4YzVkMTVhYjQ0N2UyZDRmYmJiNGViMg=="
+                    }
+                ],
+                "security": [
+                    {
+                        "jwtBearerAuthScheme": []
+                    },
+                    {
+                        "apiKeyHeaderAuthScheme": []
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "The rest request ended in success with no data."
+                    },
+                    "400": {
+                        "description": "The server cannot process the request, see the error field for more details.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                },
+                                "examples": {
+                                    "exampleResponse": {
+                                        "value": {
+                                            "name": "GeneralError",
+                                            "message": "component.error",
+                                            "properties": {
+                                                "foo": "bar"
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "You are not authorized to use the API or no credentials were supplied, see the error field for more details.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                },
+                                "examples": {
+                                    "exampleResponse": {
+                                        "value": {
+                                            "name": "UnauthorizedError",
+                                            "message": "component.error"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "The server has encountered a situation it does not know how to handle, see the error field for more details.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                },
+                                "examples": {
+                                    "exampleResponse": {
+                                        "value": {
+                                            "name": "InternalServerError",
+                                            "message": "component.error"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "requestBody": {
+                    "description": "Transfer the NFT and update the metadata.",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/NftTransferRequest"
+                            },
+                            "examples": {
+                                "nftTransferExample": {
+                                    "value": {
+                                        "recipient": "tst1prctjk5ck0dutnsunnje6u90jk5htx03qznjjmkd6843pzltlgz87srjzzv",
+                                        "metadata": {
+                                            "data": "AAAAA"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
         }
     },
     "components": {
@@ -1456,6 +2463,10 @@
                     "controller": {
                         "type": "string",
                         "description": "The controller for the identity."
+                    },
+                    "namespace": {
+                        "type": "string",
+                        "description": "The namespace of the connector to use for the identity, defaults to service configured namespace."
                     }
                 },
                 "required": [
@@ -1463,6 +2474,299 @@
                 ],
                 "additionalProperties": false,
                 "description": "The data for the request."
+            },
+            "DidDocument": {
+                "type": "object",
+                "properties": {
+                    "id": {
+                        "type": "string",
+                        "description": "The id for the document."
+                    },
+                    "alsoKnownAs": {
+                        "anyOf": [
+                            {
+                                "type": "string"
+                            },
+                            {
+                                "type": "array",
+                                "items": {
+                                    "type": "string"
+                                }
+                            }
+                        ],
+                        "description": "Aliases for the document."
+                    },
+                    "controller": {
+                        "anyOf": [
+                            {
+                                "type": "string"
+                            },
+                            {
+                                "type": "array",
+                                "items": {
+                                    "type": "string"
+                                }
+                            }
+                        ],
+                        "description": "The controller for the document."
+                    },
+                    "verificationMethod": {
+                        "type": "array",
+                        "items": {
+                            "anyOf": [
+                                {
+                                    "type": "string"
+                                },
+                                {
+                                    "$ref": "#/components/schemas/DidDocumentVerificationMethod"
+                                }
+                            ]
+                        },
+                        "description": "The verification methods."
+                    },
+                    "authentication": {
+                        "type": "array",
+                        "items": {
+                            "anyOf": [
+                                {
+                                    "type": "string"
+                                },
+                                {
+                                    "$ref": "#/components/schemas/DidDocumentVerificationMethod"
+                                }
+                            ]
+                        },
+                        "description": "The authentication methods."
+                    },
+                    "assertionMethod": {
+                        "type": "array",
+                        "items": {
+                            "anyOf": [
+                                {
+                                    "type": "string"
+                                },
+                                {
+                                    "$ref": "#/components/schemas/DidDocumentVerificationMethod"
+                                }
+                            ]
+                        },
+                        "description": "The assertion methods."
+                    },
+                    "keyAgreement": {
+                        "type": "array",
+                        "items": {
+                            "anyOf": [
+                                {
+                                    "type": "string"
+                                },
+                                {
+                                    "$ref": "#/components/schemas/DidDocumentVerificationMethod"
+                                }
+                            ]
+                        },
+                        "description": "The key agreements."
+                    },
+                    "capabilityInvocation": {
+                        "type": "array",
+                        "items": {
+                            "anyOf": [
+                                {
+                                    "type": "string"
+                                },
+                                {
+                                    "$ref": "#/components/schemas/DidDocumentVerificationMethod"
+                                }
+                            ]
+                        },
+                        "description": "The capability invocations."
+                    },
+                    "capabilityDelegation": {
+                        "type": "array",
+                        "items": {
+                            "anyOf": [
+                                {
+                                    "type": "string"
+                                },
+                                {
+                                    "$ref": "#/components/schemas/DidDocumentVerificationMethod"
+                                }
+                            ]
+                        },
+                        "description": "The capability delegations."
+                    },
+                    "service": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/DidService"
+                        },
+                        "description": "The services."
+                    }
+                },
+                "required": [
+                    "id"
+                ],
+                "additionalProperties": false,
+                "description": "Interface describing a DID Document. Spec https://www.w3.org/TR/did-core/#did-document-properties."
+            },
+            "DidDocumentVerificationMethod": {
+                "type": "object",
+                "properties": {
+                    "id": {
+                        "type": "string",
+                        "description": "The id of the entry."
+                    },
+                    "controller": {
+                        "type": "string",
+                        "description": "The controller for the entry."
+                    },
+                    "type": {
+                        "type": "string",
+                        "description": "The type of the entry."
+                    },
+                    "publicKeyMultibase": {
+                        "type": "string",
+                        "description": "The public key for the entry. Spec https://datatracker.ietf.org/doc/html/draft-multiformats-multibase-03 ."
+                    },
+                    "publicKeyJwk": {
+                        "$ref": "#/components/schemas/Jwk"
+                    },
+                    "revocation": {
+                        "type": "string",
+                        "description": "Multi key partial revocation."
+                    }
+                },
+                "required": [
+                    "id",
+                    "controller",
+                    "type"
+                ],
+                "additionalProperties": false,
+                "description": "Interface describing a DID document verification method."
+            },
+            "Jwk": {
+                "type": "object",
+                "properties": {
+                    "alg": {
+                        "$ref": "#/components/schemas/JwtAlgorithms"
+                    },
+                    "use": {
+                        "type": "string",
+                        "description": "The intended use for the key."
+                    },
+                    "key_ops": {
+                        "type": "array",
+                        "items": {
+                            "type": "string"
+                        },
+                        "description": "The operation(s) that the key is intended to be used for."
+                    },
+                    "kty": {
+                        "type": "string",
+                        "description": "The key type parameter."
+                    },
+                    "n": {
+                        "type": "string",
+                        "description": "The public key parameters."
+                    },
+                    "e": {
+                        "type": "string",
+                        "description": "Exponent parameter."
+                    },
+                    "d": {
+                        "type": "string",
+                        "description": "The private key parameters."
+                    },
+                    "p": {
+                        "type": "string",
+                        "description": "The private key parameters."
+                    },
+                    "q": {
+                        "type": "string",
+                        "description": "The private key parameters."
+                    },
+                    "dp": {
+                        "type": "string",
+                        "description": "The private key parameters."
+                    },
+                    "dq": {
+                        "type": "string",
+                        "description": "The private key parameters."
+                    },
+                    "qi": {
+                        "type": "string",
+                        "description": "The private key parameters."
+                    },
+                    "kid": {
+                        "type": "string",
+                        "description": "The key ID."
+                    }
+                },
+                "required": [
+                    "kty"
+                ],
+                "additionalProperties": {
+                    "description": "Additional fields in the key."
+                },
+                "description": "The fields in a JSON Web Key."
+            },
+            "JwtAlgorithms": {
+                "anyOf": [
+                    {
+                        "type": "string",
+                        "const": "HS256",
+                        "description": "HMAC using SHA-256."
+                    },
+                    {
+                        "type": "string",
+                        "const": "EdDSA",
+                        "description": "EdDSA using Ed25519."
+                    }
+                ],
+                "description": "The cryptographic algorithms supported for JSON Web Tokens and JSON Web Keys."
+            },
+            "DidService": {
+                "type": "object",
+                "properties": {
+                    "id": {
+                        "type": "string",
+                        "description": "The id of the service."
+                    },
+                    "type": {
+                        "anyOf": [
+                            {
+                                "type": "string"
+                            },
+                            {
+                                "type": "array",
+                                "items": {
+                                    "type": "string"
+                                }
+                            }
+                        ],
+                        "description": "The type of the service."
+                    },
+                    "serviceEndpoint": {
+                        "anyOf": [
+                            {
+                                "type": "string"
+                            },
+                            {
+                                "type": "array",
+                                "items": {
+                                    "type": "string"
+                                }
+                            }
+                        ],
+                        "description": "The endpoint for the service."
+                    }
+                },
+                "required": [
+                    "id",
+                    "type",
+                    "serviceEndpoint"
+                ],
+                "additionalProperties": false,
+                "description": "Interface describing a did document service."
             },
             "IdentityProfileCreateRequest": {
                 "type": "object",
@@ -1591,6 +2895,124 @@
                 ],
                 "additionalProperties": false,
                 "description": "The response payload."
+            },
+            "BlobStorageSetRequest": {
+                "type": "object",
+                "properties": {
+                    "blob": {
+                        "type": "string",
+                        "description": "The data to store in base64 encoding."
+                    },
+                    "namespace": {
+                        "type": "string",
+                        "description": "The namespace to store the data in, defaults to service configured namespace."
+                    }
+                },
+                "required": [
+                    "blob"
+                ],
+                "additionalProperties": false,
+                "description": "The body parameters."
+            },
+            "BlobStorageGetResponse": {
+                "type": "object",
+                "properties": {
+                    "blob": {
+                        "type": "string",
+                        "description": "The blob in base64 format."
+                    }
+                },
+                "required": [
+                    "blob"
+                ],
+                "additionalProperties": false,
+                "description": "The body parameters."
+            },
+            "NftMintRequest": {
+                "type": "object",
+                "properties": {
+                    "issuer": {
+                        "type": "string",
+                        "description": "The issuer for the NFT, will also be the initial owner."
+                    },
+                    "tag": {
+                        "type": "string",
+                        "description": "The tag for the NFT."
+                    },
+                    "immutableMetadata": {
+                        "description": "The immutable metadata for the NFT."
+                    },
+                    "metadata": {
+                        "description": "The metadata for the NFT."
+                    },
+                    "namespace": {
+                        "type": "string",
+                        "description": "The namespace of the connector to use for the NFT, defaults to service configured namespace."
+                    }
+                },
+                "required": [
+                    "issuer",
+                    "tag"
+                ],
+                "additionalProperties": false,
+                "description": "The data to be used in the minting."
+            },
+            "NftResolveResponse": {
+                "type": "object",
+                "properties": {
+                    "issuer": {
+                        "type": "string",
+                        "description": "The issuer of the NFT."
+                    },
+                    "owner": {
+                        "type": "string",
+                        "description": "The owner of the NFT."
+                    },
+                    "tag": {
+                        "type": "string",
+                        "description": "The tag data for the NFT."
+                    },
+                    "immutableMetadata": {
+                        "description": "The immutable data for the NFT."
+                    },
+                    "metadata": {
+                        "description": "The metadata for the NFT."
+                    }
+                },
+                "required": [
+                    "issuer",
+                    "owner",
+                    "tag"
+                ],
+                "additionalProperties": false,
+                "description": "The data that was resolved."
+            },
+            "NftTransferRequest": {
+                "type": "object",
+                "properties": {
+                    "recipient": {
+                        "type": "string",
+                        "description": "The recipient for the NFT."
+                    },
+                    "metadata": {
+                        "description": "The metadata for the NFT."
+                    }
+                },
+                "required": [
+                    "recipient"
+                ],
+                "additionalProperties": false,
+                "description": "The data to be used in the transfer."
+            },
+            "NftUpdateRequest": {
+                "type": "object",
+                "properties": {
+                    "metadata": {
+                        "description": "The metadata for the NFT."
+                    }
+                },
+                "additionalProperties": false,
+                "description": "The data to be used in the update."
             }
         },
         "securitySchemes": {

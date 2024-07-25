@@ -14,6 +14,12 @@
 		},
 		{
 			"package": "@gtsc/identity-service"
+		},
+		{
+			"package": "@gtsc/blob-storage-service"
+		},
+		{
+			"package": "@gtsc/nft-service"
 		}
 	],
 	"partitionMethods": ["apiKeyHeader"],
