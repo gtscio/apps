@@ -20,6 +20,9 @@
 		},
 		{
 			"package": "@gtsc/nft-service"
+		},
+		{
+			"package": "@gtsc/attestation-service"
 		}
 	],
 	"partitionMethods": ["apiKeyHeader"],

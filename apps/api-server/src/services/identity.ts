@@ -1,7 +1,6 @@
 // Copyright 2024 IOTA Stiftung.
 // SPDX-License-Identifier: Apache-2.0.
-import path from "node:path";
-import { GeneralError, I18n } from "@gtsc/core";
+import { Coerce, GeneralError, I18n } from "@gtsc/core";
 import {
 	EntityStorageIdentityConnector,
 	type IdentityDocument,
@@ -18,9 +17,8 @@ import {
 import { nameof } from "@gtsc/nameof";
 import { type IService, ServiceFactory } from "@gtsc/services";
 import { initialiseEntityStorageConnector } from "./entityStorage.js";
-import type { EntityStorageTypes } from "../models/entityStorage/entityStorageTypes.js";
+import { systemLogInfo } from "./logging.js";
 import type { IOptions } from "../models/IOptions.js";
-import { systemLogInfo } from "../progress.js";
 
 export const IDENTITY_SERVICE_NAME = "identity";
 export const IDENTITY_PROFILE_SERVICE_NAME = "identity-profile";
@@ -35,14 +33,12 @@ export function initialiseIdentityService(options: IOptions, services: IService[
 
 	initSchemaIdentity();
 
-	initialiseEntityStorageConnector(options, services, {
-		type: options.envVars.GTSC_IDENTITY_PROFILE_ENTITY_STORAGE_TYPE as EntityStorageTypes,
-		schema: nameof<IdentityProfile>(),
-		storageName: "identity-profile",
-		config: {
-			directory: path.join(options.envVars.GTSC_ENTITY_STORAGE_FILE_ROOT, "identity-profile")
-		}
-	});
+	initialiseEntityStorageConnector(
+		options,
+		services,
+		options.envVars.GTSC_IDENTITY_PROFILE_ENTITY_STORAGE_TYPE,
+		nameof<IdentityProfile>()
+	);
 
 	const service = new IdentityService();
 	services.push(service);
@@ -74,20 +70,19 @@ export function initialiseIdentityConnectorFactory(options: IOptions, services: 
 				clientOptions: {
 					nodes: [options.envVars.GTSC_IOTA_NODE_URL],
 					localPow: true
-				}
+				},
+				coinType: Coerce.number(options.envVars.GTSC_IOTA_COIN_TYPE)
 			}
 		});
 		namespace = IotaIdentityConnector.NAMESPACE;
 	} else if (type === "entity-storage") {
 		initSchemaIdentityStorage();
-		initialiseEntityStorageConnector(options, services, {
-			type: options.envVars.GTSC_IDENTITY_ENTITY_STORAGE_TYPE as EntityStorageTypes,
-			schema: nameof<IdentityDocument>(),
-			storageName: "identity-document",
-			config: {
-				directory: path.join(options.envVars.GTSC_ENTITY_STORAGE_FILE_ROOT, "identity")
-			}
-		});
+		initialiseEntityStorageConnector(
+			options,
+			services,
+			options.envVars.GTSC_IDENTITY_ENTITY_STORAGE_TYPE,
+			nameof<IdentityDocument>()
+		);
 		connector = new EntityStorageIdentityConnector({
 			vaultConnectorType: options.envVars.GTSC_VAULT_CONNECTOR
 		});

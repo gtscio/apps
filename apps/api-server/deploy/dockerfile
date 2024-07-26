@@ -19,7 +19,7 @@ EXPOSE 3000
 # Set the environment variables that will override the .env file in the package
 ENV GTSC_HOST=0.0.0.0
 ENV GTSC_PORT=3000
-ENV GTSC_ENTITY_STORAGE_FILE_ROOT=/gtsc/data
+ENV GTSC_STORAGE_FILE_ROOT=/gtsc/data
 
 # Start the server
 CMD ["node", "dist/es/index.js"]

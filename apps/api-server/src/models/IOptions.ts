@@ -1,6 +1,7 @@
 // Copyright 2024 IOTA Stiftung.
 // SPDX-License-Identifier: Apache-2.0.
 import type { IWebServerOptions } from "@gtsc/api-models";
+import type { ISystemConfig } from "./ISystemConfig";
 
 /**
  * The options for the API server.
@@ -32,17 +33,17 @@ export interface IOptions {
 	envVars: { [id: string]: string };
 
 	/**
-	 * The system identity.
+	 * The root storage folder.
 	 */
-	systemIdentity: string;
-
-	/**
-	 * The system partition id.
-	 */
-	systemPartitionId: string;
+	storageFileRoot: string;
 
 	/**
 	 * The name of the connector to use for system logging.
 	 */
 	systemLoggingConnectorName: string;
+
+	/**
+	 * The system config.
+	 */
+	systemConfig: ISystemConfig;
 }

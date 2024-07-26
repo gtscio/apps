@@ -3,5 +3,5 @@ GET http://localhost:3000/health
 
 ### With API Key should return
 GET http://localhost:3000/health
-x-api-key: RIBJU/z/ADk2+OZTvgmYtMLoNhwVoDAXyFVWzbBEfQ8=
+x-api-key: EIkiS72T/rLTd4LvMcdHK73lIrPg/mPo8scHcxql/UQ=
 

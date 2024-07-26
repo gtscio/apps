@@ -1,9 +1,10 @@
 {
 	"error": {
 		"apiServer": {
-			"missingSystemIdentity": "The GTSC_SYSTEM_IDENTITY environment variable is missing",
 			"serviceUnknownType": "Unknown type \"{type}\" specified for \"{serviceType}\"",
-			"processorUnknownType": "Unknown processor \"{type}\" specified for \"{processorType}\""
+			"processorUnknownType": "Unknown processor \"{type}\" specified for \"{processorType}\"",
+			"storageFileRootNotSet": "The environment variable GTSC_STORAGE_FILE_ROOT is not set",
+			"systemConfigNotSet": "The system configuration is not set, you must first run the server in bootstrap mode by setting GTSC_BOOTSTRAP=true"
 		}
 	},
 	"apiServer": {
@@ -14,6 +15,13 @@
 		"starting": "Starting {element}",
 		"stopping": "Stopping {element}",
 		"bootstrapMode": "Bootstrapping mode",
-		"bootstrapping": "Bootstrap {element}"
+		"bootstrapping": "Bootstrap {element}",
+		"systemPartition": "System partition \"{partition}\"",
+		"systemIdentity": "System identity \"{identity}\"",
+		"systemApiKey": "System API Key \"{apiKey}\"",
+		"systemUserEmail": "System User Email \"{email}\"",
+		"systemUserPassword": "System User Password \"{password}\"",
+		"systemConfigRecord": "System configuration created in \"{filename}\", some of these details will not be shown again, please record them",
+		"systemConfigExists": "System configuration already exists, please check \"{filename}\" for details"
 	}
 }

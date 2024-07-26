@@ -1,6 +1,5 @@
 // Copyright 2024 IOTA Stiftung.
 // SPDX-License-Identifier: Apache-2.0.
-import path from "node:path";
 import {
 	type AuthenticationUser,
 	EntityStorageAuthenticationProcessor,
@@ -12,22 +11,21 @@ import {
 	type ApiKey,
 	ApiKeyPartitionProcessor,
 	initSchema as initSchemaApi,
-	type IStaticIdentityProcessorConfig,
-	type IStaticPartitionProcessorConfig,
 	RequestLoggingProcessor,
 	ResponseLoggingProcessor,
 	RouteProcessor,
-	StaticIdentityProcessor,
-	StaticPartitionProcessor
+	StaticPartitionProcessor,
+	StaticUserIdentityProcessor,
+	SystemIdentityProcessor
 } from "@gtsc/api-processors";
-import { Coerce, GeneralError } from "@gtsc/core";
+import { GeneralError } from "@gtsc/core";
 import { nameof } from "@gtsc/nameof";
-import { ServiceFactory, type IService } from "@gtsc/services";
-import type { EntityStorageTypes } from "./models/entityStorage/entityStorageTypes.js";
-import type { IOptions } from "./models/IOptions.js";
-import { initialiseEntityStorageConnector } from "./services/entityStorage.js";
+import { type IService, ServiceFactory } from "@gtsc/services";
+import { initialiseEntityStorageConnector } from "./entityStorage.js";
+import type { IOptions } from "../models/IOptions";
 
 export const AUTH_SERVICE_NAME = "authentication";
+export const AUTH_SIGNING_NAME_VAULT_KEY = "signing";
 
 /**
  * Build the processor for the REST routes.
@@ -50,6 +48,8 @@ export function buildProcessors(
 			}
 		})
 	);
+
+	restRouteProcessors.push(new SystemIdentityProcessor());
 
 	buildPartitionProcessors(options, restRouteProcessors, services);
 
@@ -91,29 +91,39 @@ function buildAuthProcessors(
 ): void {
 	if (options.envVars.GTSC_AUTH_PROCESSOR_TYPE === "static") {
 		restRouteProcessors.push(
-			new StaticIdentityProcessor({
-				config: Coerce.object(
-					options.envVars.GTSC_AUTH_USER_STATIC_OPTIONS
-				) as IStaticIdentityProcessorConfig
+			new StaticUserIdentityProcessor({
+				config: {
+					userIdentity: options.envVars.GTSC_AUTH_USER_STATIC_IDENTITY
+				}
 			})
 		);
 	} else if (options.envVars.GTSC_AUTH_PROCESSOR_TYPE === "entity-storage") {
 		initSchemaAuthEntityStorage();
-		initialiseEntityStorageConnector(options, services, {
-			type: options.envVars.GTSC_AUTH_USER_ENTITY_STORAGE_TYPE as EntityStorageTypes,
-			schema: nameof<AuthenticationUser>(),
-			storageName: "authentication-user",
+		initialiseEntityStorageConnector(
+			options,
+			services,
+			options.envVars.GTSC_AUTH_USER_ENTITY_STORAGE_TYPE,
+			nameof<AuthenticationUser>()
+		);
+
+		const authenticationService = new EntityStorageAuthenticationService({
+			vaultConnectorType: options.envVars.GTSC_VAULT_CONNECTOR,
 			config: {
-				directory: path.join(options.envVars.GTSC_ENTITY_STORAGE_FILE_ROOT, "auth-user")
+				signingKeyName: AUTH_SIGNING_NAME_VAULT_KEY
 			}
 		});
-
-		const authenticationService = new EntityStorageAuthenticationService();
 		services.push(authenticationService);
 
 		ServiceFactory.register(AUTH_SERVICE_NAME, () => authenticationService);
 
-		restRouteProcessors.push(new EntityStorageAuthenticationProcessor());
+		restRouteProcessors.push(
+			new EntityStorageAuthenticationProcessor({
+				vaultConnectorType: options.envVars.GTSC_VAULT_CONNECTOR,
+				config: {
+					signingKeyName: AUTH_SIGNING_NAME_VAULT_KEY
+				}
+			})
+		);
 	} else {
 		throw new GeneralError("apiServer", "processorUnknownType", {
 			type: options.envVars.GTSC_AUTH_PROCESSOR_TYPE,
@@ -137,21 +147,19 @@ function buildPartitionProcessors(
 	if (options.envVars.GTSC_PARTITION_PROCESSOR_TYPE === "static") {
 		restRouteProcessors.push(
 			new StaticPartitionProcessor({
-				config: Coerce.object(
-					options.envVars.GTSC_PARTITION_STATIC_OPTIONS
-				) as IStaticPartitionProcessorConfig
+				config: {
+					partitionId: options.envVars.GTSC_PARTITION_STATIC_PARTITION_ID
+				}
 			})
 		);
 	} else if (options.envVars.GTSC_PARTITION_PROCESSOR_TYPE === "api-key") {
 		initSchemaApi();
-		initialiseEntityStorageConnector(options, services, {
-			type: options.envVars.GTSC_PARTITION_API_KEY_ENTITY_STORAGE_TYPE as EntityStorageTypes,
-			schema: nameof<ApiKey>(),
-			storageName: "api-key",
-			config: {
-				directory: path.join(options.envVars.GTSC_ENTITY_STORAGE_FILE_ROOT, "api-key")
-			}
-		});
+		initialiseEntityStorageConnector(
+			options,
+			services,
+			options.envVars.GTSC_PARTITION_API_KEY_ENTITY_STORAGE_TYPE,
+			nameof<ApiKey>()
+		);
 		restRouteProcessors.push(new ApiKeyPartitionProcessor());
 	} else {
 		throw new GeneralError("apiServer", "processorUnknownType", {

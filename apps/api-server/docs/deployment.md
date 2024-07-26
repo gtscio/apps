@@ -26,7 +26,7 @@ EXPOSE 3000
 # Set the environment variables that will override the .env file in the package
 ENV GTSC_HOST=0.0.0.0
 ENV GTSC_PORT=3000
-ENV GTSC_ENTITY_STORAGE_FILE_ROOT=/gtsc/data
+ENV GTSC_STORAGE_FILE_ROOT=/gtsc/data
 
 # Start the server
 CMD ["node", "dist/es/index.js"]
@@ -50,7 +50,7 @@ To bootstrap the docker image run the following command:
 docker run -t -i -v d:/docker-host/gtsc/data:/gtsc/data -e GTSC_BOOTSTRAP=true gtsc-api-server
 ```
 
-This example will map the local folder `d:/docker-host/gtsc/data` and make it available in the docker container as `/gtsc/data` which is used to configure file entity storage using the environment variable `GTSC_ENTITY_STORAGE_FILE_ROOT`.
+This example will map the local folder `d:/docker-host/gtsc/data` and make it available in the docker container as `/gtsc/data` which is used to configure file entity storage using the environment variable `GTSC_STORAGE_FILE_ROOT`.
 
 The output from the docker container should be something like the following.
 

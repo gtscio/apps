@@ -1,0 +1,16 @@
+### Creates an attestation
+
+POST http://localhost:3000/attestation
+x-api-key: EIkiS72T/rLTd4LvMcdHK73lIrPg/mPo8scHcxql/UQ=
+authorization: Bearer eyJhbGciOiJFZERTQSIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJkaWQ6ZW50aXR5LXN0b3JhZ2U6MHgzM2U2MWQxZjkwYTJhZmVlMDEyMDY0Y2YyY2IzNTc4M2RmZWNlZTQ2MjFjMjQ3NzM0Yjk4ZTRmYTQ3ZmMxZDRiIiwiZXhwIjoxNzIyMDg0MTM0fQ.ZSldsCC7z5jASyhcC_HWblASji8-rsS5gSsZdyqddtL9t3lGGOFIHZ7JI3q2FMF3CNhh7zlyezcUDoQzAIeCDg
+content-type: application/json
+
+{
+	"controllerAddress": "ent1qzpw5at09akjfwlthekgk93d24rvec82qst7xesfs7u850eud0mmuhxczp8",
+  	"verificationMethodId": "did:entity-storage:0xfd518c097719ae6d2aec1ceee696d42261713266c6e170acd3a9e4cb3915bbd6#attestation",
+  	"data": {
+    	"docName": "bill-of-lading",
+    	"mimeType": "application/pdf",
+    	"fingerprint": "0xf0b95a98b3dbc5ce1c9ce59d70af95a97599f100a7296ecdd1eb108bebfa047f"
+  	}
+}

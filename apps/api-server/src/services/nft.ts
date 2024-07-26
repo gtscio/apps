@@ -1,7 +1,6 @@
 // Copyright 2024 IOTA Stiftung.
 // SPDX-License-Identifier: Apache-2.0.
-import path from "node:path";
-import { GeneralError, I18n } from "@gtsc/core";
+import { Coerce, GeneralError, I18n } from "@gtsc/core";
 import { nameof } from "@gtsc/nameof";
 import {
 	EntityStorageNftConnector,
@@ -11,11 +10,10 @@ import {
 import { IotaNftConnector } from "@gtsc/nft-connector-iota";
 import { NftConnectorFactory, type INftConnector } from "@gtsc/nft-models";
 import { NftService } from "@gtsc/nft-service";
-import { type IService, ServiceFactory } from "@gtsc/services";
+import { ServiceFactory, type IService } from "@gtsc/services";
 import { initialiseEntityStorageConnector } from "./entityStorage.js";
-import type { EntityStorageTypes } from "../models/entityStorage/entityStorageTypes.js";
+import { systemLogInfo } from "./logging.js";
 import type { IOptions } from "../models/IOptions.js";
-import { systemLogInfo } from "../progress.js";
 
 export const NFT_SERVICE_NAME = "nft";
 
@@ -52,20 +50,19 @@ export function initialiseNftConnectorFactory(options: IOptions, services: IServ
 				clientOptions: {
 					nodes: [options.envVars.GTSC_IOTA_NODE_URL],
 					localPow: true
-				}
+				},
+				coinType: Coerce.number(options.envVars.GTSC_IOTA_COIN_TYPE)
 			}
 		});
 		namespace = IotaNftConnector.NAMESPACE;
 	} else if (type === "entity-storage") {
 		initSchemaNft();
-		initialiseEntityStorageConnector(options, services, {
-			type: options.envVars.GTSC_NFT_ENTITY_STORAGE_TYPE as EntityStorageTypes,
-			schema: nameof<Nft>(),
-			storageName: "nft",
-			config: {
-				directory: path.join(options.envVars.GTSC_ENTITY_STORAGE_FILE_ROOT, "nft")
-			}
-		});
+		initialiseEntityStorageConnector(
+			options,
+			services,
+			options.envVars.GTSC_NFT_ENTITY_STORAGE_TYPE,
+			nameof<Nft>()
+		);
 		connector = new EntityStorageNftConnector();
 		namespace = EntityStorageNftConnector.NAMESPACE;
 	} else {

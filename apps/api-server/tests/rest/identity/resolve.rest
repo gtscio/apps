@@ -1,12 +1,8 @@
-### Updates an nft
+### Fails with no API Key
+GET http://localhost:3000/identity/did:entity-storage:0xfd518c097719ae6d2aec1ceee696d42261713266c6e170acd3a9e4cb3915bbd6
 
-PUT http://localhost:3000/nft/nft:entity-storage:0x08f02fcd71fdd01bc1f0f812ccd4af5240543212bccbb58f70e69a0d5101b5b4
+
+### Resolves an identity
+GET http://localhost:3000/identity/did:entity-storage:0xfd518c097719ae6d2aec1ceee696d42261713266c6e170acd3a9e4cb3915bbd6
 x-api-key: EIkiS72T/rLTd4LvMcdHK73lIrPg/mPo8scHcxql/UQ=
 authorization: Bearer eyJhbGciOiJFZERTQSIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJkaWQ6ZW50aXR5LXN0b3JhZ2U6MHgzM2U2MWQxZjkwYTJhZmVlMDEyMDY0Y2YyY2IzNTc4M2RmZWNlZTQ2MjFjMjQ3NzM0Yjk4ZTRmYTQ3ZmMxZDRiIiwiZXhwIjoxNzIyMDg0MTM0fQ.ZSldsCC7z5jASyhcC_HWblASji8-rsS5gSsZdyqddtL9t3lGGOFIHZ7JI3q2FMF3CNhh7zlyezcUDoQzAIeCDg
-content-type: application/json
-
-{
-	"metadata": {
-		"someProp2": 456
-	}
-}

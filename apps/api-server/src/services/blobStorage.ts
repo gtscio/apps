@@ -8,8 +8,8 @@ import { BlobStorageConnectorFactory, type IBlobStorageConnector } from "@gtsc/b
 import { BlobStorageService } from "@gtsc/blob-storage-service";
 import { GeneralError, I18n } from "@gtsc/core";
 import { type IService, ServiceFactory } from "@gtsc/services";
+import { systemLogInfo } from "./logging.js";
 import type { IOptions } from "../models/IOptions.js";
-import { systemLogInfo } from "../progress.js";
 
 export const BLOB_STORAGE_SERVICE_NAME = "blob-storage";
 
@@ -55,7 +55,7 @@ export function initialiseBlobStorageConnectorFactory(
 	} else if (type === "file") {
 		connector = new FileBlobStorageConnector({
 			config: {
-				directory: path.join(options.envVars.GTSC_ENTITY_STORAGE_FILE_ROOT, "blob-storage")
+				directory: path.join(options.storageFileRoot, "blob-storage")
 			}
 		});
 		namespace = FileBlobStorageConnector.NAMESPACE;

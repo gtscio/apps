@@ -5,8 +5,8 @@ import type { IServerInfo } from "@gtsc/api-models";
 import { InformationService } from "@gtsc/api-service";
 import { I18n } from "@gtsc/core";
 import { type IService, ServiceFactory } from "@gtsc/services";
+import { systemLogInfo } from "./logging.js";
 import type { IOptions } from "../models/IOptions.js";
-import { systemLogInfo } from "../progress.js";
 
 export const INFORMATION_SERVICE_NAME = "information";
 
