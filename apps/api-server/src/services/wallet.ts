@@ -23,7 +23,9 @@ import type { IOptions } from "../models/IOptions.js";
 export function initialiseWalletStorage(options: IOptions, services: IService[]): void {
 	const type = options.envVars.GTSC_WALLET_CONNECTOR;
 
-	if (type === "entity-storage") {
+	if (type === "iota") {
+		// No storage required for IOTA wallet connector.
+	} else if (type === "entity-storage") {
 		initSchemaWallet();
 		initialiseEntityStorageConnector(
 			options,

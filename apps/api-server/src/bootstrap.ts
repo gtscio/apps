@@ -9,6 +9,7 @@ import {
 	EntityStorageConnectorFactory,
 	type IEntityStorageConnector
 } from "@gtsc/entity-storage-models";
+import { IotaIdentityUtils } from "@gtsc/identity-connector-iota";
 import { IdentityConnectorFactory } from "@gtsc/identity-models";
 import { nameof } from "@gtsc/nameof";
 import type { IService, IServiceRequestContext } from "@gtsc/services";
@@ -73,6 +74,8 @@ export async function bootstrapSystem(options: IOptions): Promise<void> {
 		// Create a secure mnemonic and store it in the vault so that wallet operations
 		// can be performed
 		const mnemonic = Bip39.randomMnemonic();
+		systemLogInfo(I18n.formatMessage("apiServer.generatingMnemonic", { mnemonic }));
+
 		const vaultConnector = VaultConnectorFactory.get(options.envVars.GTSC_VAULT_CONNECTOR);
 		await vaultConnector.setSecret("mnemonic", mnemonic, systemRequestContext);
 
@@ -80,8 +83,18 @@ export async function bootstrapSystem(options: IOptions): Promise<void> {
 		const walletConnector = WalletConnectorFactory.get(options.envVars.GTSC_WALLET_CONNECTOR);
 		const addresses = await walletConnector.getAddresses(0, 5, systemRequestContext);
 
+		let address0 = addresses[0];
+
+		if (options.envVars.GTSC_WALLET_CONNECTOR === "iota") {
+			address0 = `${options.envVars.GTSC_IOTA_EXPLORER_URL}addr/${address0}`;
+		}
+
+		systemLogInfo(I18n.formatMessage("apiServer.fundingWallet", { address: address0 }));
+
 		// Add some funds to the wallet from the faucet
 		await walletConnector.ensureBalance(addresses[0], 1000000000n, undefined, systemRequestContext);
+
+		systemLogInfo(I18n.formatMessage("apiServer.generatingSystemIdentity"));
 
 		// Now create an identity for the system controlled by the address we just funded
 		const identityConnector = IdentityConnectorFactory.get(options.envVars.GTSC_IDENTITY_CONNECTOR);
@@ -89,6 +102,14 @@ export async function bootstrapSystem(options: IOptions): Promise<void> {
 			addresses[0],
 			systemRequestContext
 		);
+
+		if (options.envVars.GTSC_IDENTITY_CONNECTOR === "iota") {
+			systemLogInfo(
+				I18n.formatMessage("apiServer.identityExplorer", {
+					url: `${process.env.GTSC_IOTA_EXPLORER_URL}addr/${IotaIdentityUtils.didToAddress(identityDocument.id)}?tab=DID`
+				})
+			);
+		}
 
 		// If we are using entity storage for wallet the identity associated with the
 		// address will be wrong, so fix it
@@ -114,6 +135,16 @@ export async function bootstrapSystem(options: IOptions): Promise<void> {
 		systemRequestContext.userIdentity = identityDocument.id;
 
 		await vaultConnector.setSecret("mnemonic", mnemonic, systemRequestContext);
+
+		// Add attestation verification method to DID, the correct system context is now in place
+		// so the keys for the verification method will be stored correctly
+		systemLogInfo(I18n.formatMessage("apiServer.addingAttestation"));
+		await identityConnector.addVerificationMethod(
+			identityDocument.id,
+			"assertionMethod",
+			"attestation",
+			systemRequestContext
+		);
 
 		systemLogInfo(
 			I18n.formatMessage("apiServer.systemPartition", {

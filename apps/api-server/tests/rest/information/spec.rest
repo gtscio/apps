@@ -3,5 +3,5 @@ GET http://localhost:3000/spec
 
 ### With API Key should return
 GET http://localhost:3000/spec
-x-api-key: EIkiS72T/rLTd4LvMcdHK73lIrPg/mPo8scHcxql/UQ=
+x-api-key: fu2NApKBVBJyEVotdazUQZAO34/gEytqV9u4rGElRKk=
 

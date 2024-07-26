@@ -3,16 +3,16 @@ POST http://localhost:3000/identity
 content-type: application/json
 
 {
-	"controller": "ent1qzpw5at09akjfwlthekgk93d24rvec82qst7xesfs7u850eud0mmuhxczp8"
+	"controller": "tst1qrlrpvm5yu2ue0hhzk332uhhh4e7gh6ka26c8xq6sfvcl2d4pfuag95qy9n"
 }
 
 
 ### Creates an identity
 POST http://localhost:3000/identity
-x-api-key: EIkiS72T/rLTd4LvMcdHK73lIrPg/mPo8scHcxql/UQ=
-authorization: Bearer eyJhbGciOiJFZERTQSIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJkaWQ6ZW50aXR5LXN0b3JhZ2U6MHgzM2U2MWQxZjkwYTJhZmVlMDEyMDY0Y2YyY2IzNTc4M2RmZWNlZTQ2MjFjMjQ3NzM0Yjk4ZTRmYTQ3ZmMxZDRiIiwiZXhwIjoxNzIyMDg0MTM0fQ.ZSldsCC7z5jASyhcC_HWblASji8-rsS5gSsZdyqddtL9t3lGGOFIHZ7JI3q2FMF3CNhh7zlyezcUDoQzAIeCDg
+x-api-key: fu2NApKBVBJyEVotdazUQZAO34/gEytqV9u4rGElRKk=
+authorization: Bearer eyJhbGciOiJFZERTQSIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJkaWQ6aW90YTp0c3Q6MHhhOThiZjYzMzgxYjRlMTAxZGQ4MjVhMmU2YzBiZWI2OTAyYThhNjNlMDc5YTgwNzA4ZDg5ZThjMTY5ZWNhMGJjIiwiZXhwIjoxNzIyMDg4MDkyfQ._EmQO9tDtG0Bo0bg7TDf5bgVnYthSRtIflIR2ECasqSvKauq9LHNC6828Nyh9zQ95F5XSVQAMN8X2KpMHpBtDg
 content-type: application/json
 
 {
-	"controller": "ent1qzpw5at09akjfwlthekgk93d24rvec82qst7xesfs7u850eud0mmuhxczp8"
+	"controller": "tst1qrlrpvm5yu2ue0hhzk332uhhh4e7gh6ka26c8xq6sfvcl2d4pfuag95qy9n"
 }
