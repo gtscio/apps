@@ -19,6 +19,12 @@
 			"package": "@gtsc/blob-storage-service"
 		},
 		{
+			"package": "@gtsc/telemetry-service"
+		},
+		{
+			"package": "@gtsc/logging-service"
+		},
+		{
 			"package": "@gtsc/nft-service"
 		},
 		{

@@ -3,6 +3,7 @@
 		"apiServer": {
 			"serviceUnknownType": "Unknown type \"{type}\" specified for \"{serviceType}\"",
 			"processorUnknownType": "Unknown processor \"{type}\" specified for \"{processorType}\"",
+			"noEnvVars": "There are no environment variables starting GTSC_ the server will not start without them, please set them in the shell or create a .env file",
 			"storageFileRootNotSet": "The environment variable GTSC_STORAGE_FILE_ROOT is not set",
 			"systemConfigNotSet": "The system configuration is not set, you must first run the server in bootstrap mode by setting GTSC_BOOTSTRAP=true"
 		}

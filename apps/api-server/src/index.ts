@@ -5,7 +5,7 @@ import { CLIDisplay } from "@gtsc/cli-core";
 import { BaseError, I18n, Is } from "@gtsc/core";
 import type { IService, IServiceRequestContext } from "@gtsc/services";
 import { bootstrap } from "./bootstrap.js";
-import { configure } from "./configure.js";
+import { configure, findRootPackageFolder } from "./configure.js";
 import { initialiseLocales } from "./locales.js";
 import { buildRoutes } from "./routes.js";
 import { startWebServer } from "./server.js";
@@ -23,9 +23,19 @@ import {
 	initialiseIdentityService
 } from "./services/identity.js";
 import { initialiseInformationService } from "./services/information.js";
-import { initialiseLoggingConnector, systemLogError, systemLogInfo } from "./services/logging.js";
+import {
+	initialiseLoggingConnectorFactory,
+	initialiseLoggingService,
+	initialiseSystemLoggingConnector,
+	systemLogError,
+	systemLogInfo
+} from "./services/logging.js";
 import { initialiseNftConnectorFactory, initialiseNftService } from "./services/nft.js";
 import { buildProcessors } from "./services/processors.js";
+import {
+	initialiseTelemetryConnectorFactory,
+	initialiseTelemetryService
+} from "./services/telemetry.js";
 import { initialiseVaultConnectorFactory } from "./services/vault.js";
 import { initialiseWalletConnectorFactory, initialiseWalletStorage } from "./services/wallet.js";
 
@@ -37,9 +47,10 @@ try {
 
 	CLIDisplay.header(serverInfo.name, serverInfo.version, "🌩️ ");
 
-	const options = await configure();
+	const rootPackageFolder = findRootPackageFolder();
+	await initialiseLocales(rootPackageFolder);
 
-	await initialiseLocales(options.rootPackageFolder);
+	const options = await configure(rootPackageFolder);
 
 	if (options.bootstrap) {
 		CLIDisplay.task(I18n.formatMessage("apiServer.bootstrapMode"));
@@ -50,7 +61,7 @@ try {
 	}
 
 	const services: IService[] = [];
-	initialiseLoggingConnector(options, services);
+	initialiseSystemLoggingConnector(options, services);
 
 	initialiseInformationService(options, services, serverInfo);
 
@@ -58,6 +69,12 @@ try {
 
 	initialiseIdentityConnectorFactory(options, services);
 	initialiseIdentityService(options, services);
+
+	initialiseLoggingConnectorFactory(options, services);
+	initialiseLoggingService(options, services);
+
+	initialiseTelemetryConnectorFactory(options, services);
+	initialiseTelemetryService(options, services);
 
 	initialiseBlobStorageConnectorFactory(options, services);
 	initialiseBlobStorageService(options, services);

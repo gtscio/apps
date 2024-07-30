@@ -13,18 +13,27 @@ import type { ISystemConfig } from "./models/ISystemConfig";
 export const SYSTEM_CONFIG_FILENAME = "system-config.json";
 
 /**
- * Handles the configuration of the application.
- * @returns The configuration options.
+ * Find the root package folder.
+ * @returns The root package folder.
  */
-export async function configure(): Promise<IOptions> {
+export function findRootPackageFolder(): string {
 	// Find the root package folder.
 	const rootPackageFolder = path.resolve(
 		path.join(path.dirname(fileURLToPath(import.meta.url)), "..", "..")
 	);
 
-	// Import environment variables from .env and .env.dev files.
+	return rootPackageFolder;
+}
+
+/**
+ * Handles the configuration of the application.
+ * @param rootPackageFolder The root package folder.
+ * @returns The configuration options.
+ */
+export async function configure(rootPackageFolder: string): Promise<IOptions> {
+	// Import environment variables from .env files.
 	dotenv.config({
-		path: [path.join(rootPackageFolder, ".env"), path.join(rootPackageFolder, ".env.dev")]
+		path: [path.join(rootPackageFolder, ".env")]
 	});
 
 	const envVars: { [id: string]: string } = {};
@@ -32,6 +41,10 @@ export async function configure(): Promise<IOptions> {
 		if (envVar.startsWith("GTSC_")) {
 			envVars[envVar] = process.env[envVar] ?? "";
 		}
+	}
+
+	if (!Is.objectValue(envVars)) {
+		throw new GeneralError("apiServer", "noEnvVars");
 	}
 
 	const storageFileRoot = envVars.GTSC_STORAGE_FILE_ROOT;

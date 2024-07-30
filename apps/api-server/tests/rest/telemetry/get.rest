@@ -1,8 +1,5 @@
-### Fails with no API Key
-GET http://localhost:3000/identity/did:entity-storage:0xfd518c097719ae6d2aec1ceee696d42261713266c6e170acd3a9e4cb3915bbd6
+### Gets a telemetry metric
 
-
-### Resolves an identity
-GET http://localhost:3000/identity/did:entity-storage:0xfd518c097719ae6d2aec1ceee696d42261713266c6e170acd3a9e4cb3915bbd6
+GET http://localhost:3000/telemetry/metric/my-counter
 x-api-key: fu2NApKBVBJyEVotdazUQZAO34/gEytqV9u4rGElRKk=
 authorization: Bearer eyJhbGciOiJFZERTQSIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJkaWQ6aW90YTp0c3Q6MHhhOThiZjYzMzgxYjRlMTAxZGQ4MjVhMmU2YzBiZWI2OTAyYThhNjNlMDc5YTgwNzA4ZDg5ZThjMTY5ZWNhMGJjIiwiZXhwIjoxNzIyNDExODY1fQ._Ph9eCZQVpX5HuR72hiGOI5zIlJ0wQsijadOjpQRNsABOv8-ZqGTWQxmtDF68dFGtY9PQ7IbjHrbBg_KBqclAw

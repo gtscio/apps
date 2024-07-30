@@ -9,13 +9,17 @@ import {
 	generateRestRoutesIdentity,
 	generateRestRoutesIdentityProfile
 } from "@gtsc/identity-service";
+import { generateRestRoutesLogging } from "@gtsc/logging-service";
 import { generateRestRoutesNft } from "@gtsc/nft-service";
+import { generateRestRoutesTelemetry } from "@gtsc/telemetry-service";
 import { ATTESTATION_SERVICE_NAME } from "./services/attestation.js";
 import { BLOB_STORAGE_SERVICE_NAME } from "./services/blobStorage.js";
 import { IDENTITY_PROFILE_SERVICE_NAME, IDENTITY_SERVICE_NAME } from "./services/identity.js";
 import { INFORMATION_SERVICE_NAME } from "./services/information.js";
+import { LOGGING_SERVICE_NAME } from "./services/logging.js";
 import { NFT_SERVICE_NAME } from "./services/nft.js";
 import { AUTH_SERVICE_NAME } from "./services/processors.js";
+import { TELEMETRY_SERVICE_NAME } from "./services/telemetry.js";
 
 /**
  * The routes for the application.
@@ -25,9 +29,11 @@ export function buildRoutes(): IRestRoute[] {
 	return [
 		...generateRestRoutesInformation("", INFORMATION_SERVICE_NAME),
 		...generateRestRoutesAuthentication("authentication", AUTH_SERVICE_NAME),
+		...generateRestRoutesBlobStorage("blob-storage", BLOB_STORAGE_SERVICE_NAME),
+		...generateRestRoutesLogging("logging", LOGGING_SERVICE_NAME),
+		...generateRestRoutesTelemetry("telemetry", TELEMETRY_SERVICE_NAME),
 		...generateRestRoutesIdentity("identity", IDENTITY_SERVICE_NAME),
 		...generateRestRoutesIdentityProfile("identity/profile", IDENTITY_PROFILE_SERVICE_NAME),
-		...generateRestRoutesBlobStorage("blob-storage", BLOB_STORAGE_SERVICE_NAME),
 		...generateRestRoutesNft("nft", NFT_SERVICE_NAME),
 		...generateRestRoutesAttestation("attestation", ATTESTATION_SERVICE_NAME)
 	];
