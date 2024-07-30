@@ -143,7 +143,7 @@ INFO [2024-07-24T08:43:03.013Z] Starting Web Server at address "0.0.0.0" on port
 INFO [2024-07-24T08:43:03.017Z] The Web Server started on http://0.0.0.0:3000
 ```
 
-You should now be able to access the server in the browser <http://localhost:3000/info?x-api-key=QnT8ZiIIPEIfqEgLCTN2BE/NGYmul9xldFH/1s/RmLw=> you should replace the `x-api-key` value the one generated during the bootstrap process.
+You should now be able to access the server in the browser [http://localhost:3000/info?x-api-key=QnT8ZiIIPEIfqEgLCTN2BE/NGYmul9xldFH/1s/RmLw=](http://localhost:3000/info?x-api-key=QnT8ZiIIPEIfqEgLCTN2BE/NGYmul9xldFH/1s/RmLw=) you should replace the `x-api-key` value the one generated during the bootstrap process.
 
 On successfully communicating with the server you should see something similar to the following returned from the request:
 

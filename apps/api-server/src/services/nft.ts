@@ -46,6 +46,7 @@ export function initialiseNftConnectorFactory(options: IOptions, services: IServ
 
 	if (type === "iota") {
 		connector = new IotaNftConnector({
+			vaultConnectorType: options.envVars.GTSC_VAULT_CONNECTOR,
 			config: {
 				clientOptions: {
 					nodes: [options.envVars.GTSC_IOTA_NODE_URL],

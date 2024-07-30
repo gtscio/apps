@@ -66,6 +66,7 @@ export function initialiseIdentityConnectorFactory(options: IOptions, services: 
 	let namespace: string;
 	if (type === "iota") {
 		connector = new IotaIdentityConnector({
+			vaultConnectorType: options.envVars.GTSC_VAULT_CONNECTOR,
 			config: {
 				clientOptions: {
 					nodes: [options.envVars.GTSC_IOTA_NODE_URL],
