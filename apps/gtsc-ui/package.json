@@ -15,6 +15,9 @@
 		"test:unit": "vitest --run",
 		"dist": "npm run build && npm run check && npm run test"
 	},
+	"dependencies": {
+		"@gtsc/core": "next"
+	},
 	"devDependencies": {
 		"@playwright/test": "^1.28.1",
 		"@sveltejs/adapter-auto": "^3.0.0",
