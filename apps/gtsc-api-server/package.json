@@ -1,11 +1,11 @@
 {
-	"name": "@gtsc/api-server",
+	"name": "@gtsc/gtsc-api-server",
 	"version": "0.0.1-next.1",
 	"description": "Serve APIs using the specified configuration",
 	"repository": {
 		"type": "git",
 		"url": "https://github.com/gtscio/apps.git",
-		"directory": "apps/api-server"
+		"directory": "apps/gtsc-api-server"
 	},
 	"author": "martyn.janes@iota.org",
 	"license": "Apache-2.0",

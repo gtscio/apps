@@ -22,7 +22,7 @@ import { GeneralError } from "@gtsc/core";
 import { nameof } from "@gtsc/nameof";
 import { type IService, ServiceFactory } from "@gtsc/services";
 import { initialiseEntityStorageConnector } from "./entityStorage.js";
-import type { IOptions } from "../models/IOptions";
+import type { IOptions } from "../models/IOptions.js";
 
 export const AUTH_SERVICE_NAME = "authentication";
 export const AUTH_SIGNING_NAME_VAULT_KEY = "signing";

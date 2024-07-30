@@ -1,4 +1,4 @@
-# @gtsc/api-server - Deployment
+# @gtsc/gtsc-api-server - Deployment
 
 ## Docker Building
 

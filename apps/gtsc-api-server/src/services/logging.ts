@@ -18,7 +18,7 @@ import { LoggingService } from "@gtsc/logging-service";
 import { nameof } from "@gtsc/nameof";
 import { ServiceFactory, type IService } from "@gtsc/services";
 import { initialiseEntityStorageConnector } from "./entityStorage.js";
-import type { IOptions } from "../models/IOptions";
+import type { IOptions } from "../models/IOptions.js";
 
 export const LOGGING_SERVICE_NAME = "logging";
 

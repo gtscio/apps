@@ -1,4 +1,4 @@
-# @gtsc/api-server - Configuration
+# @gtsc/gtsc-api-server - Configuration
 
 ## Environment Variables
 

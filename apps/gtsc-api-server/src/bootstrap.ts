@@ -17,7 +17,7 @@ import { VaultConnectorFactory, VaultKeyType } from "@gtsc/vault-models";
 import type { WalletAddress } from "@gtsc/wallet-connector-entity-storage";
 import { WalletConnectorFactory } from "@gtsc/wallet-models";
 import { SYSTEM_CONFIG_FILENAME, writeSystemConfig } from "./configure.js";
-import type { IOptions } from "./models/IOptions";
+import type { IOptions } from "./models/IOptions.js";
 import { systemLogInfo } from "./services/logging.js";
 import { AUTH_SIGNING_NAME_VAULT_KEY } from "./services/processors.js";
 
