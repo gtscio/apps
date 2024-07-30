@@ -16,7 +16,7 @@
 		"dist": "node ./scripts/workspaces.mjs dist",
 		"format": "prettier --config .prettierrc --write .",
 		"lint:format": "prettier --config .prettierrc --check .",
-		"lint:code": "eslint . --ext .js,.mjs,.ts",
+		"lint:code": "eslint . --ext .js,.mjs,.ts,*.svelte",
 		"lint:markdown": "markdownlint **/*.md --ignore **/node_modules/** --ignore **/docs/reference/**",
 		"lint:spell": "cspell ** --no-progress",
 		"lint": "npm run lint:format && npm run lint:code && npm run lint:markdown && npm run lint:spell"
@@ -39,7 +39,8 @@
 		"prettier": "^3.3.2"
 	},
 	"workspaces": [
-		"apps/gtsc-api-server"
+		"apps/gtsc-api-server",
+		"apps/gtsc-ui"
 	],
 	"type": "module"
 }

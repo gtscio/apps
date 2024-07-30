@@ -9,6 +9,7 @@
 		"**/docs/open-api/**",
 		"**/tests/**",
 		"*.yaml",
+		"*.svg",
 		"package.json",
 		"rollup.config.mjs",
 		"vitest.config.*",
@@ -21,11 +22,14 @@
 		"bech",
 		"Fastify",
 		"faucet",
+		"flowbite",
 		"GTSC",
 		"ipfs",
 		"nameof",
 		"openapi",
 		"Stiftung",
+		"Swatchbook",
+		"tailwindcss",
 		"WORKDIR"
 	],
 	"ignoreRegExpList": [

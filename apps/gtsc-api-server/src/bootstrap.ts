@@ -1,6 +1,5 @@
 // Copyright 2024 IOTA Stiftung.
 // SPDX-License-Identifier: Apache-2.0.
-
 import { PasswordHelper, type AuthenticationUser } from "@gtsc/api-auth-entity-storage-service";
 import type { ApiKey } from "@gtsc/api-processors";
 import { Converter, I18n, Is, RandomHelper, StringHelper } from "@gtsc/core";

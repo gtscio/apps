@@ -5,6 +5,7 @@ This mono-repository contains applications built using the GTSC framework packag
 ## Packages
 
 - [gtsc-api-server](apps/gtsc-api-server/README.md) - A REST server implementation support the routes from various packages.
+- [gtsc-ui](apps/gtsc-ui/README.md) - A web UI for accessing the APIs.
 
 ## Contributing
 
