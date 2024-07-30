@@ -3,9 +3,10 @@
 	import { Sidebar, SidebarGroup, SidebarItem, SidebarWrapper } from 'flowbite-svelte';
 	import {
 		ImageSolid,
+		LockSolid,
 		RectangleListSolid,
 		ShieldCheckSolid,
-		SwatchbookSolid, LockSolid
+		SwatchbookSolid
 	} from 'flowbite-svelte-icons';
 	import { authenticationToken } from '../stores/authentication';
 	$: activeUrl = $page.url.pathname;
@@ -19,42 +20,42 @@
 	<SidebarWrapper class="h-full">
 		<SidebarGroup>
 			{#if $authenticationToken}
-			<SidebarItem label="Telemetry" href="/secure/telemetry">
-				<svelte:fragment slot="icon">
-					<SwatchbookSolid
-						class="h-6 w-6 text-gray-500 transition duration-75 group-hover:text-gray-900 dark:text-gray-400 dark:group-hover:text-white"
-					/>
-				</svelte:fragment>
-			</SidebarItem>
-			<SidebarItem label="Logging" href="/secure/logging">
-				<svelte:fragment slot="icon">
-					<RectangleListSolid
-						class="h-6 w-6 text-gray-500 transition duration-75 group-hover:text-gray-900 dark:text-gray-400 dark:group-hover:text-white"
-					/>
-				</svelte:fragment>
-			</SidebarItem>
-			<SidebarItem label="Attestation" href="/secure/attestation">
-				<svelte:fragment slot="icon">
-					<ShieldCheckSolid
-						class="h-6 w-6 text-gray-500 transition duration-75 group-hover:text-gray-900 dark:text-gray-400 dark:group-hover:text-white"
-					/>
-				</svelte:fragment>
-			</SidebarItem>
-			<SidebarItem label="NFT" href="/secure/nft">
-				<svelte:fragment slot="icon">
-					<ImageSolid
-						class="h-6 w-6 text-gray-500 transition duration-75 group-hover:text-gray-900 dark:text-gray-400 dark:group-hover:text-white"
-					/>
-				</svelte:fragment>
-			</SidebarItem>
+				<SidebarItem label="Telemetry" href="/secure/telemetry">
+					<svelte:fragment slot="icon">
+						<SwatchbookSolid
+							class="h-6 w-6 text-gray-500 transition duration-75 group-hover:text-gray-900 dark:text-gray-400 dark:group-hover:text-white"
+						/>
+					</svelte:fragment>
+				</SidebarItem>
+				<SidebarItem label="Logging" href="/secure/logging">
+					<svelte:fragment slot="icon">
+						<RectangleListSolid
+							class="h-6 w-6 text-gray-500 transition duration-75 group-hover:text-gray-900 dark:text-gray-400 dark:group-hover:text-white"
+						/>
+					</svelte:fragment>
+				</SidebarItem>
+				<SidebarItem label="Attestation" href="/secure/attestation">
+					<svelte:fragment slot="icon">
+						<ShieldCheckSolid
+							class="h-6 w-6 text-gray-500 transition duration-75 group-hover:text-gray-900 dark:text-gray-400 dark:group-hover:text-white"
+						/>
+					</svelte:fragment>
+				</SidebarItem>
+				<SidebarItem label="NFT" href="/secure/nft">
+					<svelte:fragment slot="icon">
+						<ImageSolid
+							class="h-6 w-6 text-gray-500 transition duration-75 group-hover:text-gray-900 dark:text-gray-400 dark:group-hover:text-white"
+						/>
+					</svelte:fragment>
+				</SidebarItem>
 			{:else}
-			<SidebarItem label="Login" href="/authentication/login">
-				<svelte:fragment slot="icon">
-					<LockSolid
-						class="h-6 w-6 text-gray-500 transition duration-75 group-hover:text-gray-900 dark:text-gray-400 dark:group-hover:text-white"
-					/>
-				</svelte:fragment>
-			</SidebarItem>
+				<SidebarItem label="Login" href="/authentication/login">
+					<svelte:fragment slot="icon">
+						<LockSolid
+							class="h-6 w-6 text-gray-500 transition duration-75 group-hover:text-gray-900 dark:text-gray-400 dark:group-hover:text-white"
+						/>
+					</svelte:fragment>
+				</SidebarItem>
 			{/if}
 		</SidebarGroup>
 	</SidebarWrapper>
