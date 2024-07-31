@@ -13,12 +13,17 @@
 		"format": "prettier --write .",
 		"test:integration": "playwright test",
 		"test:unit": "vitest --run",
-		"dist": "npm run build && npm run check && npm run test"
+		"merge-locales": "merge-locales --config ./locales/merge-locales-config.json",
+		"dist": "npm run build && npm run check && npm run merge-locales && npm run test"
 	},
 	"dependencies": {
+		"@gtsc/api-auth-entity-storage-rest-client": "next",
+		"@gtsc/api-models": "next",
+		"@gtsc/api-rest-client": "next",
 		"@gtsc/core": "next"
 	},
 	"devDependencies": {
+		"@gtsc/merge-locales": "next",
 		"@playwright/test": "^1.28.1",
 		"@sveltejs/adapter-auto": "^3.0.0",
 		"@sveltejs/kit": "^2.0.0",

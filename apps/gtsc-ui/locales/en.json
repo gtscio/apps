@@ -1,0 +1,30 @@
+{
+	"app": {
+		"name": "GTSC"
+	},
+	"navigation": {
+		"home": "Home",
+		"about": "About",
+		"login": "Login",
+		"logout": "Logout",
+		"privacyPolicy": "Privacy Policy"
+	},
+	"serverStatus": {
+		"api": "API",
+		"notConnected": "Not connected"
+	},
+	"footer": {
+		"copyrightOrg": "GTSC",
+		"selectLanguage": "Select language"
+	},
+	"pages": {
+		"login": {
+			"title": "Login",
+			"email": "E-mail",
+			"password": "Password",
+			"signIn": "Sign in",
+			"noAccount": "Don't have an account yet?",
+			"signUp": "Sign up"
+		}
+	}
+}

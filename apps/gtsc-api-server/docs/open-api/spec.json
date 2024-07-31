@@ -3970,11 +3970,22 @@
                 "description": "The status of the server."
             },
             "HealthStatus": {
-                "type": "string",
-                "enum": [
-                    "ok",
-                    "warning",
-                    "error"
+                "anyOf": [
+                    {
+                        "type": "string",
+                        "const": "ok",
+                        "description": "OK."
+                    },
+                    {
+                        "type": "string",
+                        "const": "warning",
+                        "description": "Warning."
+                    },
+                    {
+                        "type": "string",
+                        "const": "error",
+                        "description": "Error."
+                    }
                 ],
                 "description": "The health status of the component."
             },
