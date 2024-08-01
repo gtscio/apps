@@ -1,1 +1,1 @@
-<h1>This is the attestation page</h1>
+<h1 class="dark:text-white">Attestation</h1>

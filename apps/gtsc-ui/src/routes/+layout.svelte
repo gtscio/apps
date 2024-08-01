@@ -15,7 +15,7 @@
 			<Sidebar />
 			<ServerStatus />
 		</div>
-		<div class="flex h-full flex-1 flex-col overflow-y-auto bg-white p-4 dark:bg-gray-900">
+		<div class="flex h-full flex-1 flex-col overflow-y-auto bg-white p-6 dark:bg-gray-900">
 			<slot></slot>
 		</div>
 	</div>

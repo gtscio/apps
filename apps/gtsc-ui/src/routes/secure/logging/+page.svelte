@@ -1,1 +1,1 @@
-<h1>This is the logging page</h1>
+<h1 class="dark:text-white">Logging</h1>

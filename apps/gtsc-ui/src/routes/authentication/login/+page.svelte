@@ -4,15 +4,15 @@
 	import { Is } from '@gtsc/core';
 	import { Button, Card, Input, Label } from 'flowbite-svelte';
 	import { Section } from 'flowbite-svelte-blocks';
-	import { authenticationError, authenticationToken, login } from '../../../stores/authentication';
+	import { authenticationError, isAuthenticated, login } from '../../../stores/authentication';
 	import { i18n } from '../../../stores/i18n';
 
-	const returnUrl = $page.url.searchParams.get('returnUrl') ?? '/';
+	const returnUrl = $page.url.searchParams.get('returnUrl') ?? '/secure/dashboard';
 	let emailAddress = '';
 	let password = '';
 
-	authenticationToken.subscribe(value => {
-		if (Is.stringValue(value)) {
+	isAuthenticated.subscribe(value => {
+		if (value) {
 			goto(returnUrl);
 		}
 	});

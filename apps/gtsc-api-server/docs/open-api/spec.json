@@ -394,10 +394,226 @@
                                     "$ref": "#/components/schemas/LoginResponse"
                                 },
                                 "examples": {
-                                    "loginResponse": {
+                                    "loginResponseExample": {
                                         "summary": "The response for the login request.",
                                         "value": {
-                                            "token": "eyJhbGciOiJIU...sw5c"
+                                            "token": "eyJhbGciOiJIU...sw5c",
+                                            "expiry": 1722514341067
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "The server cannot process the request, see the error field for more details.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                },
+                                "examples": {
+                                    "exampleResponse": {
+                                        "value": {
+                                            "name": "GeneralError",
+                                            "message": "component.error",
+                                            "properties": {
+                                                "foo": "bar"
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "You are not authorized to use the API or no credentials were supplied, see the error field for more details.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                },
+                                "examples": {
+                                    "exampleResponse": {
+                                        "value": {
+                                            "name": "UnauthorizedError",
+                                            "message": "component.error"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "The server has encountered a situation it does not know how to handle, see the error field for more details.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                },
+                                "examples": {
+                                    "exampleResponse": {
+                                        "value": {
+                                            "name": "InternalServerError",
+                                            "message": "component.error"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "requestBody": {
+                    "description": "Perform a login on the server.",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/LoginRequest"
+                            },
+                            "examples": {
+                                "loginRequestExample": {
+                                    "summary": "The request to login to the server.",
+                                    "value": {
+                                        "email": "user@example.com",
+                                        "password": "MyPassword123!"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/authentication/logout": {
+            "get": {
+                "operationId": "authenticationLogout",
+                "summary": "Logout from the server",
+                "tags": [
+                    "Authentication"
+                ],
+                "parameters": [
+                    {
+                        "name": "token",
+                        "description": "The token to logout, if it uses a mechanism with public access.",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        },
+                        "example": "eyJhbGciOiJIU...sw5c"
+                    }
+                ],
+                "security": [
+                    {
+                        "apiKeyHeaderAuthScheme": []
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "The rest request ended in success with no data."
+                    },
+                    "400": {
+                        "description": "The server cannot process the request, see the error field for more details.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                },
+                                "examples": {
+                                    "exampleResponse": {
+                                        "value": {
+                                            "name": "GeneralError",
+                                            "message": "component.error",
+                                            "properties": {
+                                                "foo": "bar"
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "You are not authorized to use the API or no credentials were supplied, see the error field for more details.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                },
+                                "examples": {
+                                    "exampleResponse": {
+                                        "value": {
+                                            "name": "UnauthorizedError",
+                                            "message": "component.error"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "The server has encountered a situation it does not know how to handle, see the error field for more details.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                },
+                                "examples": {
+                                    "exampleResponse": {
+                                        "value": {
+                                            "name": "InternalServerError",
+                                            "message": "component.error"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/authentication/refresh": {
+            "get": {
+                "operationId": "authenticationRefreshToken",
+                "summary": "Refresh an authentication token",
+                "tags": [
+                    "Authentication"
+                ],
+                "parameters": [
+                    {
+                        "name": "token",
+                        "description": "The token to refresh, if it uses a mechanism with public access.",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        },
+                        "example": "eyJhbGciOiJIU...sw5c"
+                    }
+                ],
+                "security": [
+                    {
+                        "jwtBearerAuthScheme": []
+                    },
+                    {
+                        "apiKeyHeaderAuthScheme": []
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Response from a refresh on the auth token.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/RefreshTokenResponse"
+                                },
+                                "examples": {
+                                    "refreshTokenResponseExample": {
+                                        "summary": "The response for the refresh token request.",
+                                        "value": {
+                                            "token": "eyJhbGciOiJIU...sw5c",
+                                            "expiry": 1722514341067
                                         }
                                     }
                                 }
@@ -3992,19 +4208,60 @@
             "ServerSpecResponse": {
                 "description": "The spec for the server."
             },
+            "LoginRequest": {
+                "type": "object",
+                "properties": {
+                    "email": {
+                        "type": "string",
+                        "description": "The email address for the user."
+                    },
+                    "password": {
+                        "type": "string",
+                        "description": "The password for the user."
+                    }
+                },
+                "required": [
+                    "email",
+                    "password"
+                ],
+                "additionalProperties": false,
+                "description": "The login details."
+            },
             "LoginResponse": {
                 "type": "object",
                 "properties": {
                     "token": {
                         "type": "string",
-                        "description": "The access token for future requests."
+                        "description": "The access token, if it uses a mechanism with public access."
+                    },
+                    "expiry": {
+                        "type": "number",
+                        "description": "The expiry time of the token."
                     }
                 },
                 "required": [
-                    "token"
+                    "expiry"
                 ],
                 "additionalProperties": false,
                 "description": "The login response details."
+            },
+            "RefreshTokenResponse": {
+                "type": "object",
+                "properties": {
+                    "token": {
+                        "type": "string",
+                        "description": "The refreshed token, if it uses a mechanism with public access."
+                    },
+                    "expiry": {
+                        "type": "number",
+                        "description": "The expiry time of the token."
+                    }
+                },
+                "required": [
+                    "expiry"
+                ],
+                "additionalProperties": false,
+                "description": "The refresh token details."
             },
             "IdentityCreateRequest": {
                 "type": "object",

@@ -13,7 +13,7 @@
 			copyrightMessage=""
 		/>
 		<div class="flex flex-row items-center gap-2">
-			<div class="text-sm text-gray-500 dark:text-gray-400">Language</div>
+			<div class="text-sm text-gray-500 dark:text-gray-400">{$i18n('footer.language')}</div>
 			<Select
 				class="w-48"
 				placeholder={$i18n('footer.selectLanguage')}
@@ -25,7 +25,7 @@
 			></Select>
 		</div>
 		<div class="flex flex-row items-center gap-2">
-			<div class="text-sm text-gray-500 dark:text-gray-400">Color Scheme</div>
+			<div class="text-sm text-gray-500 dark:text-gray-400">{$i18n('footer.colorTheme')}</div>
 			<DarkMode
 				btnClass="text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg text-xl p-2"
 			/>

@@ -1,1 +1,1 @@
-<h1>This is the telemetry page</h1>
+<h1 class="dark:text-white">Telemetry</h1>

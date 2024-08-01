@@ -2,7 +2,7 @@
 // SPDX-License-Identifier: Apache-2.0.
 import {
 	type AuthenticationUser,
-	EntityStorageAuthenticationProcessor,
+	AuthCookieProcessor,
 	EntityStorageAuthenticationService,
 	initSchema as initSchemaAuthEntityStorage
 } from "@gtsc/api-auth-entity-storage-service";
@@ -11,8 +11,7 @@ import {
 	type ApiKey,
 	ApiKeyPartitionProcessor,
 	initSchema as initSchemaApi,
-	RequestLoggingProcessor,
-	ResponseLoggingProcessor,
+	LoggingProcessor,
 	RouteProcessor,
 	StaticPartitionProcessor,
 	StaticUserIdentityProcessor,
@@ -41,7 +40,7 @@ export function buildProcessors(
 	const restRouteProcessors: IHttpRestRouteProcessor[] = [];
 
 	restRouteProcessors.push(
-		new RequestLoggingProcessor({
+		new LoggingProcessor({
 			loggingConnectorType: options.systemLoggingConnectorName,
 			config: {
 				includeBody: options.debug
@@ -63,22 +62,13 @@ export function buildProcessors(
 		})
 	);
 
-	restRouteProcessors.push(
-		new ResponseLoggingProcessor({
-			loggingConnectorType: options.systemLoggingConnectorName,
-			config: {
-				includeBody: options.debug
-			}
-		})
-	);
-
 	services.push(...restRouteProcessors);
 
 	return restRouteProcessors;
 }
 
 /**
- * Build the authentication processors.
+ * Build the authentication pre processors.
  * @param options The options for the web server.
  * @param restRouteProcessors The REST route processors.
  * @param services The services.
@@ -117,7 +107,7 @@ function buildAuthProcessors(
 		ServiceFactory.register(AUTH_SERVICE_NAME, () => authenticationService);
 
 		restRouteProcessors.push(
-			new EntityStorageAuthenticationProcessor({
+			new AuthCookieProcessor({
 				vaultConnectorType: options.envVars.GTSC_VAULT_CONNECTOR,
 				config: {
 					signingKeyName: AUTH_SIGNING_NAME_VAULT_KEY

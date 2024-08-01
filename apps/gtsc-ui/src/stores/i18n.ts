@@ -30,18 +30,6 @@ export const locales: Writable<ILocale[]> = writable<ILocale[]>([
 export const currentLocale: Writable<string> = persistent<string>("locale", I18n.DEFAULT_LOCALE);
 
 /**
- * Hook the original set so that we can load the translation before updating the value.
- */
-const originalSet = currentLocale.set;
-currentLocale.set = async (value: string): Promise<void> => {
-	try {
-		originalSet(value);
-		await loadTranslation(value);
-		I18n.setLocale(value);
-	} catch {}
-};
-
-/**
  * Load the locales.
  * @param fetchMethod The fetch method to use.
  */
@@ -73,6 +61,11 @@ export async function init(fetchMethod: typeof window.fetch): Promise<void> {
 	await loadTranslation(get(currentLocale));
 }
 
+currentLocale.subscribe(async locale => {
+	await loadTranslation(locale);
+	I18n.setLocale(locale);
+});
+
 /**
  * Load a translation for a locale.
  * @param locale The locale to load.
@@ -94,9 +87,7 @@ async function loadTranslation(locale: string): Promise<void> {
 	}
 }
 
-I18n.addLocaleHandler("store", (locale: string) => {
-	originalSet(locale);
-});
+I18n.addLocaleHandler("store", async (locale: string) => {});
 
 I18n.addDictionaryHandler("store", () => {
 	localeDictionaries.set(I18n.getAllDictionaries());

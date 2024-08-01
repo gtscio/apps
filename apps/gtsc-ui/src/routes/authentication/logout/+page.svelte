@@ -1,7 +1,10 @@
 <script lang="ts">
 	import { goto } from '$app/navigation';
-	import { authenticationToken } from '../../../stores/authentication';
+	import { onMount } from 'svelte';
+	import { logout } from '../../../stores/authentication';
 
-	authenticationToken.set('');
-	goto('/');
+	onMount(async () => {
+		await logout();
+		goto('/');
+	});
 </script>

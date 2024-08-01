@@ -7,7 +7,12 @@
 		"about": "About",
 		"login": "Login",
 		"logout": "Logout",
-		"privacyPolicy": "Privacy Policy"
+		"privacyPolicy": "Privacy Policy",
+		"dashboard": "Dashboard",
+		"telemetry": "Telemetry",
+		"logging": "Logging",
+		"attestation": "Attestation",
+		"nft": "NFT"
 	},
 	"serverStatus": {
 		"api": "API",
@@ -15,6 +20,8 @@
 	},
 	"footer": {
 		"copyrightOrg": "GTSC",
+		"language": "Language",
+		"colorTheme": "Color theme",
 		"selectLanguage": "Select language"
 	},
 	"pages": {

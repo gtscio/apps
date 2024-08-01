@@ -1,1 +1,1 @@
-<h1>This is the nft page</h1>
+<h1 class="dark:text-white">NFT</h1>

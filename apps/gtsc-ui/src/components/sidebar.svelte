@@ -9,9 +9,8 @@
 		ShieldCheckSolid,
 		SwatchbookSolid
 	} from 'flowbite-svelte-icons';
-	import { authenticationToken } from '../stores/authentication';
+	import { isAuthenticated } from '../stores/authentication';
 	import { i18n } from '../stores/i18n';
-	import { Is } from '@gtsc/core';
 	$: activeUrl = $page.url.pathname;
 	let activeClass =
 		'flex items-center p-2 text-base font-normal text-primary-900 bg-primary-200 dark:bg-primary-700 rounded-lg dark:text-white hover:bg-primary-100 dark:hover:bg-gray-700';
@@ -22,29 +21,36 @@
 <Sidebar {activeUrl} {activeClass} {nonActiveClass} class="h-full">
 	<SidebarWrapper class="h-full">
 		<SidebarGroup>
-			{#if Is.stringValue($authenticationToken)}
-				<SidebarItem label="Telemetry" href="/secure/telemetry">
+			{#if $isAuthenticated}
+				<SidebarItem label={$i18n('navigation.dashboard')} href="/secure/dashboard">
 					<svelte:fragment slot="icon">
 						<SwatchbookSolid
 							class="h-6 w-6 text-gray-500 transition duration-75 group-hover:text-gray-900 dark:text-gray-400 dark:group-hover:text-white"
 						/>
 					</svelte:fragment>
 				</SidebarItem>
-				<SidebarItem label="Logging" href="/secure/logging">
+				<SidebarItem label={$i18n('navigation.telemetry')} href="/secure/telemetry">
+					<svelte:fragment slot="icon">
+						<SwatchbookSolid
+							class="h-6 w-6 text-gray-500 transition duration-75 group-hover:text-gray-900 dark:text-gray-400 dark:group-hover:text-white"
+						/>
+					</svelte:fragment>
+				</SidebarItem>
+				<SidebarItem label={$i18n('navigation.logging')} href="/secure/logging">
 					<svelte:fragment slot="icon">
 						<RectangleListSolid
 							class="h-6 w-6 text-gray-500 transition duration-75 group-hover:text-gray-900 dark:text-gray-400 dark:group-hover:text-white"
 						/>
 					</svelte:fragment>
 				</SidebarItem>
-				<SidebarItem label="Attestation" href="/secure/attestation">
+				<SidebarItem label={$i18n('navigation.attestation')} href="/secure/attestation">
 					<svelte:fragment slot="icon">
 						<ShieldCheckSolid
 							class="h-6 w-6 text-gray-500 transition duration-75 group-hover:text-gray-900 dark:text-gray-400 dark:group-hover:text-white"
 						/>
 					</svelte:fragment>
 				</SidebarItem>
-				<SidebarItem label="NFT" href="/secure/nft">
+				<SidebarItem label={$i18n('navigation.nft')} href="/secure/nft">
 					<svelte:fragment slot="icon">
 						<ImageSolid
 							class="h-6 w-6 text-gray-500 transition duration-75 group-hover:text-gray-900 dark:text-gray-400 dark:group-hover:text-white"
@@ -52,7 +58,7 @@
 					</svelte:fragment>
 				</SidebarItem>
 			{/if}
-			{#if Is.stringValue($authenticationToken)}
+			{#if $isAuthenticated}
 				<SidebarGroup border>
 					<SidebarItem label={$i18n('navigation.logout')} href="/authentication/logout">
 						<svelte:fragment slot="icon">
