@@ -14,7 +14,12 @@
 		"test:integration": "playwright test",
 		"test:unit": "vitest --run",
 		"merge-locales": "merge-locales --config ./locales/merge-locales-config.json",
-		"dist": "npm run build && npm run check && npm run merge-locales && npm run test"
+		"docs:clean": "rimraf docs/overview.md",
+		"docs:copy-overview": "copyfiles README.md docs",
+		"docs:rename-overview": "node -e \"require('fs/promises').rename('docs/README.md','docs/overview.md')\"",
+		"docs:remove-header": "replace-in-files --regex='^.*overview.md.*?\\s\\s.*?\\s\\s' --string='docs/' --replacement='' \"docs/**/*.md\"",
+		"docs": "npm run docs:clean && npm run docs:copy-overview && npm run docs:rename-overview && npm run docs:remove-header",
+		"dist": "npm run build && npm run check && npm run merge-locales && npm run test && npm run docs"
 	},
 	"dependencies": {
 		"@gtsc/api-auth-entity-storage-rest-client": "next",
@@ -43,6 +48,7 @@
 		"prettier": "^3.1.1",
 		"prettier-plugin-svelte": "^3.1.2",
 		"prettier-plugin-tailwindcss": "^0.6.4",
+		"replace-in-files-cli": "2.2.0",
 		"svelte": "^4.2.7",
 		"svelte-check": "^3.6.0",
 		"tailwindcss": "^3.4.4",
