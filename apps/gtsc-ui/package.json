@@ -26,7 +26,10 @@
 		"@gtsc/api-auth-entity-storage-rest-client": "next",
 		"@gtsc/api-models": "next",
 		"@gtsc/api-rest-client": "next",
-		"@gtsc/core": "next"
+		"@gtsc/core": "next",
+		"@gtsc/identity-models": "next",
+		"@gtsc/identity-rest-client": "next",
+		"@gtsc/schema": "next"
 	},
 	"devDependencies": {
 		"@gtsc/merge-locales": "next",

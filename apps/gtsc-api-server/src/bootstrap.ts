@@ -8,8 +8,9 @@ import {
 	type IEntityStorageConnector
 } from "@gtsc/entity-storage-models";
 import { IotaIdentityUtils } from "@gtsc/identity-connector-iota";
-import { IdentityConnectorFactory } from "@gtsc/identity-models";
+import { IdentityConnectorFactory, IdentityProfileConnectorFactory } from "@gtsc/identity-models";
 import { nameof } from "@gtsc/nameof";
+import { SchemaOrgDataTypes } from "@gtsc/schema";
 import type { IService } from "@gtsc/services";
 import { VaultConnectorFactory, VaultKeyType } from "@gtsc/vault-models";
 import type { WalletAddress } from "@gtsc/wallet-connector-entity-storage";
@@ -196,6 +197,40 @@ export async function bootstrapAuth(options: IOptions): Promise<void> {
 			);
 
 			await authUserEntityStorage.set(systemUser);
+
+			// We have create a system user, now we need to create a profile for the user
+			const identityProfileConnector = IdentityProfileConnectorFactory.get(
+				options.envVars.GTSC_IDENTITY_PROFILE_CONNECTOR
+			);
+
+			if (identityProfileConnector) {
+				await identityProfileConnector.create(options.systemConfig.systemIdentity, [
+					{
+						key: "role",
+						type: SchemaOrgDataTypes.TYPE_TEXT,
+						value: "System",
+						isPublic: false
+					},
+					{
+						key: "firstName",
+						type: SchemaOrgDataTypes.TYPE_TEXT,
+						value: "System",
+						isPublic: false
+					},
+					{
+						key: "lastName",
+						type: SchemaOrgDataTypes.TYPE_TEXT,
+						value: "Administrator",
+						isPublic: false
+					},
+					{
+						key: "email",
+						type: SchemaOrgDataTypes.TYPE_TEXT,
+						value: systemUser.email,
+						isPublic: false
+					}
+				]);
+			}
 		}
 	}
 }

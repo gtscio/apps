@@ -32,7 +32,16 @@
 			"signIn": "Sign in",
 			"noAccount": "Don't have an account yet?",
 			"signUp": "Sign up"
+		},
+		"identityProfile": {
+			"title": "Profile",
+			"firstName": "First Name",
+			"lastName": "Last Name"
 		}
+	},
+	"actions": {
+		"save": "Save",
+		"saveSuccess": "Saved successfully"
 	},
 	"error": {
 		"validation": {
@@ -59,7 +68,16 @@
 			"beJSON": "The value must be correctly formatted JSON",
 			"beEmail": "The value must be a correctly formatted e-mail address",
 			"failed": "Validation failed",
-			"failedObject": "Validation of \"{objectName}\" failed"
+			"failedObject": "Validation of \"{objectName}\" failed",
+			"geo": {
+				"coordinatesLatitudeNumber": "The latitude value must be a number",
+				"coordinatesLatitudeRange": "The latitude value must be between -90 and 90",
+				"coordinatesLongitudeNumber": "The longitude value must be a number",
+				"coordinatesLongitudeRange": "The longitude value must be between -180 and 180"
+			},
+			"properties": {
+				"keyAlreadyExists": "The key already exists"
+			}
 		},
 		"guard": {
 			"undefined": "Property \"{property}\" must be defined, it is \"{value}\"",
@@ -183,6 +201,10 @@
 			"decodingFailed": "Decoding JSON failed for route \"{route}\"",
 			"failureStatusText": "The request to the API failed: \"{statusText}\""
 		},
+		"entitySchemaHelper": {
+			"noIsPrimary": "Property \"entitySchema.properties\" must contain a value with isPrimary set",
+			"multipleIsPrimary": "Property \"entitySchema.properties\" contains more than one property with isPrimary set"
+		},
 		"entityStorageAuthenticationService": {
 			"loginFailed": "Login failed",
 			"refreshFailed": "Refresh failed",
@@ -211,5 +233,32 @@
 	},
 	"errorMessages": {
 		"fetch": "Fetch"
+	},
+	"identityRole": {
+		"organization": "Organization",
+		"user": "User",
+		"node": "Node"
+	},
+	"verifiableCredentialStates": {
+		"pendingVerification": "Pending Verification",
+		"rejected": "Rejected",
+		"issued": "Issued",
+		"revoked": "Revoked"
+	},
+	"data-type-names": {
+		"http://schema.org/Text": "Text",
+		"http://schema.org/URL": "Url",
+		"http://schema.org/Integer": "Integer",
+		"http://schema.org/Float": "Float",
+		"http://schema.org/Boolean": "Boolean",
+		"http://schema.org/Date": "ISO Date",
+		"http://schema.org/DateTime": "ISO Date Time",
+		"http://schema.org/Time": "ISO Time",
+		"http://schema.org/image": "Image",
+		"http://schema.org/GeoCoordinates": "Geo Coordinates",
+		"http://schema.org/StructuredValue": "Structured Value",
+		"URN": "Urn",
+		"TimestampMilliseconds": "Milliseconds since 1970",
+		"TimestampSeconds": "Seconds since 1970"
 	}
 }

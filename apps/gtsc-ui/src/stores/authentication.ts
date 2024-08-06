@@ -29,7 +29,7 @@ export async function init(apiUrl: string): Promise<void> {
 		if (expiry < Date.now()) {
 			setAsLoggedOut();
 		} else {
-			await refresh();			
+			await refresh();
 		}
 	} else {
 		setAsLoggedOut();

@@ -87,8 +87,6 @@ async function loadTranslation(locale: string): Promise<void> {
 	}
 }
 
-I18n.addLocaleHandler("store", async (locale: string) => {});
-
 I18n.addDictionaryHandler("store", () => {
 	localeDictionaries.set(I18n.getAllDictionaries());
 });

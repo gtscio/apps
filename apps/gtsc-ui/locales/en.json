@@ -32,6 +32,15 @@
 			"signIn": "Sign in",
 			"noAccount": "Don't have an account yet?",
 			"signUp": "Sign up"
+		},
+		"identityProfile": {
+			"title": "Profile",
+			"firstName": "First Name",
+			"lastName": "Last Name"
 		}
+	},
+	"actions": {
+		"save": "Save",
+		"saveSuccess": "Saved successfully"
 	}
 }

@@ -11,14 +11,14 @@
 	let emailAddress = '';
 	let password = '';
 
-	isAuthenticated.subscribe((value) => {
+	isAuthenticated.subscribe(value => {
 		if (value) {
 			// This will get triggered on a successful login
 			goto(returnUrl);
 		}
 	});
 
-	async function handleLogin() {
+	async function handleSubmit() {
 		await login(emailAddress, password);
 	}
 </script>
@@ -51,7 +51,7 @@
 							bind:value={password}
 						/>
 					</Label>
-					<Button type="button" class="w-full1" on:click={() => handleLogin()}
+					<Button type="button" class="w-full1" on:click={() => handleSubmit()}
 						>{$i18n('pages.login.signIn')}</Button
 					>
 					{#if Is.stringValue($authenticationError)}
@@ -63,7 +63,7 @@
 						{$i18n('pages.login.noAccount')}
 						<a
 							href="/authentication/signup"
-							class="text-primary-600 dark:text-primary-500 font-medium hover:underline"
+							class="font-medium text-primary-600 hover:underline dark:text-primary-500"
 							>{$i18n('pages.login.signUp')}</a
 						>
 					</p>
