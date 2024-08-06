@@ -11,8 +11,7 @@ import {
 import {
 	type ILoggingConnector,
 	LoggingConnectorFactory,
-	MultiLoggingConnector,
-	SystemLoggingConnector
+	MultiLoggingConnector
 } from "@gtsc/logging-models";
 import { LoggingService } from "@gtsc/logging-service";
 import { nameof } from "@gtsc/nameof";
@@ -38,17 +37,12 @@ export function initialiseSystemLoggingConnector(options: IOptions, services: IS
 		hideGroups: true
 	});
 	services.push(consoleLoggingConnector);
-	LoggingConnectorFactory.register("system-console", () => consoleLoggingConnector);
 
-	// Create a system logging connector which wraps the console logger and automatically logs to the system partition.
-	systemLoggingConnector = new SystemLoggingConnector({
-		loggingConnectorType: "system-console",
-		systemPartitionId: options.systemConfig.systemPartitionId
-	});
-	services.push(systemLoggingConnector);
+	systemLoggingConnector = consoleLoggingConnector;
+
 	LoggingConnectorFactory.register(
 		options.systemLoggingConnectorName,
-		() => systemLoggingConnector
+		() => consoleLoggingConnector
 	);
 
 	showDetail = options.debug;

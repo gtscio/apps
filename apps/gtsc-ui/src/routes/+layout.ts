@@ -3,7 +3,7 @@
 import { init as initApiInformation } from "../stores/apiInformation";
 import { init as initAuthentication } from "../stores/authentication";
 import { init as initLocales } from "../stores/i18n";
-import { PUBLIC_GTSC_API_KEY, PUBLIC_GTSC_API_URL } from "$env/static/public";
+import { PUBLIC_GTSC_API_URL } from "$env/static/public";
 
 /**
  * Perform a load.
@@ -12,6 +12,6 @@ import { PUBLIC_GTSC_API_KEY, PUBLIC_GTSC_API_URL } from "$env/static/public";
  */
 export async function load(params: { fetch: typeof window.fetch }): Promise<void> {
 	await initLocales(params.fetch);
-	await initApiInformation(PUBLIC_GTSC_API_URL, PUBLIC_GTSC_API_KEY);
-	await initAuthentication(PUBLIC_GTSC_API_URL, PUBLIC_GTSC_API_KEY);
+	await initApiInformation(PUBLIC_GTSC_API_URL);
+	await initAuthentication(PUBLIC_GTSC_API_URL);
 }

@@ -3,17 +3,19 @@
 import { Coerce, GeneralError, I18n } from "@gtsc/core";
 import {
 	EntityStorageIdentityConnector,
+	EntityStorageIdentityProfileConnector,
 	type IdentityDocument,
+	type IdentityProfile,
 	initSchema as initSchemaIdentityStorage
 } from "@gtsc/identity-connector-entity-storage";
 import { IotaIdentityConnector } from "@gtsc/identity-connector-iota";
-import { IdentityConnectorFactory, type IIdentityConnector } from "@gtsc/identity-models";
 import {
-	type IdentityProfile,
-	IdentityProfileService,
-	IdentityService,
-	initSchema as initSchemaIdentity
-} from "@gtsc/identity-service";
+	IdentityConnectorFactory,
+	IdentityProfileConnectorFactory,
+	type IIdentityProfileConnector,
+	type IIdentityConnector
+} from "@gtsc/identity-models";
+import { IdentityProfileService, IdentityService } from "@gtsc/identity-service";
 import { nameof } from "@gtsc/nameof";
 import { type IService, ServiceFactory } from "@gtsc/services";
 import { initialiseEntityStorageConnector } from "./entityStorage.js";
@@ -31,22 +33,9 @@ export const IDENTITY_PROFILE_SERVICE_NAME = "identity-profile";
 export function initialiseIdentityService(options: IOptions, services: IService[]): void {
 	systemLogInfo(I18n.formatMessage("apiServer.configuring", { element: "Identity Service" }));
 
-	initSchemaIdentity();
-
-	initialiseEntityStorageConnector(
-		options,
-		services,
-		options.envVars.GTSC_IDENTITY_PROFILE_ENTITY_STORAGE_TYPE,
-		nameof<IdentityProfile>()
-	);
-
 	const service = new IdentityService();
 	services.push(service);
 	ServiceFactory.register(IDENTITY_SERVICE_NAME, () => service);
-
-	const serviceProfile = new IdentityProfileService();
-	services.push(serviceProfile);
-	ServiceFactory.register(IDENTITY_PROFILE_SERVICE_NAME, () => serviceProfile);
 }
 
 /**
@@ -67,6 +56,7 @@ export function initialiseIdentityConnectorFactory(options: IOptions, services: 
 	if (type === "iota") {
 		connector = new IotaIdentityConnector({
 			vaultConnectorType: options.envVars.GTSC_VAULT_CONNECTOR,
+			walletConnectorType: options.envVars.GTSC_WALLET_CONNECTOR,
 			config: {
 				clientOptions: {
 					nodes: [options.envVars.GTSC_IOTA_NODE_URL],
@@ -77,7 +67,7 @@ export function initialiseIdentityConnectorFactory(options: IOptions, services: 
 		});
 		namespace = IotaIdentityConnector.NAMESPACE;
 	} else if (type === "entity-storage") {
-		initSchemaIdentityStorage();
+		initSchemaIdentityStorage({ includeProfile: false });
 		initialiseEntityStorageConnector(
 			options,
 			services,
@@ -97,4 +87,61 @@ export function initialiseIdentityConnectorFactory(options: IOptions, services: 
 
 	services.push(connector);
 	IdentityConnectorFactory.register(namespace, () => connector);
+}
+
+/**
+ * Initialise the identity profile service.
+ * @param options The options for the web server.
+ * @param services The services.
+ */
+export function initialiseIdentityProfileService(options: IOptions, services: IService[]): void {
+	systemLogInfo(
+		I18n.formatMessage("apiServer.configuring", { element: "Identity Profile Service" })
+	);
+
+	const serviceProfile = new IdentityProfileService({
+		profileEntityConnectorType: options.envVars.GTSC_IDENTITY_PROFILE_CONNECTOR
+	});
+	services.push(serviceProfile);
+	ServiceFactory.register(IDENTITY_PROFILE_SERVICE_NAME, () => serviceProfile);
+}
+
+/**
+ * Initialise the identity profile connector factory.
+ * @param options The options for the web server.
+ * @param services The services.
+ * @throws GeneralError if the connector type is unknown.
+ */
+export function initialiseIdentityProfileConnectorFactory(
+	options: IOptions,
+	services: IService[]
+): void {
+	systemLogInfo(
+		I18n.formatMessage("apiServer.configuring", { element: "Identity Profile Connector Factory" })
+	);
+
+	const type = options.envVars.GTSC_IDENTITY_PROFILE_CONNECTOR;
+
+	let connector: IIdentityProfileConnector;
+	let namespace: string;
+	if (type === "entity-storage") {
+		initSchemaIdentityStorage({ includeDocument: false });
+
+		initialiseEntityStorageConnector(
+			options,
+			services,
+			options.envVars.GTSC_IDENTITY_PROFILE_ENTITY_STORAGE_TYPE,
+			nameof<IdentityProfile>()
+		);
+		connector = new EntityStorageIdentityProfileConnector();
+		namespace = EntityStorageIdentityProfileConnector.NAMESPACE;
+	} else {
+		throw new GeneralError("apiServer", "serviceUnknownType", {
+			type,
+			serviceType: "identityProfileConnector"
+		});
+	}
+
+	services.push(connector);
+	IdentityProfileConnectorFactory.register(namespace, () => connector);
 }

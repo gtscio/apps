@@ -1,12 +1,11 @@
 ### Creates an nft
 
 POST http://localhost:3000/nft
-x-api-key: fu2NApKBVBJyEVotdazUQZAO34/gEytqV9u4rGElRKk=
-authorization: Bearer eyJhbGciOiJFZERTQSIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJkaWQ6aW90YTp0c3Q6MHhhOThiZjYzMzgxYjRlMTAxZGQ4MjVhMmU2YzBiZWI2OTAyYThhNjNlMDc5YTgwNzA4ZDg5ZThjMTY5ZWNhMGJjIiwiZXhwIjoxNzIyNDExODY1fQ._Ph9eCZQVpX5HuR72hiGOI5zIlJ0wQsijadOjpQRNsABOv8-ZqGTWQxmtDF68dFGtY9PQ7IbjHrbBg_KBqclAw
+cookie: access_token=eyJhbGciOiJFZERTQSIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJkaWQ6aW90YTp0c3Q6MHhlYjY2OWMzMmIwOGU3M2UwMGIyZjNhZmMwYmI5NDkxMzMyOWE3ZjcwZDNjYTc4YTdjMjlmNDIxNzhhYTNiYzYzIiwiZXhwIjoxNzIyOTM3MDc3fQ.HdPTasafY307PzP6gUrczSwzuF0GPZ2d-ecAtJh6zBrQFuq4hB2T163s-tGmcPahwrFA9lasBT13vL5GyoBICQ
 content-type: application/json
 
 {
-	"issuer": "did:entity-storage:0x33e61d1f90a2afee012064cf2cb35783dfecee4621c247734b98e4fa47fc1d4b",
+	"issuer": "tst1qzcs7xqax2rajn6kn5y52w2x9x7q3qvfphf0nte7yjpswufvgasrstt4eny",
 	"tag": "MY_NFT",
 	"immutableMetadata": {
 		"name": "My NFT",

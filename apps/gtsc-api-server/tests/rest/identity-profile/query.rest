@@ -1,8 +1,5 @@
-### Creates an identity profile
+## Query the identity profiles
 
-POST http://localhost:3000/identity/profile
+GET http://localhost:3000/identity/profile/query
 cookie: access_token=eyJhbGciOiJFZERTQSIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJkaWQ6aW90YTp0c3Q6MHhlYjY2OWMzMmIwOGU3M2UwMGIyZjNhZmMwYmI5NDkxMzMyOWE3ZjcwZDNjYTc4YTdjMjlmNDIxNzhhYTNiYzYzIiwiZXhwIjoxNzIyOTM3MDc3fQ.HdPTasafY307PzP6gUrczSwzuF0GPZ2d-ecAtJh6zBrQFuq4hB2T163s-tGmcPahwrFA9lasBT13vL5GyoBICQ
 content-type: application/json
-
-{
-}

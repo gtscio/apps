@@ -2,21 +2,12 @@
 // SPDX-License-Identifier: Apache-2.0.
 import {
 	type AuthenticationUser,
-	AuthCookieProcessor,
+	AuthHeaderProcessor,
 	EntityStorageAuthenticationService,
 	initSchema as initSchemaAuthEntityStorage
 } from "@gtsc/api-auth-entity-storage-service";
 import type { IHttpRestRouteProcessor } from "@gtsc/api-models";
-import {
-	type ApiKey,
-	ApiKeyPartitionProcessor,
-	initSchema as initSchemaApi,
-	LoggingProcessor,
-	RouteProcessor,
-	StaticPartitionProcessor,
-	StaticUserIdentityProcessor,
-	SystemIdentityProcessor
-} from "@gtsc/api-processors";
+import { LoggingProcessor, RouteProcessor, SystemIdentityProcessor } from "@gtsc/api-processors";
 import { GeneralError } from "@gtsc/core";
 import { nameof } from "@gtsc/nameof";
 import { type IService, ServiceFactory } from "@gtsc/services";
@@ -50,8 +41,6 @@ export function buildProcessors(
 
 	restRouteProcessors.push(new SystemIdentityProcessor());
 
-	buildPartitionProcessors(options, restRouteProcessors, services);
-
 	buildAuthProcessors(options, restRouteProcessors, services);
 
 	restRouteProcessors.push(
@@ -79,15 +68,7 @@ function buildAuthProcessors(
 	restRouteProcessors: IHttpRestRouteProcessor[],
 	services: IService[]
 ): void {
-	if (options.envVars.GTSC_AUTH_PROCESSOR_TYPE === "static") {
-		restRouteProcessors.push(
-			new StaticUserIdentityProcessor({
-				config: {
-					userIdentity: options.envVars.GTSC_AUTH_USER_STATIC_IDENTITY
-				}
-			})
-		);
-	} else if (options.envVars.GTSC_AUTH_PROCESSOR_TYPE === "entity-storage") {
+	if (options.envVars.GTSC_AUTH_PROCESSOR_TYPE === "entity-storage") {
 		initSchemaAuthEntityStorage();
 		initialiseEntityStorageConnector(
 			options,
@@ -107,7 +88,7 @@ function buildAuthProcessors(
 		ServiceFactory.register(AUTH_SERVICE_NAME, () => authenticationService);
 
 		restRouteProcessors.push(
-			new AuthCookieProcessor({
+			new AuthHeaderProcessor({
 				vaultConnectorType: options.envVars.GTSC_VAULT_CONNECTOR,
 				config: {
 					signingKeyName: AUTH_SIGNING_NAME_VAULT_KEY
@@ -118,43 +99,6 @@ function buildAuthProcessors(
 		throw new GeneralError("apiServer", "processorUnknownType", {
 			type: options.envVars.GTSC_AUTH_PROCESSOR_TYPE,
 			processorType: "authProcessor"
-		});
-	}
-}
-
-/**
- * Build the partition processors.
- * @param options The options for the web server.
- * @param restRouteProcessors The REST route processors.
- * @param services The services.
- * @throws If the partition processor type is unknown.
- */
-function buildPartitionProcessors(
-	options: IOptions,
-	restRouteProcessors: IHttpRestRouteProcessor[],
-	services: IService[]
-): void {
-	if (options.envVars.GTSC_PARTITION_PROCESSOR_TYPE === "static") {
-		restRouteProcessors.push(
-			new StaticPartitionProcessor({
-				config: {
-					partitionId: options.envVars.GTSC_PARTITION_STATIC_PARTITION_ID
-				}
-			})
-		);
-	} else if (options.envVars.GTSC_PARTITION_PROCESSOR_TYPE === "api-key") {
-		initSchemaApi();
-		initialiseEntityStorageConnector(
-			options,
-			services,
-			options.envVars.GTSC_PARTITION_API_KEY_ENTITY_STORAGE_TYPE,
-			nameof<ApiKey>()
-		);
-		restRouteProcessors.push(new ApiKeyPartitionProcessor());
-	} else {
-		throw new GeneralError("apiServer", "processorUnknownType", {
-			type: options.envVars.GTSC_PARTITION_PROCESSOR_TYPE,
-			processorType: "partitionProcessor"
 		});
 	}
 }

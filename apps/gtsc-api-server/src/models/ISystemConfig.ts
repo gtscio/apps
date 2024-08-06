@@ -6,11 +6,6 @@
  */
 export interface ISystemConfig {
 	/**
-	 * The partition id for the system data.
-	 */
-	systemPartitionId: string;
-
-	/**
 	 * The identity for the system.
 	 */
 	systemIdentity: string;

@@ -8,11 +8,6 @@ import type { IOptions } from "./models/IOptions";
 /**
  * Starts the web server.
  * @param options The options for the web server.
- * @param options.webServerOptions The options for the web server.
- * @param options.rootPackageFolder The root package folder.
- * @param options.debug Whether to run in debug mode.
- * @param options.envVars The environment variables.
- * @param options.systemPartitionId The system partition id.
  * @param restRouteProcessors The REST route processors.
  * @param routes The routes to serve.
  * @param stopCallback Callback to call when the server is stopped.

@@ -1,7 +1,3 @@
-### With no API Key should auth fail with apiKeyMissing
+### Should return the spec
 GET http://localhost:3000/spec
-
-### With API Key should return
-GET http://localhost:3000/spec
-x-api-key: fu2NApKBVBJyEVotdazUQZAO34/gEytqV9u4rGElRKk=
 

@@ -67,7 +67,6 @@ INFO [2024-07-24T08:35:58.762Z] Configuring Identity Connector Factory
 INFO [2024-07-24T08:35:58.762Z] Configuring Entity Storage with name "identity-document" using "file" connector
 INFO [2024-07-24T08:35:58.763Z] Configuring Identity Service
 INFO [2024-07-24T08:35:58.763Z] Configuring Entity Storage with name "identity-profile" using "file" connector
-INFO [2024-07-24T08:35:58.763Z] Configuring Entity Storage with name "api-key" using "file" connector
 INFO [2024-07-24T08:35:58.764Z] Configuring Entity Storage with name "authentication-user" using "file" connector
 INFO [2024-07-24T08:35:58.764Z] Bootstrap FileEntityStorageConnector
 INFO [2024-07-24T08:35:58.765Z] Creating directory "/gtsc/data/vault-key"
@@ -81,17 +80,12 @@ INFO [2024-07-24T08:35:58.770Z] Created directory "/gtsc/data/identity"
 INFO [2024-07-24T08:35:58.770Z] Bootstrap FileEntityStorageConnector
 INFO [2024-07-24T08:35:58.771Z] Creating directory "/gtsc/data/identity-profile"
 INFO [2024-07-24T08:35:58.772Z] Created directory "/gtsc/data/identity-profile"
-INFO [2024-07-24T08:35:58.772Z] Bootstrap FileEntityStorageConnector
-INFO [2024-07-24T08:35:58.773Z] Creating directory "/gtsc/data/api-key"
-INFO [2024-07-24T08:35:58.774Z] Created directory "/gtsc/data/api-key"
 INFO [2024-07-24T08:35:58.774Z] Bootstrap FileEntityStorageConnector
 INFO [2024-07-24T08:35:58.775Z] Creating directory "/gtsc/data/auth-user"
 INFO [2024-07-24T08:35:58.776Z] Created directory "/gtsc/data/auth-user"
 INFO [2024-07-24T08:35:58.776Z] Bootstrap EntityStorageAuthenticationService
 INFO [2024-07-24T08:35:58.829Z] The signing encryption key was created in the vault
 INFO [2024-07-24T08:35:58.839Z] The default system user has been created, email: "system@system", password: "Jn2D0CyQu?DhZRGV"
-INFO [2024-07-24T08:35:58.839Z] Bootstrap ApiKeyPartitionProcessor
-INFO [2024-07-24T08:35:58.848Z] The System API Key was created, it is "QnT8ZiIIPEIfqEgLCTN2BE/NGYmul9xldFH/1s/RmLw="
 ```
 
 You will see it generated an API key and system user with password for future use, these should be recorded as they will not be made visible again.
@@ -121,11 +115,9 @@ INFO [2024-07-24T08:43:02.993Z] Configuring Identity Connector Factory
 INFO [2024-07-24T08:43:02.994Z] Configuring Entity Storage with name "identity-document" using "file" connector
 INFO [2024-07-24T08:43:02.994Z] Configuring Identity Service
 INFO [2024-07-24T08:43:02.994Z] Configuring Entity Storage with name "identity-profile" using "file" connector
-INFO [2024-07-24T08:43:02.994Z] Configuring Entity Storage with name "api-key" using "file" connector
 INFO [2024-07-24T08:43:02.995Z] Configuring Entity Storage with name "authentication-user" using "file" connector
 INFO [2024-07-24T08:43:02.995Z] Starting InformationService
 INFO [2024-07-24T08:43:02.997Z] Starting EntityStorageAuthenticationService
-INFO [2024-07-24T08:43:02.998Z] Starting ApiKeyPartitionProcessor
 INFO [2024-07-24T08:43:02.998Z] Starting EntityStorageAuthenticationProcessor
 INFO [2024-07-24T08:43:03.002Z] Building Web Server
 INFO [2024-07-24T08:43:03.008Z] Added REST route "/" "GET"
@@ -143,7 +135,7 @@ INFO [2024-07-24T08:43:03.013Z] Starting Web Server at address "0.0.0.0" on port
 INFO [2024-07-24T08:43:03.017Z] The Web Server started on http://0.0.0.0:3000
 ```
 
-You should now be able to access the server in the browser [http://localhost:3000/info?x-api-key=QnT8ZiIIPEIfqEgLCTN2BE/NGYmul9xldFH/1s/RmLw=](http://localhost:3000/info?x-api-key=QnT8ZiIIPEIfqEgLCTN2BE/NGYmul9xldFH/1s/RmLw=) you should replace the `x-api-key` value the one generated during the bootstrap process.
+You should now be able to access the server in the browser [http://localhost:3000/info](http://localhost:3000/info).
 
 On successfully communicating with the server you should see something similar to the following returned from the request:
 

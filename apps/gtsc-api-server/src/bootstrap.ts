@@ -1,7 +1,6 @@
 // Copyright 2024 IOTA Stiftung.
 // SPDX-License-Identifier: Apache-2.0.
 import { PasswordHelper, type AuthenticationUser } from "@gtsc/api-auth-entity-storage-service";
-import type { ApiKey } from "@gtsc/api-processors";
 import { Converter, I18n, Is, RandomHelper, StringHelper } from "@gtsc/core";
 import { Bip39, PasswordGenerator } from "@gtsc/crypto";
 import {
@@ -11,7 +10,7 @@ import {
 import { IotaIdentityUtils } from "@gtsc/identity-connector-iota";
 import { IdentityConnectorFactory } from "@gtsc/identity-models";
 import { nameof } from "@gtsc/nameof";
-import type { IService, IServiceRequestContext } from "@gtsc/services";
+import type { IService } from "@gtsc/services";
 import { VaultConnectorFactory, VaultKeyType } from "@gtsc/vault-models";
 import type { WalletAddress } from "@gtsc/wallet-connector-entity-storage";
 import { WalletConnectorFactory } from "@gtsc/wallet-models";
@@ -36,7 +35,6 @@ export async function bootstrap(options: IOptions, services: IService[]): Promis
 	}
 
 	await bootstrapSystem(options);
-	await bootstrapPartition(options);
 	await bootstrapAuth(options);
 
 	if (!hasIdentity) {
@@ -63,12 +61,7 @@ export async function bootstrapSystem(options: IOptions): Promise<void> {
 		// But we have a chicken and egg problem in that we can't create the identity
 		// to store the mnemonic in the vault without an identity. We use a temporary identity
 		// and then replace it with the new identity later in the process.
-		const tempSystemIdentity = `temp:${Converter.bytesToBase64(RandomHelper.generate(32))}`;
-		const systemRequestContext: IServiceRequestContext = {
-			partitionId: options.systemConfig.systemPartitionId,
-			systemIdentity: tempSystemIdentity,
-			userIdentity: tempSystemIdentity
-		};
+		const bootstrapSystemIdentity = `bootstrap-${Converter.bytesToBase64(RandomHelper.generate(32))}`;
 
 		// Create a secure mnemonic and store it in the vault so that wallet operations
 		// can be performed
@@ -76,11 +69,11 @@ export async function bootstrapSystem(options: IOptions): Promise<void> {
 		systemLogInfo(I18n.formatMessage("apiServer.generatingMnemonic", { mnemonic }));
 
 		const vaultConnector = VaultConnectorFactory.get(options.envVars.GTSC_VAULT_CONNECTOR);
-		await vaultConnector.setSecret("mnemonic", mnemonic, systemRequestContext);
+		await vaultConnector.setSecret(`${bootstrapSystemIdentity}/mnemonic`, mnemonic);
 
 		// Generate an address from the wallet, this will use the mnemonic from above
 		const walletConnector = WalletConnectorFactory.get(options.envVars.GTSC_WALLET_CONNECTOR);
-		const addresses = await walletConnector.getAddresses(0, 5, systemRequestContext);
+		const addresses = await walletConnector.getAddresses(bootstrapSystemIdentity, 0, 5);
 
 		let address0 = addresses[0];
 
@@ -91,16 +84,13 @@ export async function bootstrapSystem(options: IOptions): Promise<void> {
 		systemLogInfo(I18n.formatMessage("apiServer.fundingWallet", { address: address0 }));
 
 		// Add some funds to the wallet from the faucet
-		await walletConnector.ensureBalance(addresses[0], 1000000000n, undefined, systemRequestContext);
+		await walletConnector.ensureBalance(bootstrapSystemIdentity, addresses[0], 1000000000n);
 
 		systemLogInfo(I18n.formatMessage("apiServer.generatingSystemIdentity"));
 
 		// Now create an identity for the system controlled by the address we just funded
 		const identityConnector = IdentityConnectorFactory.get(options.envVars.GTSC_IDENTITY_CONNECTOR);
-		const identityDocument = await identityConnector.createDocument(
-			addresses[0],
-			systemRequestContext
-		);
+		const identityDocument = await identityConnector.createDocument(bootstrapSystemIdentity);
 
 		if (options.envVars.GTSC_IDENTITY_CONNECTOR === "iota") {
 			systemLogInfo(
@@ -116,10 +106,10 @@ export async function bootstrapSystem(options: IOptions): Promise<void> {
 			const walletAddress = EntityStorageConnectorFactory.get<
 				IEntityStorageConnector<WalletAddress>
 			>(StringHelper.kebabCase(nameof<WalletAddress>()));
-			const addr = await walletAddress.get(addresses[0], undefined, systemRequestContext);
+			const addr = await walletAddress.get(addresses[0]);
 			if (!Is.empty(addr)) {
 				addr.identity = identityDocument.id;
-				await walletAddress.set(addr, systemRequestContext);
+				await walletAddress.set(addr);
 			}
 		}
 
@@ -128,73 +118,25 @@ export async function bootstrapSystem(options: IOptions): Promise<void> {
 
 		// Now that we have an identity we can remove the temporary one
 		// and store the mnemonic with the new identity
-		await vaultConnector.removeSecret("mnemonic", systemRequestContext);
+		await vaultConnector.removeSecret(`${bootstrapSystemIdentity}/mnemonic`);
 
-		systemRequestContext.systemIdentity = identityDocument.id;
-		systemRequestContext.userIdentity = identityDocument.id;
-
-		await vaultConnector.setSecret("mnemonic", mnemonic, systemRequestContext);
+		await vaultConnector.setSecret(`${identityDocument.id}/mnemonic`, mnemonic);
 
 		// Add attestation verification method to DID, the correct system context is now in place
 		// so the keys for the verification method will be stored correctly
 		systemLogInfo(I18n.formatMessage("apiServer.addingAttestation"));
 		await identityConnector.addVerificationMethod(
 			identityDocument.id,
+			identityDocument.id,
 			"assertionMethod",
-			"attestation",
-			systemRequestContext
+			"attestation"
 		);
 
-		systemLogInfo(
-			I18n.formatMessage("apiServer.systemPartition", {
-				partition: options.systemConfig.systemPartitionId
-			})
-		);
 		systemLogInfo(
 			I18n.formatMessage("apiServer.systemIdentity", {
 				identity: options.systemConfig.systemIdentity
 			})
 		);
-	}
-}
-
-/**
- * Bootstrap the partitioning.
- * @param options The options for the web server.
- */
-export async function bootstrapPartition(options: IOptions): Promise<void> {
-	if (options.envVars.GTSC_PARTITION_PROCESSOR_TYPE === "api-key") {
-		// Create a new API key for the system if one does not exist
-		const systemRequestContext: IServiceRequestContext = {
-			partitionId: options.systemConfig.systemPartitionId,
-			systemIdentity: options.systemConfig.systemIdentity,
-			userIdentity: options.systemConfig.systemIdentity
-		};
-
-		const apiKeyEntityStorage = EntityStorageConnectorFactory.get<IEntityStorageConnector<ApiKey>>(
-			StringHelper.kebabCase(nameof<ApiKey>())
-		);
-
-		const systemApiKey = await apiKeyEntityStorage.get(
-			options.systemConfig.systemIdentity,
-			"owner",
-			systemRequestContext
-		);
-
-		if (Is.empty(systemApiKey?.key)) {
-			const apiKey = Converter.bytesToBase64(RandomHelper.generate(32));
-
-			systemLogInfo(I18n.formatMessage("apiServer.systemApiKey", { apiKey }));
-
-			await apiKeyEntityStorage.set(
-				{
-					key: apiKey,
-					partitionId: options.systemConfig.systemPartitionId,
-					owner: options.systemConfig.systemIdentity
-				},
-				systemRequestContext
-			);
-		}
 	}
 }
 
@@ -205,29 +147,21 @@ export async function bootstrapPartition(options: IOptions): Promise<void> {
 export async function bootstrapAuth(options: IOptions): Promise<void> {
 	if (options.envVars.GTSC_AUTH_PROCESSOR_TYPE === "entity-storage") {
 		// Create a new JWT signing key and a user login for the system if one does not exist
-		const systemRequestContext: IServiceRequestContext = {
-			partitionId: options.systemConfig.systemPartitionId,
-			systemIdentity: options.systemConfig.systemIdentity,
-			userIdentity: options.systemConfig.systemIdentity
-		};
-
 		// Create the signing key for the JWT token
 		let hasSigningKey = false;
 		const vaultConnector = VaultConnectorFactory.get(options.envVars.GTSC_VAULT_CONNECTOR);
 
 		try {
 			const vaultKey = await vaultConnector.getKey(
-				AUTH_SIGNING_NAME_VAULT_KEY,
-				systemRequestContext
+				`${options.systemConfig.systemIdentity}/${AUTH_SIGNING_NAME_VAULT_KEY}`
 			);
 			hasSigningKey = Is.notEmpty(vaultKey);
 		} catch {}
 
 		if (!hasSigningKey) {
 			await vaultConnector.createKey(
-				AUTH_SIGNING_NAME_VAULT_KEY,
-				VaultKeyType.Ed25519,
-				systemRequestContext
+				`${options.systemConfig.systemIdentity}/${AUTH_SIGNING_NAME_VAULT_KEY}`,
+				VaultKeyType.Ed25519
 			);
 		}
 
@@ -238,11 +172,7 @@ export async function bootstrapAuth(options: IOptions): Promise<void> {
 
 		let hasSystemUser = false;
 		try {
-			const systemUser = await authUserEntityStorage.get(
-				"system@system",
-				undefined,
-				systemRequestContext
-			);
+			const systemUser = await authUserEntityStorage.get("system@system");
 			hasSystemUser = Is.notEmpty(systemUser);
 		} catch {}
 
@@ -265,7 +195,7 @@ export async function bootstrapAuth(options: IOptions): Promise<void> {
 				I18n.formatMessage("apiServer.systemUserPassword", { password: generatedPassword })
 			);
 
-			await authUserEntityStorage.set(systemUser, systemRequestContext);
+			await authUserEntityStorage.set(systemUser);
 		}
 	}
 }

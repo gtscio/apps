@@ -21,14 +21,10 @@ let informationClient: InformationClient | undefined;
 /**
  * Initialize the API information.
  * @param apiUrl The API url.
- * @param apiKey The API key.
  */
-export async function init(apiUrl: string, apiKey: string): Promise<void> {
+export async function init(apiUrl: string): Promise<void> {
 	informationClient = new InformationClient({
 		endpoint: apiUrl,
-		headers: {
-			"X-API-Key": apiKey
-		},
 		pathPrefix: ""
 	});
 

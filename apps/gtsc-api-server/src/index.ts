@@ -3,7 +3,7 @@
 import type { IServerInfo } from "@gtsc/api-models";
 import { CLIDisplay } from "@gtsc/cli-core";
 import { BaseError, I18n, Is } from "@gtsc/core";
-import type { IService, IServiceRequestContext } from "@gtsc/services";
+import type { IService } from "@gtsc/services";
 import { bootstrap } from "./bootstrap.js";
 import { configure, findRootPackageFolder } from "./configure.js";
 import { initialiseLocales } from "./locales.js";
@@ -20,6 +20,8 @@ import {
 import { initialiseFaucetConnectorFactory } from "./services/faucet.js";
 import {
 	initialiseIdentityConnectorFactory,
+	initialiseIdentityProfileConnectorFactory,
+	initialiseIdentityProfileService,
 	initialiseIdentityService
 } from "./services/identity.js";
 import { initialiseInformationService } from "./services/information.js";
@@ -67,8 +69,15 @@ try {
 
 	initialiseVaultConnectorFactory(options, services);
 
+	initialiseWalletStorage(options, services);
+	initialiseFaucetConnectorFactory(options, services);
+	initialiseWalletConnectorFactory(options, services);
+
 	initialiseIdentityConnectorFactory(options, services);
 	initialiseIdentityService(options, services);
+
+	initialiseIdentityProfileConnectorFactory(options, services);
+	initialiseIdentityProfileService(options, services);
 
 	initialiseLoggingConnectorFactory(options, services);
 	initialiseLoggingService(options, services);
@@ -85,10 +94,6 @@ try {
 	initialiseAttestationConnectorFactory(options, services);
 	initialiseAttestationService(options, services);
 
-	initialiseWalletStorage(options, services);
-	initialiseFaucetConnectorFactory(options, services);
-	initialiseWalletConnectorFactory(options, services);
-
 	const processors = buildProcessors(options, services);
 
 	if (options.bootstrap) {
@@ -97,15 +102,13 @@ try {
 		CLIDisplay.break();
 		CLIDisplay.done();
 	} else {
-		const systemRequestContext: IServiceRequestContext = {
-			partitionId: options.systemConfig.systemPartitionId,
-			systemIdentity: options.systemConfig.systemIdentity
-		};
-
 		for (const service of services) {
 			if (Is.function(service.start)) {
 				systemLogInfo(I18n.formatMessage("apiServer.starting", { element: service.CLASS_NAME }));
-				await service.start(systemRequestContext, options.systemLoggingConnectorName);
+				await service.start(
+					options.systemConfig.systemIdentity,
+					options.systemLoggingConnectorName
+				);
 			}
 		}
 
@@ -113,7 +116,10 @@ try {
 			for (const service of services) {
 				if (Is.function(service.stop)) {
 					systemLogInfo(I18n.formatMessage("apiServer.stopping", { element: service.CLASS_NAME }));
-					await service.stop(systemRequestContext, options.systemLoggingConnectorName);
+					await service.stop(
+						options.systemConfig.systemIdentity,
+						options.systemLoggingConnectorName
+					);
 				}
 			}
 		});

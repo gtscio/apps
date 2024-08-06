@@ -31,6 +31,5 @@
 			"package": "@gtsc/attestation-service"
 		}
 	],
-	"partitionMethods": ["apiKeyHeader"],
 	"authMethods": ["jwtBearer"]
 }

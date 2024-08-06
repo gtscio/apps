@@ -4,7 +4,7 @@ import path from "node:path";
 import { fileURLToPath } from "node:url";
 import type { IWebServerOptions } from "@gtsc/api-models";
 import { CLIUtils } from "@gtsc/cli-core";
-import { Coerce, Converter, GeneralError, Is, RandomHelper } from "@gtsc/core";
+import { Coerce, GeneralError, Is } from "@gtsc/core";
 import type { HttpMethod } from "@gtsc/web";
 import * as dotenv from "dotenv";
 import type { IOptions } from "./models/IOptions";
@@ -73,10 +73,7 @@ export async function configure(rootPackageFolder: string): Promise<IOptions> {
 
 	if (!Is.object<ISystemConfig>(systemConfig)) {
 		if (bootstrap) {
-			// There is no system configuration, create one with a random partition id.
-			// This is the system partition id and not the one used for data.
 			systemConfig = {
-				systemPartitionId: Converter.bytesToHex(RandomHelper.generate(16)),
 				systemIdentity: ""
 			};
 

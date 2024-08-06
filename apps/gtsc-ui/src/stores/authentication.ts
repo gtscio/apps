@@ -16,14 +16,10 @@ let intervalId: number | undefined;
 /**
  * Initialize the API information.
  * @param apiUrl The API url.
- * @param apiKey The API key.
  */
-export async function init(apiUrl: string, apiKey: string): Promise<void> {
+export async function init(apiUrl: string): Promise<void> {
 	authenticationClient = new EntityStorageAuthenticationClient({
-		endpoint: apiUrl,
-		headers: {
-			"X-API-Key": apiKey
-		}
+		endpoint: apiUrl
 	});
 
 	// If we have reached the expiry time then we are no longer authenticated.
