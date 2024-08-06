@@ -57,8 +57,6 @@
 						/>
 					</svelte:fragment>
 				</SidebarItem>
-			{/if}
-			{#if $isAuthenticated}
 				<SidebarGroup border>
 					<SidebarItem label={$i18n('navigation.logout')} href="/authentication/logout">
 						<svelte:fragment slot="icon">
@@ -68,7 +66,8 @@
 						</svelte:fragment>
 					</SidebarItem>
 				</SidebarGroup>
-			{:else}
+			{/if}
+			{#if !$isAuthenticated}
 				<SidebarGroup>
 					<SidebarItem label={$i18n('navigation.login')} href="/authentication/login">
 						<svelte:fragment slot="icon">

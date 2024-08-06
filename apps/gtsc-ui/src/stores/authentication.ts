@@ -6,9 +6,9 @@ import { redirect } from "@sveltejs/kit";
 import { get, writable } from "svelte/store";
 import { persistent } from "../utils/persistent";
 
-export const isAuthenticated = persistent<boolean>("authenticated", false);
-export const authenticationExpiry = persistent<number>("auth-expiry", 0);
+export const isAuthenticated = writable<boolean | undefined>();
 export const authenticationError = writable<string>("");
+const authenticationExpiry = persistent<number>("auth-expiry", 0);
 
 let authenticationClient: EntityStorageAuthenticationClient | undefined;
 let intervalId: number | undefined;
@@ -22,11 +22,17 @@ export async function init(apiUrl: string): Promise<void> {
 		endpoint: apiUrl
 	});
 
-	// If we have reached the expiry time then we are no longer authenticated.
+	// The application has just started, if we have reached the expiry time
+	// then we are no longer authenticated, so set store to logged out status.
 	const expiry = get(authenticationExpiry);
-	if (expiry > 0 && expiry < Date.now()) {
-		isAuthenticated.set(false);
-		authenticationExpiry.set(0);
+	if (expiry > 0) {
+		if (expiry < Date.now()) {
+			setAsLoggedOut();
+		} else {
+			await refresh();			
+		}
+	} else {
+		setAsLoggedOut();
 	}
 
 	isAuthenticated.subscribe(async value => {
@@ -60,14 +66,13 @@ export async function login(emailAddress: string, password: string): Promise<voi
 	if (Is.object(authenticationClient)) {
 		try {
 			// Authentication token is set in cookie, so no token is returned
-			// from the login method
+			// from the login method, just capture the expiry time
 			const result = await authenticationClient.login(emailAddress, password);
 			authenticationExpiry.set(result.expiry);
 			isAuthenticated.set(true);
 		} catch (err) {
 			authenticationError.set(ErrorHelper.formatErrors(err).join("\n"));
-			isAuthenticated.set(false);
-			authenticationExpiry.set(0);
+			setAsLoggedOut();
 		}
 	}
 }
@@ -81,12 +86,9 @@ export async function logout(): Promise<void> {
 			// Authentication token is set in cookie, sending the
 			// logout request will clear the cookie
 			await authenticationClient.logout();
-			isAuthenticated.set(false);
-			authenticationExpiry.set(0);
-		} catch {
-			isAuthenticated.set(false);
-			authenticationExpiry.set(0);
-		}
+		} catch {}
+
+		setAsLoggedOut();
 	}
 }
 
@@ -100,11 +102,19 @@ export async function refresh(): Promise<void> {
 			// intermittently refresh the token to keep the session alive
 			const result = await authenticationClient.refresh();
 			authenticationExpiry.set(result.expiry);
+			isAuthenticated.set(true);
 		} catch {
-			isAuthenticated.set(false);
-			authenticationExpiry.set(0);
+			setAsLoggedOut();
 		}
 	}
+}
+
+/**
+ * Set the user as logged out.
+ */
+function setAsLoggedOut(): void {
+	isAuthenticated.set(false);
+	authenticationExpiry.set(0);
 }
 
 /**
@@ -115,9 +125,6 @@ async function startTokenRefresh(): Promise<void> {
 
 	// Every 5 minutes refresh the token.
 	intervalId = window.setInterval(async () => refresh(), 5 * 60 * 1000);
-
-	// and refresh now.
-	await refresh();
 }
 
 /**
