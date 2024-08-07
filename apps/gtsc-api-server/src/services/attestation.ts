@@ -5,7 +5,7 @@ import { IotaAttestationConnector } from "@gtsc/attestation-connector-iota";
 import { AttestationConnectorFactory, type IAttestationConnector } from "@gtsc/attestation-models";
 import { AttestationService } from "@gtsc/attestation-service";
 import { GeneralError, I18n } from "@gtsc/core";
-import { type IService, ServiceFactory } from "@gtsc/services";
+import { ServiceFactory, type IService } from "@gtsc/services";
 import { systemLogInfo } from "./logging.js";
 import type { IOptions } from "../models/IOptions.js";
 

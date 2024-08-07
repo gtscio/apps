@@ -7,7 +7,7 @@ import { MemoryBlobStorageConnector } from "@gtsc/blob-storage-connector-memory"
 import { BlobStorageConnectorFactory, type IBlobStorageConnector } from "@gtsc/blob-storage-models";
 import { BlobStorageService } from "@gtsc/blob-storage-service";
 import { GeneralError, I18n } from "@gtsc/core";
-import { type IService, ServiceFactory } from "@gtsc/services";
+import { ServiceFactory, type IService } from "@gtsc/services";
 import { systemLogInfo } from "./logging.js";
 import type { IOptions } from "../models/IOptions.js";
 

@@ -1,16 +1,16 @@
 // Copyright 2024 IOTA Stiftung.
 // SPDX-License-Identifier: Apache-2.0.
 import {
-	type AuthenticationUser,
 	AuthHeaderProcessor,
 	EntityStorageAuthenticationService,
-	initSchema as initSchemaAuthEntityStorage
+	initSchema as initSchemaAuthEntityStorage,
+	type AuthenticationUser
 } from "@gtsc/api-auth-entity-storage-service";
 import type { IHttpRestRouteProcessor } from "@gtsc/api-models";
 import { LoggingProcessor, RouteProcessor, SystemIdentityProcessor } from "@gtsc/api-processors";
 import { GeneralError } from "@gtsc/core";
 import { nameof } from "@gtsc/nameof";
-import { type IService, ServiceFactory } from "@gtsc/services";
+import { ServiceFactory, type IService } from "@gtsc/services";
 import { initialiseEntityStorageConnector } from "./entityStorage.js";
 import type { IOptions } from "../models/IOptions.js";
 

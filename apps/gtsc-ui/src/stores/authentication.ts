@@ -7,7 +7,6 @@ import { get, writable } from "svelte/store";
 import { persistent } from "../utils/persistent";
 
 export const isAuthenticated = writable<boolean | undefined>();
-export const authenticationError = writable<string>("");
 const authenticationExpiry = persistent<number>("auth-expiry", 0);
 
 let authenticationClient: EntityStorageAuthenticationClient | undefined;
@@ -61,8 +60,9 @@ export function checkAuth(url: URL): void {
  * Login the user.
  * @param emailAddress The email address.
  * @param password The password.
+ * @returns The error message if the login failed.
  */
-export async function login(emailAddress: string, password: string): Promise<void> {
+export async function login(emailAddress: string, password: string): Promise<string | undefined> {
 	if (Is.object(authenticationClient)) {
 		try {
 			// Authentication token is set in cookie, so no token is returned
@@ -71,8 +71,8 @@ export async function login(emailAddress: string, password: string): Promise<voi
 			authenticationExpiry.set(result.expiry);
 			isAuthenticated.set(true);
 		} catch (err) {
-			authenticationError.set(ErrorHelper.formatErrors(err).join("\n"));
 			setAsLoggedOut();
+			return ErrorHelper.formatErrors(err).join("\n");
 		}
 	}
 }

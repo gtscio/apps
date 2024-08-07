@@ -5,11 +5,11 @@ import { nameof } from "@gtsc/nameof";
 import type { IService } from "@gtsc/services";
 import {
 	EntityStorageVaultConnector,
+	initSchema,
 	type VaultKey,
-	type VaultSecret,
-	initSchema
+	type VaultSecret
 } from "@gtsc/vault-connector-entity-storage";
-import { type IVaultConnector, VaultConnectorFactory } from "@gtsc/vault-models";
+import { VaultConnectorFactory, type IVaultConnector } from "@gtsc/vault-models";
 import { initialiseEntityStorageConnector } from "./entityStorage.js";
 import { systemLogInfo } from "./logging.js";
 import type { IOptions } from "../models/IOptions.js";

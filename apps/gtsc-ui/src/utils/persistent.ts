@@ -1,7 +1,7 @@
 // Copyright 2024 IOTA Stiftung.
 // SPDX-License-Identifier: Apache-2.0.
-import { writable, type Writable } from "svelte/store";
 import { browser } from "$app/environment";
+import { writable, type Writable } from "svelte/store";
 
 /**
  * Persist a writable Svelte store to local storage.

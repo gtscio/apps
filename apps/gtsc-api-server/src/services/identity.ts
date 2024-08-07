@@ -4,20 +4,20 @@ import { Coerce, GeneralError, I18n } from "@gtsc/core";
 import {
 	EntityStorageIdentityConnector,
 	EntityStorageIdentityProfileConnector,
+	initSchema as initSchemaIdentityStorage,
 	type IdentityDocument,
-	type IdentityProfile,
-	initSchema as initSchemaIdentityStorage
+	type IdentityProfile
 } from "@gtsc/identity-connector-entity-storage";
 import { IotaIdentityConnector } from "@gtsc/identity-connector-iota";
 import {
 	IdentityConnectorFactory,
 	IdentityProfileConnectorFactory,
-	type IIdentityProfileConnector,
-	type IIdentityConnector
+	type IIdentityConnector,
+	type IIdentityProfileConnector
 } from "@gtsc/identity-models";
 import { IdentityProfileService, IdentityService } from "@gtsc/identity-service";
 import { nameof } from "@gtsc/nameof";
-import { type IService, ServiceFactory } from "@gtsc/services";
+import { ServiceFactory, type IService } from "@gtsc/services";
 import { initialiseEntityStorageConnector } from "./entityStorage.js";
 import { systemLogInfo } from "./logging.js";
 import type { IOptions } from "../models/IOptions.js";

@@ -1,4 +1,6 @@
 <script lang="ts">
+	// Copyright 2024 IOTA Stiftung.
+	// SPDX-License-Identifier: Apache-2.0.
 	import { page } from '$app/stores';
 	import { Sidebar, SidebarGroup, SidebarItem, SidebarWrapper } from 'flowbite-svelte';
 	import {
@@ -12,9 +14,9 @@
 	import { isAuthenticated } from '../stores/authentication';
 	import { i18n } from '../stores/i18n';
 	$: activeUrl = $page.url.pathname;
-	let activeClass =
+	const activeClass =
 		'flex items-center p-2 text-base font-normal text-primary-900 bg-primary-200 dark:bg-primary-600 rounded-lg dark:text-white hover:bg-primary-100 dark:hover:bg-gray-700';
-	let nonActiveClass =
+	const nonActiveClass =
 		'flex items-center p-2 text-base font-normal text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700';
 </script>
 

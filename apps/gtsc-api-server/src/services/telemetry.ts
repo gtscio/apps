@@ -2,14 +2,14 @@
 // SPDX-License-Identifier: Apache-2.0.
 import { GeneralError, I18n } from "@gtsc/core";
 import { nameof } from "@gtsc/nameof";
-import { type IService, ServiceFactory } from "@gtsc/services";
+import { ServiceFactory, type IService } from "@gtsc/services";
 import {
 	EntityStorageTelemetryConnector,
 	initSchema as initSchemaTelemetry,
 	type TelemetryMetric,
 	type TelemetryMetricValue
 } from "@gtsc/telemetry-connector-entity-storage";
-import { type ITelemetryConnector, TelemetryConnectorFactory } from "@gtsc/telemetry-models";
+import { TelemetryConnectorFactory, type ITelemetryConnector } from "@gtsc/telemetry-models";
 import { TelemetryService } from "@gtsc/telemetry-service";
 import { initialiseEntityStorageConnector } from "./entityStorage.js";
 import { systemLogInfo } from "./logging.js";

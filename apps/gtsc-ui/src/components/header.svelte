@@ -1,12 +1,14 @@
 <script lang="ts">
+	// Copyright 2024 IOTA Stiftung.
+	// SPDX-License-Identifier: Apache-2.0.
 	import { page } from '$app/stores';
+	import { Is } from '@gtsc/core';
+	import { PropertyHelper } from '@gtsc/schema';
 	import { Avatar, Navbar, NavBrand, NavHamburger, NavLi, NavUl } from 'flowbite-svelte';
 	import '../app.css';
-	import { i18n } from '../stores/i18n';
 	import { isAuthenticated } from '../stores/authentication';
+	import { i18n } from '../stores/i18n';
 	import { profileProperties } from '../stores/profile';
-	import { PropertyHelper } from '@gtsc/schema';
-	import { Is } from '@gtsc/core';
 
 	$: activeUrl = $page.url.pathname;
 
@@ -55,7 +57,7 @@
 	</NavUl>
 	{#if $isAuthenticated}
 		<a href="/secure/identity-profile"
-			><Avatar border class="cursor-pointer ring-primary-600 dark:ring-primary-600"
+			><Avatar border class="ring-primary-600 dark:ring-primary-600 cursor-pointer"
 				>{finalInitials}</Avatar
 			></a
 		>

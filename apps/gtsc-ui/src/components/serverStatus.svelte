@@ -1,8 +1,10 @@
 <script lang="ts">
-	import { Badge } from 'flowbite-svelte';
-	import { serverName, serverVersion, serverHealthStatus } from '../stores/apiInformation';
-	import { Is } from '@gtsc/core';
+	// Copyright 2024 IOTA Stiftung.
+	// SPDX-License-Identifier: Apache-2.0.
 	import { HealthStatus } from '@gtsc/api-models';
+	import { Is } from '@gtsc/core';
+	import { Badge } from 'flowbite-svelte';
+	import { serverHealthStatus, serverName, serverVersion } from '../stores/apiInformation';
 	import { i18n } from '../stores/i18n';
 </script>
 

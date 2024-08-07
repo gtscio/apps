@@ -1,14 +1,17 @@
 <script lang="ts">
-	import { Is } from '@gtsc/core';
+	// Copyright 2024 IOTA Stiftung.
+	// SPDX-License-Identifier: Apache-2.0.
+	import { Is, type IValidationFailure } from '@gtsc/core';
 	import { Helper } from 'flowbite-svelte';
 	import { i18n } from '../stores/i18n';
 
-	export let property: string;
-	export let validationErrors: { [id: string]: string };
+	export let validationErrors: IValidationFailure[] | undefined;
 </script>
 
-{#if Is.stringValue(validationErrors[property])}
+{#if Is.arrayValue(validationErrors)}
 	<Helper class="mt-2" color="red">
-		{$i18n(`error.${validationErrors[property]}`)}
+		{#each validationErrors as validationError}
+			{$i18n(`error.${validationError.reason}`, validationError.properties)}
+		{/each}
 	</Helper>
 {/if}

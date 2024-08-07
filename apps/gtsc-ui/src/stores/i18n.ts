@@ -1,9 +1,9 @@
 // Copyright 2024 IOTA Stiftung.
 // SPDX-License-Identifier: Apache-2.0.
+import { dev } from "$app/environment";
 import { I18n, type ILocale, type ILocaleDictionary, type ILocalesIndex } from "@gtsc/core";
 import { derived, get, writable, type Writable } from "svelte/store";
 import { persistent } from "../utils/persistent";
-import { dev } from "$app/environment";
 
 let svelteFetch: typeof window.fetch | undefined;
 

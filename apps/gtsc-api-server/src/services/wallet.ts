@@ -9,7 +9,7 @@ import {
 	type WalletAddress
 } from "@gtsc/wallet-connector-entity-storage";
 import { IotaWalletConnector } from "@gtsc/wallet-connector-iota";
-import { type IWalletConnector, WalletConnectorFactory } from "@gtsc/wallet-models";
+import { WalletConnectorFactory, type IWalletConnector } from "@gtsc/wallet-models";
 import { initialiseEntityStorageConnector } from "./entityStorage.js";
 import { systemLogInfo } from "./logging.js";
 import type { IOptions } from "../models/IOptions.js";

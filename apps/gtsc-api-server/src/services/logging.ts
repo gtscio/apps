@@ -1,7 +1,7 @@
 // Copyright 2024 IOTA Stiftung.
 // SPDX-License-Identifier: Apache-2.0.
 import { CLIDisplay } from "@gtsc/cli-core";
-import { ErrorHelper, GeneralError, I18n, type IError, Is } from "@gtsc/core";
+import { ErrorHelper, GeneralError, I18n, Is, type IError } from "@gtsc/core";
 import { ConsoleLoggingConnector } from "@gtsc/logging-connector-console";
 import {
 	EntityStorageLoggingConnector,
@@ -9,9 +9,9 @@ import {
 	type LogEntry
 } from "@gtsc/logging-connector-entity-storage";
 import {
-	type ILoggingConnector,
 	LoggingConnectorFactory,
-	MultiLoggingConnector
+	MultiLoggingConnector,
+	type ILoggingConnector
 } from "@gtsc/logging-models";
 import { LoggingService } from "@gtsc/logging-service";
 import { nameof } from "@gtsc/nameof";

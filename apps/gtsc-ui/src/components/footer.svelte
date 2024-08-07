@@ -1,7 +1,15 @@
 <script lang="ts">
-	import { Footer, FooterCopyright, FooterLinkGroup, FooterLink, Select } from 'flowbite-svelte';
-	import { i18n, locales, currentLocale } from '../stores/i18n';
-	import { DarkMode } from 'flowbite-svelte';
+	// Copyright 2024 IOTA Stiftung.
+	// SPDX-License-Identifier: Apache-2.0.
+	import {
+		DarkMode,
+		Footer,
+		FooterCopyright,
+		FooterLink,
+		FooterLinkGroup,
+		Select
+	} from 'flowbite-svelte';
+	import { currentLocale, i18n, locales } from '../stores/i18n';
 </script>
 
 <Footer class="border-t border-gray-100 bg-white px-4 py-2 dark:border-gray-700 dark:bg-gray-900">

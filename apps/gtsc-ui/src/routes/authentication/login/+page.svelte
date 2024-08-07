@@ -1,74 +1,85 @@
 <script lang="ts">
+	// Copyright 2024 IOTA Stiftung.
+	// SPDX-License-Identifier: Apache-2.0.
 	import { goto } from '$app/navigation';
 	import { page } from '$app/stores';
-	import { Is } from '@gtsc/core';
-	import { Button, Card, Input, Label } from 'flowbite-svelte';
-	import { Section } from 'flowbite-svelte-blocks';
-	import { authenticationError, isAuthenticated, login } from '../../../stores/authentication';
+	import { Is, Validation, type IValidationFailure } from '@gtsc/core';
+	import { Input, Label } from 'flowbite-svelte';
+	import ValidatedForm from '../../../components/validatedForm.svelte';
+	import ValidationError from '../../../components/validationError.svelte';
+	import { isAuthenticated, login } from '../../../stores/authentication';
 	import { i18n } from '../../../stores/i18n';
 
-	const returnUrl = $page.url.searchParams.get('returnUrl') ?? '/secure/dashboard';
-	let emailAddress = '';
+	let email = '';
 	let password = '';
+	let validationErrors: { [field in 'email' | 'password']?: IValidationFailure[] | undefined } = {};
+	let isBusy = false;
 
 	isAuthenticated.subscribe(value => {
 		if (value) {
 			// This will get triggered on a successful login
-			goto(returnUrl);
+			goto($page.url.searchParams.get('returnUrl') ?? '/secure/dashboard');
 		}
 	});
 
-	async function handleSubmit() {
-		await login(emailAddress, password);
+	async function validate(validationFailures: IValidationFailure[]): Promise<void> {
+		Validation.email('email', email, validationFailures, $i18n('pages.login.email'));
+		Validation.stringValue('password', password, validationFailures, $i18n('pages.login.password'));
+	}
+
+	async function action(): Promise<string | undefined> {
+		return login(email, password);
 	}
 </script>
 
-{#if !$isAuthenticated}
-	<Section name="login">
-		<Card>
-			<div class="space-y-4 p-6 sm:p-8 md:space-y-6">
-				<form class="flex flex-col space-y-6">
-					<h3 class="p-0 text-xl font-medium text-gray-900 dark:text-white">
-						{$i18n('pages.login.title')}
-					</h3>
-					<Label class="space-y-2">
-						<span>{$i18n('pages.login.email')}</span>
-						<Input
-							type="email"
-							name="email"
-							placeholder="name@example.com"
-							required
-							bind:value={emailAddress}
-						/>
-					</Label>
-					<Label class="space-y-2">
-						<span>{$i18n('pages.login.password')}</span>
-						<Input
-							type="password"
-							name="password"
-							placeholder="•••••"
-							required
-							bind:value={password}
-						/>
-					</Label>
-					<Button type="button" class="w-full1" on:click={() => handleSubmit()}
-						>{$i18n('pages.login.signIn')}</Button
+{#if !$isAuthenticated || true}
+	<section class="flex justify-center">
+		<ValidatedForm
+			titleResource="pages.login.title"
+			actionButtonResource="pages.login.signIn"
+			actionButtonBusyResource="pages.login.signingIn"
+			validationMethod={validate}
+			actionMethod={action}
+			actionSuccessResource=""
+			bind:validationErrors
+			bind:isBusy
+		>
+			<svelte:fragment slot="fields">
+				<Label class="space-y-2">
+					<span>{$i18n('pages.login.email')}</span>
+					<Input
+						type="email"
+						name="email"
+						placeholder="name@example.com"
+						bind:value={email}
+						color={Is.arrayValue(validationErrors.email) ? 'red' : 'base'}
+						disabled={isBusy}
+					/>
+					<ValidationError validationErrors={validationErrors.email} />
+				</Label>
+				<Label class="space-y-2">
+					<span>{$i18n('pages.login.password')}</span>
+					<Input
+						type="password"
+						name="password"
+						placeholder="•••••"
+						bind:value={password}
+						color={Is.arrayValue(validationErrors.password) ? 'red' : 'base'}
+						disabled={isBusy}
+					/>
+					<ValidationError validationErrors={validationErrors.password} />
+				</Label>
+			</svelte:fragment>
+			<svelte:fragment slot="after-action">
+				<p class="text-sm font-light text-gray-500 dark:text-gray-400">
+					{$i18n('pages.login.noAccount')}
+					<a
+						href="/authentication/signup"
+						class="text-primary-600 dark:text-primary-500 font-medium hover:underline"
+						>{$i18n('pages.login.signUp')}</a
 					>
-					{#if Is.stringValue($authenticationError)}
-						<p class="whitespace-pre-line text-sm text-red-500 dark:text-red-400">
-							{$authenticationError}
-						</p>
-					{/if}
-					<p class="text-sm font-light text-gray-500 dark:text-gray-400">
-						{$i18n('pages.login.noAccount')}
-						<a
-							href="/authentication/signup"
-							class="font-medium text-primary-600 hover:underline dark:text-primary-500"
-							>{$i18n('pages.login.signUp')}</a
-						>
-					</p>
-				</form>
-			</div>
-		</Card>
-	</Section>
+				</p>
+			</svelte:fragment>
+		</ValidatedForm>
+	</section>
 {/if}
