@@ -9,6 +9,7 @@ coverage
 *.tgz
 **/.tmp
 **/.local-data
-.env.dev
 vitest.config.ts.timestamp*
-.env
+**/.svelte-kit
+**/test-results
+/apps/workbench-server/.env
