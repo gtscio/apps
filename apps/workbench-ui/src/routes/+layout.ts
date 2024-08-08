@@ -9,11 +9,11 @@ import { init as initIdentityProfile } from "../stores/profile";
 /**
  * Perform a load.
  * @param params The parameters for the load.
- * @param params.fetch The fetch method to use.
+ * @param params.url The current URL.
  */
-export async function load(params: { fetch: typeof window.fetch }): Promise<void> {
+export async function load(params: { url: URL }): Promise<void> {
 	try {
-		await initLocales(params.fetch);
+		await initLocales(params.url);
 		await initApiInformation(PUBLIC_WORKBENCH_SERVER_URL);
 		await initAuthentication(PUBLIC_WORKBENCH_SERVER_URL);
 		await initIdentityProfile(PUBLIC_WORKBENCH_SERVER_URL);

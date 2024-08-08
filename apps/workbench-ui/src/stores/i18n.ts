@@ -1,11 +1,11 @@
 // Copyright 2024 IOTA Stiftung.
 // SPDX-License-Identifier: Apache-2.0.
 import { dev } from "$app/environment";
-import { I18n, type ILocale, type ILocaleDictionary, type ILocalesIndex } from "@gtsc/core";
+import { I18n, Is, type ILocale, type ILocaleDictionary, type ILocalesIndex } from "@gtsc/core";
 import { derived, get, writable, type Writable } from "svelte/store";
 import { persistent } from "../utils/persistent";
 
-let svelteFetch: typeof window.fetch | undefined;
+let baseUrl: URL | undefined;
 
 /**
  * The locales dictionaries for each code.
@@ -31,11 +31,11 @@ export const currentLocale: Writable<string> = persistent<string>("locale", I18n
 
 /**
  * Load the locales.
- * @param fetchMethod The fetch method to use.
+ * @param url The current URL to use in loading locales.
  */
-export async function init(fetchMethod: typeof window.fetch): Promise<void> {
-	svelteFetch = fetchMethod;
-	const response = await svelteFetch("/locales.json");
+export async function init(url: URL): Promise<void> {
+	baseUrl = url;
+	const response = await fetch(`${baseUrl.origin}/locales.json`);
 
 	const localesIndex: ILocalesIndex = await response.json();
 
@@ -71,7 +71,7 @@ currentLocale.subscribe(async locale => {
  * @param locale The locale to load.
  */
 async function loadTranslation(locale: string): Promise<void> {
-	if (svelteFetch) {
+	if (Is.notEmpty(baseUrl)) {
 		let loadLocale = locale;
 		if (locale.startsWith("debug-")) {
 			loadLocale = I18n.DEFAULT_LOCALE;
@@ -79,7 +79,7 @@ async function loadTranslation(locale: string): Promise<void> {
 
 		const tl = get(localeDictionaries);
 		if (!tl[loadLocale]) {
-			const response = await svelteFetch(`/locales/${loadLocale}.json`);
+			const response = await fetch(`${baseUrl?.origin}/locales/${loadLocale}.json`);
 			const json: ILocaleDictionary = await response.json();
 
 			I18n.addDictionary(loadLocale, json);
