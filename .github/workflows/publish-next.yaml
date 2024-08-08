@@ -28,7 +28,6 @@ jobs:
         with:
           node-version: 20
 
-
       - name: Deploy to Vercel
         uses: BetaHuhn/deploy-to-vercel-action@v1.10.0
         with:

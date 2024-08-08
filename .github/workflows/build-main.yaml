@@ -32,6 +32,11 @@ jobs:
           npm ci
           npx playwright install
 
+      - name: Setup env
+        run: |
+          cd apps/workbench-ui
+          cp .env.example .env
+
       - name: Run Lint and Dist
         run: |
           npm run lint
