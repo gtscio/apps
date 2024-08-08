@@ -10,7 +10,7 @@ export const isAuthenticated = writable<boolean | undefined>();
 const authenticationExpiry = persistent<number>("auth-expiry", 0);
 
 let authenticationClient: EntityStorageAuthenticationClient | undefined;
-let intervalId: number | undefined;
+let intervalId: NodeJS.Timeout | undefined;
 
 /**
  * Initialize the API information.
@@ -124,7 +124,7 @@ async function startTokenRefresh(): Promise<void> {
 	stopTokenRefresh();
 
 	// Every 5 minutes refresh the token.
-	intervalId = window.setInterval(async () => refresh(), 5 * 60 * 1000);
+	intervalId = setInterval(async () => refresh(), 5 * 60 * 1000);
 }
 
 /**
@@ -132,7 +132,7 @@ async function startTokenRefresh(): Promise<void> {
  */
 function stopTokenRefresh(): void {
 	if (intervalId) {
-		window.clearInterval(intervalId);
+		clearInterval(intervalId);
 		intervalId = undefined;
 	}
 }

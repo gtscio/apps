@@ -3,7 +3,7 @@
 import { HealthStatus } from "@gtsc/api-models";
 import { InformationClient } from "@gtsc/api-rest-client";
 import { Is } from "@gtsc/core";
-import { writable } from "svelte/store";
+import { get, writable } from "svelte/store";
 
 export const serverVersion = writable<string>("");
 export const serverName = writable<string>("");
@@ -17,6 +17,7 @@ export const serverComponentHealth = writable<
 >([]);
 
 let informationClient: InformationClient | undefined;
+let healthInterval: NodeJS.Timeout | undefined;
 
 /**
  * Initialize the API information.
@@ -28,8 +29,11 @@ export async function init(apiUrl: string): Promise<void> {
 		pathPrefix: ""
 	});
 
-	await getInfo();
 	await getHealth();
+
+	if (Is.empty(healthInterval)) {
+		healthInterval = setInterval(getHealth, 30000);
+	}
 }
 
 /**
@@ -41,9 +45,7 @@ export async function getInfo(): Promise<void> {
 			const result = await informationClient.info();
 			serverVersion.set(result.version);
 			serverName.set(result.name);
-		} catch {
-			serverHealthStatus.set(HealthStatus.Error);
-		}
+		} catch {}
 	}
 }
 
@@ -56,6 +58,15 @@ export async function getHealth(): Promise<void> {
 			const result = await informationClient.health();
 			serverHealthStatus.set(result.status);
 			serverComponentHealth.set(result.components ?? []);
-		} catch {}
+
+			if (
+				(result.status !== HealthStatus.Error && !Is.stringValue(get(serverVersion))) ||
+				!Is.stringValue(get(serverName))
+			) {
+				await getInfo();
+			}
+		} catch {
+			serverHealthStatus.set(HealthStatus.Error);
+		}
 	}
 }

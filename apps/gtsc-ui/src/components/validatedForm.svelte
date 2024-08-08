@@ -18,12 +18,12 @@
 
 	let submitResult: string | undefined = '';
 	let submitResultIsError: boolean = false;
-	let submitResultTimeout: number | undefined;
+	let submitResultTimeout: NodeJS.Timeout | undefined;
 
 	async function handleSubmit(): Promise<void> {
 		submitResult = '';
 		submitResultIsError = false;
-		window.clearTimeout(submitResultTimeout);
+		clearTimeout(submitResultTimeout);
 
 		if (Is.function(validationMethod)) {
 			const validationFailures: IValidationFailure[] = [];
@@ -53,7 +53,7 @@
 		if (!submitResultIsError && Is.stringValue(actionSuccessResource)) {
 			submitResult = $i18n(actionSuccessResource);
 		}
-		submitResultTimeout = window.setTimeout(() => {
+		submitResultTimeout = setTimeout(() => {
 			submitResult = '';
 		}, 5000);
 	}
