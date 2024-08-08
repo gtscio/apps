@@ -37,13 +37,12 @@ jobs:
 
       - name: Install dependencies
         run: |
-          cd apps/workbench
+          cd apps/workbench-server
           npm install
 
-      - name: Run Lint
+      - name: Run Build
         run: |
-          cd apps/workbench
-          npm lint
+          cd apps/workbench-server
           npm dist
 
       - name: Deploy to Vercel
