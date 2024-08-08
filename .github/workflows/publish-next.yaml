@@ -47,8 +47,7 @@ jobs:
           npm run build
 
       - name: Deploy to Vercel
-        uses: iFixit/deploy-to-vercel-action@master
-        # uses: BetaHuhn/deploy-to-vercel-action@v1
+        uses: BetaHuhn/deploy-to-vercel-action@v1.10.0
         with:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
