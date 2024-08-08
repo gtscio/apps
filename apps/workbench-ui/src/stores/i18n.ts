@@ -1,11 +1,9 @@
 // Copyright 2024 IOTA Stiftung.
 // SPDX-License-Identifier: Apache-2.0.
-import { dev } from "$app/environment";
-import { I18n, Is, type ILocale, type ILocaleDictionary, type ILocalesIndex } from "@gtsc/core";
+import { I18n, type ILocale } from "@gtsc/core";
 import { derived, get, writable, type Writable } from "svelte/store";
+import localIndex from "../assets/locales.json";
 import { persistent } from "../utils/persistent";
-
-let baseUrl: URL | undefined;
 
 /**
  * The locales dictionaries for each code.
@@ -17,12 +15,7 @@ export const localeDictionaries: Writable<{ [code: string]: { [key: string]: str
 /**
  * The complete list of locales.
  */
-export const locales: Writable<ILocale[]> = writable<ILocale[]>([
-	{
-		label: "English",
-		code: "en"
-	}
-]);
+export const locales: Writable<ILocale[]> = writable<ILocale[]>(localIndex.locales);
 
 /**
  * The current locale.
@@ -30,19 +23,22 @@ export const locales: Writable<ILocale[]> = writable<ILocale[]>([
 export const currentLocale: Writable<string> = persistent<string>("locale", I18n.DEFAULT_LOCALE);
 
 /**
- * Load the locales.
- * @param url The current URL to use in loading locales.
+ * The active locale.
  */
-export async function init(url: URL): Promise<void> {
-	baseUrl = url;
-	const response = await fetch(`${baseUrl.origin}/locales.json`);
+export const activeLocale: Writable<string> = writable<string>(I18n.DEFAULT_LOCALE);
 
-	const localesIndex: ILocalesIndex = await response.json();
+/**
+ * Load the locales.
+ * @param debugLanguages Should we load the debug languages.
+ */
+export async function init(debugLanguages: boolean): Promise<void> {
+	currentLocale.subscribe(async locale => {
+		await loadTranslation(locale);
+		activeLocale.set(locale);
+	});
 
-	locales.update(() => {
-		const loadedLocales = localesIndex.locales;
-
-		if (dev) {
+	if (debugLanguages) {
+		locales.update(loadedLocales => {
 			loadedLocales.push(
 				{
 					label: "Debug - Keys",
@@ -53,10 +49,10 @@ export async function init(url: URL): Promise<void> {
 					code: "debug-x"
 				}
 			);
-		}
 
-		return loadedLocales;
-	});
+			return loadedLocales;
+		});
+	}
 
 	await loadTranslation(get(currentLocale));
 }
@@ -71,19 +67,18 @@ currentLocale.subscribe(async locale => {
  * @param locale The locale to load.
  */
 async function loadTranslation(locale: string): Promise<void> {
-	if (Is.notEmpty(baseUrl)) {
-		let loadLocale = locale;
-		if (locale.startsWith("debug-")) {
-			loadLocale = I18n.DEFAULT_LOCALE;
-		}
+	let loadLocale = locale;
+	if (locale.startsWith("debug-")) {
+		loadLocale = I18n.DEFAULT_LOCALE;
+	}
 
-		const tl = get(localeDictionaries);
-		if (!tl[loadLocale]) {
-			const response = await fetch(`${baseUrl?.origin}/locales/${loadLocale}.json`);
-			const json: ILocaleDictionary = await response.json();
+	const tl = get(localeDictionaries);
+	if (!tl[loadLocale]) {
+		try {
+			const json = await import(`../assets/locales/${loadLocale}.json`);
 
 			I18n.addDictionary(loadLocale, json);
-		}
+		} catch {}
 	}
 }
 
@@ -94,4 +89,4 @@ I18n.addDictionaryHandler("store", () => {
 /**
  * Format the message.
  */
-export const i18n = derived([currentLocale, localeDictionaries], () => I18n.formatMessage);
+export const i18n = derived([localeDictionaries, activeLocale], () => I18n.formatMessage);
