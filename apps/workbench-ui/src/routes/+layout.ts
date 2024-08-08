@@ -12,10 +12,12 @@ import { init as initLocales } from "../stores/i18n";
  * @param params.fetch The fetch method to use.
  */
 export async function load(params: { fetch: typeof window.fetch }): Promise<void> {
-	console.log("PUBLIC_WORKBENCH_SERVER_URL", PUBLIC_WORKBENCH_SERVER_URL);
-	console.log("params.fetch", params.fetch);
-	await initLocales(params.fetch);
-	// await initApiInformation(PUBLIC_WORKBENCH_SERVER_URL);
-	// await initAuthentication(PUBLIC_WORKBENCH_SERVER_URL);
-	// await initIdentityProfile(env.PUBLIC_WORKBENCH_SERVER_URL);
+	try {
+		await initLocales(params.fetch);
+		// await initApiInformation(PUBLIC_WORKBENCH_SERVER_URL);
+		// await initAuthentication(PUBLIC_WORKBENCH_SERVER_URL);
+		// await initIdentityProfile(env.PUBLIC_WORKBENCH_SERVER_URL);
+	} catch (err) {
+		console.error("Error during init load", err);
+	}
 }

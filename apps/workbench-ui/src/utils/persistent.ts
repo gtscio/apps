@@ -10,28 +10,28 @@ import { writable, type Writable } from "svelte/store";
  * @returns The writable value.
  */
 export function persistent<T>(key: string, initialValue: T): Writable<T> {
-	let value = initialValue;
+	const value = initialValue;
 
-	if (browser) {
-		try {
-			const json = localStorage.getItem(key);
-			if (json) {
-				value = JSON.parse(json);
-			}
-		} catch {}
-	}
+	// if (browser) {
+	// 	try {
+	// 		const json = localStorage.getItem(key);
+	// 		if (json) {
+	// 			value = JSON.parse(json);
+	// 		}
+	// 	} catch {}
+	// }
 
 	const state = writable(value);
 
-	if (browser) {
-		state.subscribe(($value): void => {
-			if ($value === undefined || $value === null) {
-				localStorage.removeItem(key);
-			} else {
-				localStorage.setItem(key, JSON.stringify($value));
-			}
-		});
-	}
+	// if (browser) {
+	// 	state.subscribe(($value): void => {
+	// 		if ($value === undefined || $value === null) {
+	// 			localStorage.removeItem(key);
+	// 		} else {
+	// 			localStorage.setItem(key, JSON.stringify($value));
+	// 		}
+	// 	});
+	// }
 
 	return state;
 }
