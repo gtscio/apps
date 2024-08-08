@@ -43,7 +43,8 @@ jobs:
       - name: Run Build
         run: |
           cd apps/workbench-ui
-          npm run dist
+          npm run merge-locales
+          npm run build
 
       - name: Deploy to Vercel
         uses: iFixit/deploy-to-vercel-action@master
