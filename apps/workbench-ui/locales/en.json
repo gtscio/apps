@@ -1,0 +1,48 @@
+{
+	"app": {
+		"name": "Workbench"
+	},
+	"navigation": {
+		"home": "Home",
+		"about": "About",
+		"login": "Login",
+		"logout": "Logout",
+		"privacyPolicy": "Privacy Policy",
+		"dashboard": "Dashboard",
+		"telemetry": "Telemetry",
+		"logging": "Logging",
+		"attestation": "Attestation",
+		"nft": "NFT"
+	},
+	"serverStatus": {
+		"api": "API",
+		"notConnected": "Not connected"
+	},
+	"footer": {
+		"copyrightOrg": "GTSC",
+		"language": "Language",
+		"colorTheme": "Color theme",
+		"selectLanguage": "Select language"
+	},
+	"pages": {
+		"login": {
+			"title": "Login",
+			"email": "E-mail",
+			"password": "Password",
+			"signIn": "Sign in",
+			"signingIn": "Signing in",
+			"noAccount": "Don't have an account yet?",
+			"signUp": "Sign up"
+		},
+		"identityProfile": {
+			"title": "Profile",
+			"firstName": "First Name",
+			"lastName": "Last Name"
+		}
+	},
+	"actions": {
+		"save": "Save",
+		"saving": "Saving",
+		"saveSuccess": "Saved successfully"
+	}
+}

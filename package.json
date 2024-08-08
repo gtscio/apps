@@ -41,8 +41,8 @@
 		"prettier-plugin-tailwindcss": "^0.6.4"
 	},
 	"workspaces": [
-		"apps/gtsc-api-server",
-		"apps/gtsc-ui"
+		"apps/workbench-server",
+		"apps/workbench-ui"
 	],
 	"type": "module"
 }
