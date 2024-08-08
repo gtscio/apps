@@ -40,14 +40,14 @@ docker build -t gtsc-api-server -f deploy/dockerfile .
 
 This will build and deploy an image called `gtsc-api-server` to your docker server.
 
-## Docker Bootstrapping
+## Bootstrapping
 
 To initialize the server instance you must first run it in `bootstrap` mode. If you have any entity storage configured to use `file` storage you should map a folder on the local host to contain the data, so that it remains persistent.
 
-To bootstrap the docker image run the following command:
+If the server does not find `system-config.json` in the `file` storage it will automatically trigger bootstrap mode:
 
 ```shell
-docker run -t -i -v d:/docker-host/gtsc/data:/gtsc/data -e GTSC_BOOTSTRAP=true gtsc-api-server
+docker run -t -i -v d:/docker-host/gtsc/data:/gtsc/data -p 3000:3000 gtsc-api-server
 ```
 
 This example will map the local folder `d:/docker-host/gtsc/data` and make it available in the docker container as `/gtsc/data` which is used to configure file entity storage using the environment variable `GTSC_STORAGE_FILE_ROOT`.
@@ -57,44 +57,63 @@ The output from the docker container should be something like the following.
 ```shell
 🌩️ GTSC API Server v1.0.0
 
-➡️  Bootstrapping mode
+.....
 
-INFO [2024-07-24T08:35:58.760Z] Configuring Information Service
-INFO [2024-07-24T08:35:58.761Z] Configuring Vault Connector Factory
-INFO [2024-07-24T08:35:58.761Z] Configuring Entity Storage with name "vault-key" using "file" connector
-INFO [2024-07-24T08:35:58.762Z] Configuring Entity Storage with name "vault-secret" using "file" connector
-INFO [2024-07-24T08:35:58.762Z] Configuring Identity Connector Factory
-INFO [2024-07-24T08:35:58.762Z] Configuring Entity Storage with name "identity-document" using "file" connector
-INFO [2024-07-24T08:35:58.763Z] Configuring Identity Service
-INFO [2024-07-24T08:35:58.763Z] Configuring Entity Storage with name "identity-profile" using "file" connector
-INFO [2024-07-24T08:35:58.764Z] Configuring Entity Storage with name "authentication-user" using "file" connector
-INFO [2024-07-24T08:35:58.764Z] Bootstrap FileEntityStorageConnector
-INFO [2024-07-24T08:35:58.765Z] Creating directory "/gtsc/data/vault-key"
-INFO [2024-07-24T08:35:58.766Z] Created directory "/gtsc/data/vault-key"
-INFO [2024-07-24T08:35:58.766Z] Bootstrap FileEntityStorageConnector
-INFO [2024-07-24T08:35:58.767Z] Creating directory "/gtsc/data/vault-secret"
-INFO [2024-07-24T08:35:58.768Z] Created directory "/gtsc/data/vault-secret"
-INFO [2024-07-24T08:35:58.768Z] Bootstrap FileEntityStorageConnector
-INFO [2024-07-24T08:35:58.768Z] Creating directory "/gtsc/data/identity"
-INFO [2024-07-24T08:35:58.770Z] Created directory "/gtsc/data/identity"
-INFO [2024-07-24T08:35:58.770Z] Bootstrap FileEntityStorageConnector
-INFO [2024-07-24T08:35:58.771Z] Creating directory "/gtsc/data/identity-profile"
-INFO [2024-07-24T08:35:58.772Z] Created directory "/gtsc/data/identity-profile"
-INFO [2024-07-24T08:35:58.774Z] Bootstrap FileEntityStorageConnector
-INFO [2024-07-24T08:35:58.775Z] Creating directory "/gtsc/data/auth-user"
-INFO [2024-07-24T08:35:58.776Z] Created directory "/gtsc/data/auth-user"
-INFO [2024-07-24T08:35:58.776Z] Bootstrap EntityStorageAuthenticationService
-INFO [2024-07-24T08:35:58.829Z] The signing encryption key was created in the vault
-INFO [2024-07-24T08:35:58.839Z] The default system user has been created, email: "system@system", password: "Jn2D0CyQu?DhZRGV"
+➡️  No system-config.json found, starting bootstrap process
+
+INFO [2024-08-08T06:36:15.925Z] Bootstrap FileEntityStorageConnector
+INFO [2024-08-08T06:36:15.926Z] Creating directory "D:\Workarea\IOTA\gtsc2\apps\.tmp\vault-key"
+INFO [2024-08-08T06:36:15.927Z] Created directory "D:\Workarea\IOTA\gtsc2\apps\.tmp\vault-key"
+INFO [2024-08-08T06:36:15.928Z] Bootstrap FileEntityStorageConnector
+INFO [2024-08-08T06:36:15.928Z] Creating directory "D:\Workarea\IOTA\gtsc2\apps\.tmp\vault-secret"
+INFO [2024-08-08T06:36:15.928Z] Created directory "D:\Workarea\IOTA\gtsc2\apps\.tmp\vault-secret"
+INFO [2024-08-08T06:36:15.929Z] Bootstrap FileEntityStorageConnector
+INFO [2024-08-08T06:36:15.929Z] Creating directory "D:\Workarea\IOTA\gtsc2\apps\.tmp\wallet-address"
+INFO [2024-08-08T06:36:15.929Z] Created directory "D:\Workarea\IOTA\gtsc2\apps\.tmp\wallet-address"
+INFO [2024-08-08T06:36:15.930Z] Bootstrap FileEntityStorageConnector
+INFO [2024-08-08T06:36:15.930Z] Creating directory "D:\Workarea\IOTA\gtsc2\apps\.tmp\identity-document"
+INFO [2024-08-08T06:36:15.930Z] Created directory "D:\Workarea\IOTA\gtsc2\apps\.tmp\identity-document"
+INFO [2024-08-08T06:36:15.930Z] Bootstrap FileEntityStorageConnector
+INFO [2024-08-08T06:36:15.931Z] Creating directory "D:\Workarea\IOTA\gtsc2\apps\.tmp\identity-profile"
+INFO [2024-08-08T06:36:15.932Z] Created directory "D:\Workarea\IOTA\gtsc2\apps\.tmp\identity-profile"
+INFO [2024-08-08T06:36:15.932Z] Bootstrap FileEntityStorageConnector
+INFO [2024-08-08T06:36:15.932Z] Creating directory "D:\Workarea\IOTA\gtsc2\apps\.tmp\log-entry"
+INFO [2024-08-08T06:36:15.932Z] Created directory "D:\Workarea\IOTA\gtsc2\apps\.tmp\log-entry"
+INFO [2024-08-08T06:36:15.933Z] Bootstrap FileEntityStorageConnector
+INFO [2024-08-08T06:36:15.933Z] Creating directory "D:\Workarea\IOTA\gtsc2\apps\.tmp\telemetry-metric"
+INFO [2024-08-08T06:36:15.933Z] Created directory "D:\Workarea\IOTA\gtsc2\apps\.tmp\telemetry-metric"
+INFO [2024-08-08T06:36:15.934Z] Bootstrap FileEntityStorageConnector
+INFO [2024-08-08T06:36:15.934Z] Creating directory "D:\Workarea\IOTA\gtsc2\apps\.tmp\telemetry-metric-value"
+INFO [2024-08-08T06:36:15.934Z] Created directory "D:\Workarea\IOTA\gtsc2\apps\.tmp\telemetry-metric-value"
+INFO [2024-08-08T06:36:15.935Z] Bootstrap FileBlobStorageConnector
+INFO [2024-08-08T06:36:15.935Z] Creating directory "D:\Workarea\IOTA\gtsc2\apps\.tmp\blob-storage"
+INFO [2024-08-08T06:36:15.935Z] Created directory "D:\Workarea\IOTA\gtsc2\apps\.tmp\blob-storage"
+INFO [2024-08-08T06:36:15.935Z] Bootstrap FileEntityStorageConnector
+INFO [2024-08-08T06:36:15.936Z] Creating directory "D:\Workarea\IOTA\gtsc2\apps\.tmp\nft"
+INFO [2024-08-08T06:36:15.936Z] Created directory "D:\Workarea\IOTA\gtsc2\apps\.tmp\nft"
+INFO [2024-08-08T06:36:15.936Z] Bootstrap FileEntityStorageConnector
+INFO [2024-08-08T06:36:15.936Z] Creating directory "D:\Workarea\IOTA\gtsc2\apps\.tmp\authentication-user"
+INFO [2024-08-08T06:36:15.937Z] Created directory "D:\Workarea\IOTA\gtsc2\apps\.tmp\authentication-user"
+INFO [2024-08-08T06:36:15.938Z] Generating and storing mnemonic "educate short size soup enact faculty brother move purity robust dose toy crumble jazz lunar hospital response pepper nice ice movie post used icon"
+INFO [2024-08-08T06:36:16.016Z] Funding wallet "ent1qqc8saacg65385catgeke7ph36z05cdmwuatekkuqp9n0u5rmzjkq7exhrg"
+INFO [2024-08-08T06:36:16.017Z] Generating system identity
+INFO [2024-08-08T06:36:16.050Z] Adding attestation verification method
+INFO [2024-08-08T06:36:16.075Z] System identity "did:entity-storage:0xad375455c60b6e6df5f0fbf42d1224732756484dd64758dc9b3d71aa9c6478ed"
+INFO [2024-08-08T06:36:16.085Z] System User Email "system@system"
+INFO [2024-08-08T06:36:16.085Z] System User Password "MFCUApWEdgr0R4&C"
+INFO [2024-08-08T06:36:16.087Z] System configuration created in "system-config.json", some of these details will not be shown again, please record them
+
+➡️  Writing JSON file: d:/docker-host/gtsc/data/system-config.json
+➡️  Bootstrap process complete, system-config.json has been created
 ```
 
 You will see it generated an API key and system user with password for future use, these should be recorded as they will not be made visible again.
 
-Running bootstrap again will not overwrite any existing data, to perform a clean bootstrap you must manually clear the storage.
+To run the bootstrap again you would have to manually remove the `system-config.json` from the data folder.
 
 ## Docker Running
 
-You can now use a similar command to run docker and launch the API server. This time instead of setting the bootstrap environment variable we expose the port so that the API server can be accessed externally.
+To run the server we use exactly the same command as before, when the `system-config.json` is found the bootstrap process will not be repeated.
 
 ```shell
 docker run -t -i -v d:/docker-host/gtsc/data:/gtsc/data -p 3000:3000 gtsc-api-server

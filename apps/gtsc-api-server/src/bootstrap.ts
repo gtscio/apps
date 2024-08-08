@@ -1,6 +1,7 @@
 // Copyright 2024 IOTA Stiftung.
 // SPDX-License-Identifier: Apache-2.0.
 import { PasswordHelper, type AuthenticationUser } from "@gtsc/api-auth-entity-storage-service";
+import { CLIDisplay } from "@gtsc/cli-core";
 import { Converter, I18n, Is, RandomHelper, StringHelper } from "@gtsc/core";
 import { Bip39, PasswordGenerator } from "@gtsc/crypto";
 import {
@@ -15,7 +16,7 @@ import type { IService } from "@gtsc/services";
 import { VaultConnectorFactory, VaultKeyType } from "@gtsc/vault-models";
 import type { WalletAddress } from "@gtsc/wallet-connector-entity-storage";
 import { WalletConnectorFactory } from "@gtsc/wallet-models";
-import { SYSTEM_CONFIG_FILENAME, writeSystemConfig } from "./configure.js";
+import { writeSystemConfig } from "./configure.js";
 import type { IOptions } from "./models/IOptions.js";
 import { systemLogInfo } from "./services/logging.js";
 import { AUTH_SIGNING_NAME_VAULT_KEY } from "./services/processors.js";
@@ -26,6 +27,12 @@ import { AUTH_SIGNING_NAME_VAULT_KEY } from "./services/processors.js";
  * @param services The services to bootstrap.
  */
 export async function bootstrap(options: IOptions, services: IService[]): Promise<void> {
+	CLIDisplay.break();
+	CLIDisplay.task(
+		I18n.formatMessage("apiServer.bootstrapStarted", { filename: options.systemConfigFilename })
+	);
+	CLIDisplay.break();
+
 	const hasIdentity = Is.stringValue(options.systemConfig.systemIdentity);
 
 	for (const service of services) {
@@ -40,14 +47,22 @@ export async function bootstrap(options: IOptions, services: IService[]): Promis
 
 	if (!hasIdentity) {
 		systemLogInfo(
-			I18n.formatMessage("apiServer.systemConfigRecord", { filename: SYSTEM_CONFIG_FILENAME })
+			I18n.formatMessage("apiServer.systemConfigRecord", { filename: options.systemConfigFilename })
 		);
-		await writeSystemConfig(options.storageFileRoot, options.systemConfig);
+		CLIDisplay.break();
+		await writeSystemConfig(
+			options.storageFileRoot,
+			options.systemConfigFilename,
+			options.systemConfig
+		);
 	} else {
 		systemLogInfo(
-			I18n.formatMessage("apiServer.systemConfigExists", { filename: SYSTEM_CONFIG_FILENAME })
+			I18n.formatMessage("apiServer.systemConfigExists", { filename: options.systemConfigFilename })
 		);
 	}
+
+	CLIDisplay.task(I18n.formatMessage("apiServer.bootstrapComplete"));
+	CLIDisplay.break();
 }
 
 /**

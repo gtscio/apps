@@ -10,7 +10,7 @@ import * as dotenv from "dotenv";
 import type { IOptions } from "./models/IOptions";
 import type { ISystemConfig } from "./models/ISystemConfig";
 
-export const SYSTEM_CONFIG_FILENAME = "system-config.json";
+export const DEFAULT_SYSTEM_CONFIG_FILENAME = "system-config.json";
 
 /**
  * Find the root package folder.
@@ -52,8 +52,6 @@ export async function configure(rootPackageFolder: string): Promise<IOptions> {
 		throw new GeneralError("apiServer", "storageFileRootNotSet");
 	}
 
-	let systemConfig = await readSystemConfig(storageFileRoot);
-
 	const webServerOptions: IWebServerOptions = {
 		port: Coerce.number(envVars.GTSC_PORT),
 		host: Coerce.string(envVars.GTSC_HOST),
@@ -69,21 +67,13 @@ export async function configure(rootPackageFolder: string): Promise<IOptions> {
 			: undefined
 	};
 
-	const bootstrap = Coerce.boolean(envVars.GTSC_BOOTSTRAP) ?? false;
-
-	if (!Is.object<ISystemConfig>(systemConfig)) {
-		if (bootstrap) {
-			systemConfig = {
-				systemIdentity: ""
-			};
-
-			await writeSystemConfig(storageFileRoot, systemConfig);
-		} else {
-			// We are not bootstrapping and there is no system configuration.
-			// so we cannot continue.
-			throw new GeneralError("apiServer", "systemConfigNotSet");
-		}
-	}
+	const systemConfigFilename =
+		envVars.GTSC_SYSTEM_CONFIG_FILENAME ?? DEFAULT_SYSTEM_CONFIG_FILENAME;
+	const systemConfig = (await readSystemConfig(storageFileRoot, systemConfigFilename)) ?? {
+		systemIdentity: ""
+	};
+	// If there is no system identity then we need to bootstrap the system.
+	const bootstrap = !Is.stringValue(systemConfig.systemIdentity);
 
 	return {
 		webServerOptions,
@@ -92,6 +82,7 @@ export async function configure(rootPackageFolder: string): Promise<IOptions> {
 		bootstrap,
 		envVars,
 		storageFileRoot,
+		systemConfigFilename,
 		systemConfig,
 		systemLoggingConnectorName: envVars.GTSC_SYSTEM_LOGGING_CONNECTOR_NAME ?? "system"
 	};
@@ -100,26 +91,30 @@ export async function configure(rootPackageFolder: string): Promise<IOptions> {
 /**
  * Read the system configuration.
  * @param storageFileRoot The root of the storage files.
+ * @param systemConfigFilename The system config filename.
  * @returns The system configuration.
  */
 export async function readSystemConfig(
-	storageFileRoot: string
+	storageFileRoot: string,
+	systemConfigFilename: string
 ): Promise<ISystemConfig | undefined> {
-	const systemConfigFilename = path.join(storageFileRoot, SYSTEM_CONFIG_FILENAME);
+	const fullSystemConfigFilename = path.join(storageFileRoot, systemConfigFilename);
 
-	return CLIUtils.readJsonFile<ISystemConfig>(systemConfigFilename);
+	return CLIUtils.readJsonFile<ISystemConfig>(fullSystemConfigFilename);
 }
 
 /**
  * Write the system configuration.
  * @param storageFileRoot The root of the storage files.
+ * @param systemConfigFilename The system config filename.
  * @param systemConfig The system configuration.
  */
 export async function writeSystemConfig(
 	storageFileRoot: string,
+	systemConfigFilename: string,
 	systemConfig: ISystemConfig
 ): Promise<void> {
-	const systemConfigFilename = path.join(storageFileRoot, SYSTEM_CONFIG_FILENAME);
+	const fullSystemConfigFilename = path.join(storageFileRoot, systemConfigFilename);
 
-	await CLIUtils.writeJsonFile(systemConfigFilename, systemConfig, false);
+	await CLIUtils.writeJsonFile(fullSystemConfigFilename, systemConfig, false);
 }

@@ -54,10 +54,7 @@ try {
 
 	const options = await configure(rootPackageFolder);
 
-	if (options.bootstrap) {
-		CLIDisplay.task(I18n.formatMessage("apiServer.bootstrapMode"));
-		CLIDisplay.break();
-	} else if (options.debug) {
+	if (options.debug) {
 		CLIDisplay.value(I18n.formatMessage("apiServer.debuggingEnabled"), "true");
 		CLIDisplay.break();
 	}
@@ -98,32 +95,23 @@ try {
 
 	if (options.bootstrap) {
 		await bootstrap(options, services);
+	}
 
-		CLIDisplay.break();
-		CLIDisplay.done();
-	} else {
+	for (const service of services) {
+		if (Is.function(service.start)) {
+			systemLogInfo(I18n.formatMessage("apiServer.starting", { element: service.CLASS_NAME }));
+			await service.start(options.systemConfig.systemIdentity, options.systemLoggingConnectorName);
+		}
+	}
+
+	await startWebServer(options, processors, buildRoutes(), async () => {
 		for (const service of services) {
-			if (Is.function(service.start)) {
-				systemLogInfo(I18n.formatMessage("apiServer.starting", { element: service.CLASS_NAME }));
-				await service.start(
-					options.systemConfig.systemIdentity,
-					options.systemLoggingConnectorName
-				);
+			if (Is.function(service.stop)) {
+				systemLogInfo(I18n.formatMessage("apiServer.stopping", { element: service.CLASS_NAME }));
+				await service.stop(options.systemConfig.systemIdentity, options.systemLoggingConnectorName);
 			}
 		}
-
-		await startWebServer(options, processors, buildRoutes(), async () => {
-			for (const service of services) {
-				if (Is.function(service.stop)) {
-					systemLogInfo(I18n.formatMessage("apiServer.stopping", { element: service.CLASS_NAME }));
-					await service.stop(
-						options.systemConfig.systemIdentity,
-						options.systemLoggingConnectorName
-					);
-				}
-			}
-		});
-	}
+	});
 } catch (err) {
 	systemLogError(BaseError.fromError(err));
 	// eslint-disable-next-line unicorn/no-process-exit

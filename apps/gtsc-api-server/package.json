@@ -27,8 +27,7 @@
 		"docs:api": "ts-to-openapi ./ts-to-openapi.json ./docs/open-api/spec.json",
 		"docs": "npm run docs:clean && npm run docs:copy-overview && npm run docs:rename-overview && npm run docs:remove-header && npm run docs:api",
 		"dist": "npm run clean && npm run build && npm run merge-locales && npm run test && npm run docs",
-		"start": "node dist/es/index.js",
-		"start:bootstrap": "cross-env GTSC_BOOTSTRAP=true node dist/es/index.js"
+		"start": "node dist/es/index.js"
 	},
 	"dependencies": {
 		"@gtsc/attestation-models": "next",

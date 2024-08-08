@@ -38,6 +38,11 @@ export interface IOptions {
 	storageFileRoot: string;
 
 	/**
+	 * The name of the system config file.
+	 */
+	systemConfigFilename: string;
+
+	/**
 	 * The name of the connector to use for system logging.
 	 */
 	systemLoggingConnectorName: string;
