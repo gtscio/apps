@@ -13,3 +13,4 @@ vitest.config.ts.timestamp*
 **/.svelte-kit
 **/test-results
 /apps/workbench-server/.env
+.vercel
