@@ -13,7 +13,7 @@ let authenticationClient: EntityStorageAuthenticationClient | undefined;
 let intervalId: NodeJS.Timeout | undefined;
 
 /**
- * Initialize the API information.
+ * Initialize the authentication.
  * @param apiUrl The API url.
  */
 export async function init(apiUrl: string): Promise<void> {

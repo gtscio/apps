@@ -11,30 +11,30 @@ import {
 import { IotaWalletConnector } from "@gtsc/wallet-connector-iota";
 import { WalletConnectorFactory, type IWalletConnector } from "@gtsc/wallet-models";
 import { initialiseEntityStorageConnector } from "./entityStorage.js";
-import { systemLogInfo } from "./logging.js";
-import type { IOptions } from "../models/IOptions.js";
+import { nodeLogInfo } from "./logging.js";
+import type { IWorkbenchContext } from "../models/IWorkbenchContext.js";
 
 /**
  * Initialise the wallet connector factory.
- * @param options The options for the web server.
+ * @param context The context for the node.
  * @param services The services.
  * @throws GeneralError if the connector type is unknown.
  */
-export function initialiseWalletStorage(options: IOptions, services: IService[]): void {
-	const type = options.envVars.SERVER_WALLET_CONNECTOR;
+export function initialiseWalletStorage(context: IWorkbenchContext, services: IService[]): void {
+	const type = context.envVars.WORKBENCH_WALLET_CONNECTOR;
 
 	if (type === "iota") {
 		// No storage required for IOTA wallet connector.
 	} else if (type === "entity-storage") {
 		initSchemaWallet();
 		initialiseEntityStorageConnector(
-			options,
+			context,
 			services,
-			options.envVars.SERVER_NFT_ENTITY_STORAGE_TYPE,
+			context.envVars.WORKBENCH_NFT_ENTITY_STORAGE_TYPE,
 			nameof<WalletAddress>()
 		);
 	} else {
-		throw new GeneralError("apiServer", "serviceUnknownType", {
+		throw new GeneralError("Workbench", "serviceUnknownType", {
 			type,
 			serviceType: "walletConnector"
 		});
@@ -43,42 +43,43 @@ export function initialiseWalletStorage(options: IOptions, services: IService[])
 
 /**
  * Initialise the wallet connector factory.
- * @param options The options for the web server.
+ * @param context The context for the node.
  * @param services The services.
  * @throws GeneralError if the connector type is unknown.
  */
-export function initialiseWalletConnectorFactory(options: IOptions, services: IService[]): void {
-	systemLogInfo(
-		I18n.formatMessage("apiServer.configuring", { element: "Wallet Connector Factory" })
-	);
+export function initialiseWalletConnectorFactory(
+	context: IWorkbenchContext,
+	services: IService[]
+): void {
+	nodeLogInfo(I18n.formatMessage("workbench.configuring", { element: "Wallet Connector Factory" }));
 
-	const type = options.envVars.SERVER_WALLET_CONNECTOR;
+	const type = context.envVars.WORKBENCH_WALLET_CONNECTOR;
 
 	let connector: IWalletConnector;
 	let namespace: string;
 
 	if (type === "iota") {
 		connector = new IotaWalletConnector({
-			vaultConnectorType: options.envVars.SERVER_VAULT_CONNECTOR,
-			faucetConnectorType: options.envVars.SERVER_FAUCET_CONNECTOR,
+			vaultConnectorType: context.envVars.WORKBENCH_VAULT_CONNECTOR,
+			faucetConnectorType: context.envVars.WORKBENCH_FAUCET_CONNECTOR,
 			config: {
 				clientOptions: {
-					nodes: [options.envVars.SERVER_IOTA_NODE_URL],
+					nodes: [context.envVars.WORKBENCH_IOTA_NODE_URL],
 					localPow: true
 				},
-				coinType: Coerce.number(options.envVars.SERVER_IOTA_COIN_TYPE),
-				bech32Hrp: options.envVars.SERVER_IOTA_BECH32_HRP
+				coinType: Coerce.number(context.envVars.WORKBENCH_IOTA_COIN_TYPE),
+				bech32Hrp: context.envVars.WORKBENCH_IOTA_BECH32_HRP
 			}
 		});
 		namespace = IotaWalletConnector.NAMESPACE;
 	} else if (type === "entity-storage") {
 		connector = new EntityStorageWalletConnector({
-			vaultConnectorType: options.envVars.SERVER_VAULT_CONNECTOR,
-			faucetConnectorType: options.envVars.SERVER_FAUCET_CONNECTOR
+			vaultConnectorType: context.envVars.WORKBENCH_VAULT_CONNECTOR,
+			faucetConnectorType: context.envVars.WORKBENCH_FAUCET_CONNECTOR
 		});
 		namespace = EntityStorageWalletConnector.NAMESPACE;
 	} else {
-		throw new GeneralError("apiServer", "serviceUnknownType", {
+		throw new GeneralError("Workbench", "serviceUnknownType", {
 			type,
 			serviceType: "walletConnector"
 		});

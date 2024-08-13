@@ -17,9 +17,9 @@ COPY . .
 EXPOSE 3000
 
 # Set the environment variables that will override the .env file in the package
-ENV SERVER_HOST=0.0.0.0
-ENV SERVER_PORT=3000
-ENV SERVER_STORAGE_FILE_ROOT=/workbench/data
+ENV WORKBENCH_HOST=0.0.0.0
+ENV WORKBENCH_PORT=3000
+ENV WORKBENCH_STORAGE_FILE_ROOT=/workbench/data
 
 # Start the server
 CMD ["node", "dist/es/index.js"]

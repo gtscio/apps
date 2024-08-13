@@ -11,21 +11,22 @@ import {
 } from "@gtsc/vault-connector-entity-storage";
 import { VaultConnectorFactory, type IVaultConnector } from "@gtsc/vault-models";
 import { initialiseEntityStorageConnector } from "./entityStorage.js";
-import { systemLogInfo } from "./logging.js";
-import type { IOptions } from "../models/IOptions.js";
+import { nodeLogInfo } from "./logging.js";
+import type { IWorkbenchContext } from "../models/IWorkbenchContext.js";
 
 /**
  * Initialise the vault connector factory.
- * @param options The options for the web server.
+ * @param context The context for the node.
  * @param services The services.
  * @throws GeneralError if the connector type is unknown.
  */
-export function initialiseVaultConnectorFactory(options: IOptions, services: IService[]): void {
-	systemLogInfo(
-		I18n.formatMessage("apiServer.configuring", { element: "Vault Connector Factory" })
-	);
+export function initialiseVaultConnectorFactory(
+	context: IWorkbenchContext,
+	services: IService[]
+): void {
+	nodeLogInfo(I18n.formatMessage("workbench.configuring", { element: "Vault Connector Factory" }));
 
-	const type = options.envVars.SERVER_VAULT_CONNECTOR;
+	const type = context.envVars.WORKBENCH_VAULT_CONNECTOR;
 
 	let connector: IVaultConnector;
 	let namespace: string;
@@ -33,21 +34,21 @@ export function initialiseVaultConnectorFactory(options: IOptions, services: ISe
 	if (type === "entity-storage") {
 		initSchema();
 		initialiseEntityStorageConnector(
-			options,
+			context,
 			services,
-			options.envVars.SERVER_VAULT_KEY_ENTITY_STORAGE_TYPE,
+			context.envVars.WORKBENCH_VAULT_KEY_ENTITY_STORAGE_TYPE,
 			nameof<VaultKey>()
 		);
 		initialiseEntityStorageConnector(
-			options,
+			context,
 			services,
-			options.envVars.SERVER_VAULT_SECRET_ENTITY_STORAGE_TYPE,
+			context.envVars.WORKBENCH_VAULT_SECRET_ENTITY_STORAGE_TYPE,
 			nameof<VaultSecret>()
 		);
 		connector = new EntityStorageVaultConnector();
 		namespace = EntityStorageVaultConnector.NAMESPACE;
 	} else {
-		throw new GeneralError("apiServer", "serviceUnknownType", {
+		throw new GeneralError("Workbench", "serviceUnknownType", {
 			type,
 			serviceType: "vaultConnector"
 		});

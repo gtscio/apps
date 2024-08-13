@@ -1,14 +1,14 @@
 // Copyright 2024 IOTA Stiftung.
 // SPDX-License-Identifier: Apache-2.0.
 import type { IWebServerOptions } from "@gtsc/api-models";
-import type { ISystemConfig } from "./ISystemConfig";
+import type { IWorkbenchConfig } from "./IWorkbenchConfig";
 
 /**
- * The options for the API server.
+ * The context for the node.
  */
-export interface IOptions {
+export interface IWorkbenchContext {
 	/**
-	 * The options for the web server.
+	 * The context for the node.
 	 */
 	webServerOptions: IWebServerOptions;
 
@@ -38,17 +38,17 @@ export interface IOptions {
 	storageFileRoot: string;
 
 	/**
-	 * The name of the system config file.
+	 * The name of the connector to use for node logging.
 	 */
-	systemConfigFilename: string;
+	nodeLoggingConnectorName: string;
 
 	/**
-	 * The name of the connector to use for system logging.
+	 * The name of the workbench config file.
 	 */
-	systemLoggingConnectorName: string;
+	workbenchConfigFilename: string;
 
 	/**
-	 * The system config.
+	 * The workbench config.
 	 */
-	systemConfig: ISystemConfig;
+	config: IWorkbenchConfig;
 }

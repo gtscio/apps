@@ -7,10 +7,11 @@ import { CLIUtils } from "@gtsc/cli-core";
 import { Coerce, GeneralError, Is } from "@gtsc/core";
 import type { HttpMethod } from "@gtsc/web";
 import * as dotenv from "dotenv";
-import type { IOptions } from "./models/IOptions";
-import type { ISystemConfig } from "./models/ISystemConfig";
+import type { IWorkbenchConfig } from "./models/IWorkbenchConfig";
+import type { IWorkbenchContext } from "./models/IWorkbenchContext";
 
-export const DEFAULT_SYSTEM_CONFIG_FILENAME = "system-config.json";
+export const DEFAULT_CONFIG_FILENAME = "workbench-config.json";
+export const DEFAULT_NODE_LOGGING_CONNECTOR = "node-logging";
 
 /**
  * Find the root package folder.
@@ -28,9 +29,9 @@ export function findRootPackageFolder(): string {
 /**
  * Handles the configuration of the application.
  * @param rootPackageFolder The root package folder.
- * @returns The configuration options.
+ * @returns The context.
  */
-export async function configure(rootPackageFolder: string): Promise<IOptions> {
+export async function configure(rootPackageFolder: string): Promise<IWorkbenchContext> {
 	// Import environment variables from .env files.
 	dotenv.config({
 		path: [path.join(rootPackageFolder, ".env")]
@@ -38,83 +39,83 @@ export async function configure(rootPackageFolder: string): Promise<IOptions> {
 
 	const envVars: { [id: string]: string } = {};
 	for (const envVar in process.env) {
-		if (envVar.startsWith("SERVER_")) {
+		if (envVar.startsWith("WORKBENCH_")) {
 			envVars[envVar] = process.env[envVar] ?? "";
 		}
 	}
 
 	if (!Is.objectValue(envVars)) {
-		throw new GeneralError("apiServer", "noEnvVars");
+		throw new GeneralError("Workbench", "noEnvVars");
 	}
 
-	const storageFileRoot = envVars.SERVER_STORAGE_FILE_ROOT;
+	const storageFileRoot = envVars.WORKBENCH_STORAGE_FILE_ROOT;
 	if (!Is.stringValue(storageFileRoot)) {
-		throw new GeneralError("apiServer", "storageFileRootNotSet");
+		throw new GeneralError("Workbench", "storageFileRootNotSet");
 	}
 
 	const webServerOptions: IWebServerOptions = {
-		port: Coerce.number(envVars.SERVER_PORT),
-		host: Coerce.string(envVars.SERVER_HOST),
-		methods: Is.stringValue(envVars.SERVER_HTTP_METHODS)
-			? (envVars.SERVER_HTTP_METHODS.split(",") as HttpMethod[])
+		port: Coerce.number(envVars.WORKBENCH_PORT),
+		host: Coerce.string(envVars.WORKBENCH_HOST),
+		methods: Is.stringValue(envVars.WORKBENCH_HTTP_METHODS)
+			? (envVars.WORKBENCH_HTTP_METHODS.split(",") as HttpMethod[])
 			: undefined,
-		allowedHeaders: Is.stringValue(envVars.SERVER_HTTP_ALLOWED_HEADERS)
-			? envVars.SERVER_HTTP_ALLOWED_HEADERS.split(",")
+		allowedHeaders: Is.stringValue(envVars.WORKBENCH_HTTP_ALLOWED_HEADERS)
+			? envVars.WORKBENCH_HTTP_ALLOWED_HEADERS.split(",")
 			: undefined,
-		exposedHeaders: Is.stringValue(envVars.SERVER_) ? envVars.SERVER_.split(",") : undefined,
-		corsOrigins: Is.stringValue(envVars.SERVER_CORS_ORIGINS)
-			? envVars.SERVER_CORS_ORIGINS.split(",")
+		exposedHeaders: Is.stringValue(envVars.WORKBENCH_) ? envVars.WORKBENCH_.split(",") : undefined,
+		corsOrigins: Is.stringValue(envVars.WORKBENCH_CORS_ORIGINS)
+			? envVars.WORKBENCH_CORS_ORIGINS.split(",")
 			: undefined
 	};
 
-	const systemConfigFilename =
-		envVars.SERVER_SYSTEM_CONFIG_FILENAME ?? DEFAULT_SYSTEM_CONFIG_FILENAME;
-	const systemConfig = (await readSystemConfig(storageFileRoot, systemConfigFilename)) ?? {
-		systemIdentity: ""
+	const workbenchConfigFilename = envVars.WORKBENCH_CONFIG_FILENAME ?? DEFAULT_CONFIG_FILENAME;
+	const workbenchConfig = (await readConfig(storageFileRoot, workbenchConfigFilename)) ?? {
+		nodeIdentity: ""
 	};
-	// If there is no system identity then we need to bootstrap the system.
-	const bootstrap = !Is.stringValue(systemConfig.systemIdentity);
+	// If there is no node identity then we need to bootstrap the node.
+	const bootstrap = !Is.stringValue(workbenchConfig.nodeIdentity);
 
 	return {
 		webServerOptions,
 		rootPackageFolder,
-		debug: Coerce.boolean(envVars.SERVER_DEBUG) ?? false,
+		debug: Coerce.boolean(envVars.WORKBENCH_DEBUG) ?? false,
 		bootstrap,
 		envVars,
 		storageFileRoot,
-		systemConfigFilename,
-		systemConfig,
-		systemLoggingConnectorName: envVars.SERVER_SYSTEM_LOGGING_CONNECTOR_NAME ?? "system"
+		workbenchConfigFilename,
+		config: workbenchConfig,
+		nodeLoggingConnectorName:
+			envVars.WORKBENCH_NODE_LOGGING_CONNECTOR_NAME ?? DEFAULT_NODE_LOGGING_CONNECTOR
 	};
 }
 
 /**
- * Read the system configuration.
+ * Read the configuration.
  * @param storageFileRoot The root of the storage files.
- * @param systemConfigFilename The system config filename.
- * @returns The system configuration.
+ * @param configFilename The workbench config filename.
+ * @returns The configuration.
  */
-export async function readSystemConfig(
+export async function readConfig(
 	storageFileRoot: string,
-	systemConfigFilename: string
-): Promise<ISystemConfig | undefined> {
-	const fullSystemConfigFilename = path.join(storageFileRoot, systemConfigFilename);
+	configFilename: string
+): Promise<IWorkbenchConfig | undefined> {
+	const fullConfigFilename = path.join(storageFileRoot, configFilename);
 
-	return CLIUtils.readJsonFile<ISystemConfig>(fullSystemConfigFilename);
+	return CLIUtils.readJsonFile<IWorkbenchConfig>(fullConfigFilename);
 }
 
 /**
- * Write the system configuration.
+ * Write the configuration.
  * @param storageFileRoot The root of the storage files.
- * @param systemConfigFilename The system config filename.
- * @param systemConfig The system configuration.
+ * @param configFilename The config filename.
+ * @param config The configuration.
  */
-export async function writeSystemConfig(
+export async function writeConfig(
 	storageFileRoot: string,
-	systemConfigFilename: string,
-	systemConfig: ISystemConfig
+	configFilename: string,
+	config: IWorkbenchConfig
 ): Promise<void> {
-	const fullSystemConfigFilename = path.join(storageFileRoot, systemConfigFilename);
+	const fullConfigFilename = path.join(storageFileRoot, configFilename);
 
-	await CLIUtils.writeJsonFile(fullSystemConfigFilename, systemConfig, false);
+	await CLIUtils.writeJsonFile(fullConfigFilename, config, false);
 }

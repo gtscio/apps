@@ -12,7 +12,7 @@ export const profileProperties = writable<IIdentityProfileProperty[]>([]);
 let identityProfileClient: IdentityProfileClient | undefined;
 
 /**
- * Initialize the API information.
+ * Initialize the identity profile.
  * @param apiUrl The API url.
  */
 export async function init(apiUrl: string): Promise<void> {

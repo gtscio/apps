@@ -6,18 +6,21 @@ import { AttestationConnectorFactory, type IAttestationConnector } from "@gtsc/a
 import { AttestationService } from "@gtsc/attestation-service";
 import { GeneralError, I18n } from "@gtsc/core";
 import { ServiceFactory, type IService } from "@gtsc/services";
-import { systemLogInfo } from "./logging.js";
-import type { IOptions } from "../models/IOptions.js";
+import { nodeLogInfo } from "./logging.js";
+import type { IWorkbenchContext } from "../models/IWorkbenchContext.js";
 
 export const ATTESTATION_SERVICE_NAME = "attestation";
 
 /**
  * Initialise the attestation service.
- * @param options The options for the web server.
+ * @param context The context for the node.
  * @param services The services.
  */
-export function initialiseAttestationService(options: IOptions, services: IService[]): void {
-	systemLogInfo(I18n.formatMessage("apiServer.configuring", { element: "Attestation Service" }));
+export function initialiseAttestationService(
+	context: IWorkbenchContext,
+	services: IService[]
+): void {
+	nodeLogInfo(I18n.formatMessage("workbench.configuring", { element: "Attestation Service" }));
 
 	const service = new AttestationService();
 	services.push(service);
@@ -26,37 +29,37 @@ export function initialiseAttestationService(options: IOptions, services: IServi
 
 /**
  * Initialise the attestation connector factory.
- * @param options The options for the web server.
+ * @param context The context for the node.
  * @param services The services.
  * @throws GeneralError if the connector type is unknown.
  */
 export function initialiseAttestationConnectorFactory(
-	options: IOptions,
+	context: IWorkbenchContext,
 	services: IService[]
 ): void {
-	systemLogInfo(
-		I18n.formatMessage("apiServer.configuring", { element: "Attestation Connector Factory" })
+	nodeLogInfo(
+		I18n.formatMessage("workbench.configuring", { element: "Attestation Connector Factory" })
 	);
 
-	const type = options.envVars.SERVER_ATTESTATION_CONNECTOR;
+	const type = context.envVars.WORKBENCH_ATTESTATION_CONNECTOR;
 
 	let connector: IAttestationConnector;
 	let namespace: string;
 
 	if (type === "iota") {
 		connector = new IotaAttestationConnector({
-			identityConnectorType: options.envVars.SERVER_IDENTITY_CONNECTOR,
-			nftConnectorType: options.envVars.SERVER_NFT_CONNECTOR
+			identityConnectorType: context.envVars.WORKBENCH_IDENTITY_CONNECTOR,
+			nftConnectorType: context.envVars.WORKBENCH_NFT_CONNECTOR
 		});
 		namespace = IotaAttestationConnector.NAMESPACE;
 	} else if (type === "entity-storage") {
 		connector = new EntityStorageAttestationConnector({
-			identityConnectorType: options.envVars.SERVER_IDENTITY_CONNECTOR,
-			nftConnectorType: options.envVars.SERVER_NFT_CONNECTOR
+			identityConnectorType: context.envVars.WORKBENCH_IDENTITY_CONNECTOR,
+			nftConnectorType: context.envVars.WORKBENCH_NFT_CONNECTOR
 		});
 		namespace = EntityStorageAttestationConnector.NAMESPACE;
 	} else {
-		throw new GeneralError("apiServer", "serviceUnknownType", {
+		throw new GeneralError("Workbench", "serviceUnknownType", {
 			type,
 			serviceType: "attestationConnector"
 		});

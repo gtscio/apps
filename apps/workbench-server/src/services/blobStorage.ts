@@ -8,18 +8,21 @@ import { BlobStorageConnectorFactory, type IBlobStorageConnector } from "@gtsc/b
 import { BlobStorageService } from "@gtsc/blob-storage-service";
 import { GeneralError, I18n } from "@gtsc/core";
 import { ServiceFactory, type IService } from "@gtsc/services";
-import { systemLogInfo } from "./logging.js";
-import type { IOptions } from "../models/IOptions.js";
+import { nodeLogInfo } from "./logging.js";
+import type { IWorkbenchContext } from "../models/IWorkbenchContext.js";
 
 export const BLOB_STORAGE_SERVICE_NAME = "blob-storage";
 
 /**
  * Initialise the blob storage service.
- * @param options The options for the web server.
+ * @param context The context for the node.
  * @param services The services.
  */
-export function initialiseBlobStorageService(options: IOptions, services: IService[]): void {
-	systemLogInfo(I18n.formatMessage("apiServer.configuring", { element: "Blob Storage Service" }));
+export function initialiseBlobStorageService(
+	context: IWorkbenchContext,
+	services: IService[]
+): void {
+	nodeLogInfo(I18n.formatMessage("workbench.configuring", { element: "Blob Storage Service" }));
 
 	const service = new BlobStorageService();
 	services.push(service);
@@ -28,34 +31,34 @@ export function initialiseBlobStorageService(options: IOptions, services: IServi
 
 /**
  * Initialise the blob storage connector factory.
- * @param options The options for the web server.
+ * @param context The context for the node.
  * @param services The services.
  * @throws GeneralError if the connector type is unknown.
  */
 export function initialiseBlobStorageConnectorFactory(
-	options: IOptions,
+	context: IWorkbenchContext,
 	services: IService[]
 ): void {
-	systemLogInfo(
-		I18n.formatMessage("apiServer.configuring", { element: "Blob Storage Connector Factory" })
+	nodeLogInfo(
+		I18n.formatMessage("workbench.configuring", { element: "Blob Storage Connector Factory" })
 	);
 
-	const type = options.envVars.SERVER_BLOB_STORAGE_CONNECTOR;
+	const type = context.envVars.WORKBENCH_BLOB_STORAGE_CONNECTOR;
 
 	let connector: IBlobStorageConnector;
 	let namespace: string;
 	if (type === "ipfs") {
 		connector = new IpfsBlobStorageConnector({
 			config: {
-				apiUrl: options.envVars.SERVER_IPFS_URL,
-				bearerToken: options.envVars.SERVER_IPFS_TOKEN
+				apiUrl: context.envVars.WORKBENCH_IPFS_URL,
+				bearerToken: context.envVars.WORKBENCH_IPFS_TOKEN
 			}
 		});
 		namespace = IpfsBlobStorageConnector.NAMESPACE;
 	} else if (type === "file") {
 		connector = new FileBlobStorageConnector({
 			config: {
-				directory: path.join(options.storageFileRoot, "blob-storage")
+				directory: path.join(context.storageFileRoot, "blob-storage")
 			}
 		});
 		namespace = FileBlobStorageConnector.NAMESPACE;
@@ -63,7 +66,7 @@ export function initialiseBlobStorageConnectorFactory(
 		connector = new MemoryBlobStorageConnector();
 		namespace = MemoryBlobStorageConnector.NAMESPACE;
 	} else {
-		throw new GeneralError("apiServer", "serviceUnknownType", {
+		throw new GeneralError("Workbench", "serviceUnknownType", {
 			type,
 			serviceType: "blobStorageConnector"
 		});

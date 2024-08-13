@@ -17,44 +17,44 @@ import { LoggingService } from "@gtsc/logging-service";
 import { nameof } from "@gtsc/nameof";
 import { ServiceFactory, type IService } from "@gtsc/services";
 import { initialiseEntityStorageConnector } from "./entityStorage.js";
-import type { IOptions } from "../models/IOptions.js";
+import type { IWorkbenchContext } from "../models/IWorkbenchContext.js";
 
 export const LOGGING_SERVICE_NAME = "logging";
 
-let systemLoggingConnector: ILoggingConnector;
+let nodeLoggingConnector: ILoggingConnector;
 let showDetail: boolean;
 
 /**
  * Initialise the logging connector.
- * @param options The options for the web server.
+ * @param context The context for the node.
  * @param services The services.
  */
-export function initialiseSystemLoggingConnector(options: IOptions, services: IService[]): void {
+export function initialiseNodeLoggingConnector(
+	context: IWorkbenchContext,
+	services: IService[]
+): void {
 	// Create a regular console logger which automatically translates messages and hides groups.
-	// to display the system messages to the console
+	// to display the node messages to the console
 	const consoleLoggingConnector = new ConsoleLoggingConnector({
 		translateMessages: true,
 		hideGroups: true
 	});
 	services.push(consoleLoggingConnector);
 
-	systemLoggingConnector = consoleLoggingConnector;
+	nodeLoggingConnector = consoleLoggingConnector;
 
-	LoggingConnectorFactory.register(
-		options.systemLoggingConnectorName,
-		() => consoleLoggingConnector
-	);
+	LoggingConnectorFactory.register(context.nodeLoggingConnectorName, () => consoleLoggingConnector);
 
-	showDetail = options.debug;
+	showDetail = context.debug;
 }
 
 /**
  * Initialise the logging service.
- * @param options The options for the web server.
+ * @param context The context for the node.
  * @param services The services.
  */
-export function initialiseLoggingService(options: IOptions, services: IService[]): void {
-	systemLogInfo(I18n.formatMessage("apiServer.configuring", { element: "Logging Service" }));
+export function initialiseLoggingService(context: IWorkbenchContext, services: IService[]): void {
+	nodeLogInfo(I18n.formatMessage("workbench.configuring", { element: "Logging Service" }));
 
 	const service = new LoggingService();
 	services.push(service);
@@ -63,16 +63,19 @@ export function initialiseLoggingService(options: IOptions, services: IService[]
 
 /**
  * Initialise the logging connector factory.
- * @param options The options for the web server.
+ * @param context The context for the node.
  * @param services The services.
  * @throws GeneralError if the connector type is unknown.
  */
-export function initialiseLoggingConnectorFactory(options: IOptions, services: IService[]): void {
-	systemLogInfo(
-		I18n.formatMessage("apiServer.configuring", { element: "Logging Connector Factory" })
+export function initialiseLoggingConnectorFactory(
+	context: IWorkbenchContext,
+	services: IService[]
+): void {
+	nodeLogInfo(
+		I18n.formatMessage("workbench.configuring", { element: "Logging Connector Factory" })
 	);
 
-	const types = options.envVars.SERVER_LOGGING_CONNECTOR.split(",");
+	const types = context.envVars.WORKBENCH_LOGGING_CONNECTOR.split(",");
 
 	for (const type of types) {
 		let connector: ILoggingConnector;
@@ -86,15 +89,15 @@ export function initialiseLoggingConnectorFactory(options: IOptions, services: I
 		} else if (type === "entity-storage") {
 			initSchemaLogging();
 			initialiseEntityStorageConnector(
-				options,
+				context,
 				services,
-				options.envVars.SERVER_LOGGING_ENTITY_STORAGE_TYPE,
+				context.envVars.WORKBENCH_LOGGING_ENTITY_STORAGE_TYPE,
 				nameof<LogEntry>()
 			);
 			connector = new EntityStorageLoggingConnector();
 			namespace = EntityStorageLoggingConnector.NAMESPACE;
 		} else {
-			throw new GeneralError("apiServer", "serviceUnknownType", {
+			throw new GeneralError("Workbench", "serviceUnknownType", {
 				type,
 				serviceType: "loggingConnector"
 			});
@@ -118,9 +121,9 @@ export function initialiseLoggingConnectorFactory(options: IOptions, services: I
  * Log info.
  * @param message The message to log.
  */
-export function systemLogInfo(message: string): void {
-	systemLoggingConnector?.log({
-		source: "apiServer",
+export function nodeLogInfo(message: string): void {
+	nodeLoggingConnector?.log({
+		source: "Workbench",
 		level: "info",
 		message
 	});
@@ -130,7 +133,7 @@ export function systemLogInfo(message: string): void {
  * Log error.
  * @param error The error to log.
  */
-export function systemLogError(error: IError): void {
+export function nodeLogError(error: IError): void {
 	const formattedErrors = ErrorHelper.localizeErrors(error);
 	for (const formattedError of formattedErrors) {
 		let message = Is.stringValue(formattedError.source)
@@ -139,9 +142,9 @@ export function systemLogError(error: IError): void {
 		if (showDetail && Is.stringValue(formattedError.stack)) {
 			message += `\n${formattedError.stack}`;
 		}
-		if (systemLoggingConnector) {
-			systemLoggingConnector.log({
-				source: "apiServer",
+		if (nodeLoggingConnector) {
+			nodeLoggingConnector.log({
+				source: "Workbench",
 				level: "error",
 				message
 			});

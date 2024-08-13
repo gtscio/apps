@@ -12,21 +12,21 @@ import {
 import { TelemetryConnectorFactory, type ITelemetryConnector } from "@gtsc/telemetry-models";
 import { TelemetryService } from "@gtsc/telemetry-service";
 import { initialiseEntityStorageConnector } from "./entityStorage.js";
-import { systemLogInfo } from "./logging.js";
-import type { IOptions } from "../models/IOptions.js";
+import { nodeLogInfo } from "./logging.js";
+import type { IWorkbenchContext } from "../models/IWorkbenchContext.js";
 
 export const TELEMETRY_SERVICE_NAME = "telemetry";
 
 /**
  * Initialise the telemetry service.
- * @param options The options for the web server.
+ * @param context The context for the node.
  * @param services The services.
  */
-export function initialiseTelemetryService(options: IOptions, services: IService[]): void {
-	systemLogInfo(I18n.formatMessage("apiServer.configuring", { element: "Telemetry Service" }));
+export function initialiseTelemetryService(context: IWorkbenchContext, services: IService[]): void {
+	nodeLogInfo(I18n.formatMessage("workbench.configuring", { element: "Telemetry Service" }));
 
 	const service = new TelemetryService({
-		telemetryConnectorType: options.envVars.SERVER_TELEMETRY_CONNECTOR
+		telemetryConnectorType: context.envVars.WORKBENCH_TELEMETRY_CONNECTOR
 	});
 	services.push(service);
 	ServiceFactory.register(TELEMETRY_SERVICE_NAME, () => service);
@@ -34,31 +34,34 @@ export function initialiseTelemetryService(options: IOptions, services: IService
 
 /**
  * Initialise the telemetry connector factory.
- * @param options The options for the web server.
+ * @param context The context for the node.
  * @param services The services.
  * @throws GeneralError if the connector type is unknown.
  */
-export function initialiseTelemetryConnectorFactory(options: IOptions, services: IService[]): void {
-	systemLogInfo(
-		I18n.formatMessage("apiServer.configuring", { element: "Telemetry Connector Factory" })
+export function initialiseTelemetryConnectorFactory(
+	context: IWorkbenchContext,
+	services: IService[]
+): void {
+	nodeLogInfo(
+		I18n.formatMessage("workbench.configuring", { element: "Telemetry Connector Factory" })
 	);
 
-	const type = options.envVars.SERVER_TELEMETRY_CONNECTOR;
+	const type = context.envVars.WORKBENCH_TELEMETRY_CONNECTOR;
 
 	let connector: ITelemetryConnector;
 	let namespace: string;
 	if (type === "entity-storage") {
 		initSchemaTelemetry();
 		initialiseEntityStorageConnector(
-			options,
+			context,
 			services,
-			options.envVars.SERVER_TELEMETRY_ENTITY_STORAGE_TYPE,
+			context.envVars.WORKBENCH_TELEMETRY_ENTITY_STORAGE_TYPE,
 			nameof<TelemetryMetric>()
 		);
 		initialiseEntityStorageConnector(
-			options,
+			context,
 			services,
-			options.envVars.SERVER_TELEMETRY_ENTITY_STORAGE_TYPE,
+			context.envVars.WORKBENCH_TELEMETRY_ENTITY_STORAGE_TYPE,
 			nameof<TelemetryMetricValue>()
 		);
 		connector = new EntityStorageTelemetryConnector({
@@ -66,7 +69,7 @@ export function initialiseTelemetryConnectorFactory(options: IOptions, services:
 		});
 		namespace = EntityStorageTelemetryConnector.NAMESPACE;
 	} else {
-		throw new GeneralError("apiServer", "serviceUnknownType", {
+		throw new GeneralError("Workbench", "serviceUnknownType", {
 			type,
 			serviceType: "telemetryConnector"
 		});

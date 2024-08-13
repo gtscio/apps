@@ -19,19 +19,19 @@ import { IdentityProfileService, IdentityService } from "@gtsc/identity-service"
 import { nameof } from "@gtsc/nameof";
 import { ServiceFactory, type IService } from "@gtsc/services";
 import { initialiseEntityStorageConnector } from "./entityStorage.js";
-import { systemLogInfo } from "./logging.js";
-import type { IOptions } from "../models/IOptions.js";
+import { nodeLogInfo } from "./logging.js";
+import type { IWorkbenchContext } from "../models/IWorkbenchContext.js";
 
 export const IDENTITY_SERVICE_NAME = "identity";
 export const IDENTITY_PROFILE_SERVICE_NAME = "identity-profile";
 
 /**
  * Initialise the identity service.
- * @param options The options for the web server.
+ * @param context The context for the node.
  * @param services The services.
  */
-export function initialiseIdentityService(options: IOptions, services: IService[]): void {
-	systemLogInfo(I18n.formatMessage("apiServer.configuring", { element: "Identity Service" }));
+export function initialiseIdentityService(context: IWorkbenchContext, services: IService[]): void {
+	nodeLogInfo(I18n.formatMessage("workbench.configuring", { element: "Identity Service" }));
 
 	const service = new IdentityService();
 	services.push(service);
@@ -40,46 +40,49 @@ export function initialiseIdentityService(options: IOptions, services: IService[
 
 /**
  * Initialise the identity connector factory.
- * @param options The options for the web server.
+ * @param context The context for the node.
  * @param services The services.
  * @throws GeneralError if the connector type is unknown.
  */
-export function initialiseIdentityConnectorFactory(options: IOptions, services: IService[]): void {
-	systemLogInfo(
-		I18n.formatMessage("apiServer.configuring", { element: "Identity Connector Factory" })
+export function initialiseIdentityConnectorFactory(
+	context: IWorkbenchContext,
+	services: IService[]
+): void {
+	nodeLogInfo(
+		I18n.formatMessage("workbench.configuring", { element: "Identity Connector Factory" })
 	);
 
-	const type = options.envVars.SERVER_IDENTITY_CONNECTOR;
+	const type = context.envVars.WORKBENCH_IDENTITY_CONNECTOR;
 
 	let connector: IIdentityConnector;
 	let namespace: string;
 	if (type === "iota") {
 		connector = new IotaIdentityConnector({
-			vaultConnectorType: options.envVars.SERVER_VAULT_CONNECTOR,
-			walletConnectorType: options.envVars.SERVER_WALLET_CONNECTOR,
+			vaultConnectorType: context.envVars.WORKBENCH_VAULT_CONNECTOR,
+			walletConnectorType: context.envVars.WORKBENCH_WALLET_CONNECTOR,
 			config: {
 				clientOptions: {
-					nodes: [options.envVars.SERVER_IOTA_NODE_URL],
+					nodes: [context.envVars.WORKBENCH_IOTA_NODE_URL],
 					localPow: true
 				},
-				coinType: Coerce.number(options.envVars.SERVER_IOTA_COIN_TYPE)
+				coinType: Coerce.number(context.envVars.WORKBENCH_IOTA_COIN_TYPE)
 			}
 		});
 		namespace = IotaIdentityConnector.NAMESPACE;
 	} else if (type === "entity-storage") {
 		initSchemaIdentityStorage({ includeProfile: false });
 		initialiseEntityStorageConnector(
-			options,
+			context,
 			services,
-			options.envVars.SERVER_IDENTITY_ENTITY_STORAGE_TYPE,
+			context.envVars.WORKBENCH_IDENTITY_ENTITY_STORAGE_TYPE,
 			nameof<IdentityDocument>()
 		);
 		connector = new EntityStorageIdentityConnector({
-			vaultConnectorType: options.envVars.SERVER_VAULT_CONNECTOR
+			vaultConnectorType: context.envVars.WORKBENCH_VAULT_CONNECTOR
 		});
 		namespace = EntityStorageIdentityConnector.NAMESPACE;
 	} else {
-		throw new GeneralError("apiServer", "serviceUnknownType", {
+		throw new GeneralError("Workbench", "serviceUnknownType", {
 			type,
 			serviceType: "identityConnector"
 		});
@@ -91,16 +94,17 @@ export function initialiseIdentityConnectorFactory(options: IOptions, services: 
 
 /**
  * Initialise the identity profile service.
- * @param options The options for the web server.
+ * @param context The context for the node.
  * @param services The services.
  */
-export function initialiseIdentityProfileService(options: IOptions, services: IService[]): void {
-	systemLogInfo(
-		I18n.formatMessage("apiServer.configuring", { element: "Identity Profile Service" })
-	);
+export function initialiseIdentityProfileService(
+	context: IWorkbenchContext,
+	services: IService[]
+): void {
+	nodeLogInfo(I18n.formatMessage("workbench.configuring", { element: "Identity Profile Service" }));
 
 	const serviceProfile = new IdentityProfileService({
-		profileEntityConnectorType: options.envVars.SERVER_IDENTITY_PROFILE_CONNECTOR
+		profileEntityConnectorType: context.envVars.WORKBENCH_IDENTITY_PROFILE_CONNECTOR
 	});
 	services.push(serviceProfile);
 	ServiceFactory.register(IDENTITY_PROFILE_SERVICE_NAME, () => serviceProfile);
@@ -108,19 +112,19 @@ export function initialiseIdentityProfileService(options: IOptions, services: IS
 
 /**
  * Initialise the identity profile connector factory.
- * @param options The options for the web server.
+ * @param context The context for the node.
  * @param services The services.
  * @throws GeneralError if the connector type is unknown.
  */
 export function initialiseIdentityProfileConnectorFactory(
-	options: IOptions,
+	context: IWorkbenchContext,
 	services: IService[]
 ): void {
-	systemLogInfo(
-		I18n.formatMessage("apiServer.configuring", { element: "Identity Profile Connector Factory" })
+	nodeLogInfo(
+		I18n.formatMessage("workbench.configuring", { element: "Identity Profile Connector Factory" })
 	);
 
-	const type = options.envVars.SERVER_IDENTITY_PROFILE_CONNECTOR;
+	const type = context.envVars.WORKBENCH_IDENTITY_PROFILE_CONNECTOR;
 
 	let connector: IIdentityProfileConnector;
 	let namespace: string;
@@ -128,15 +132,15 @@ export function initialiseIdentityProfileConnectorFactory(
 		initSchemaIdentityStorage({ includeDocument: false });
 
 		initialiseEntityStorageConnector(
-			options,
+			context,
 			services,
-			options.envVars.SERVER_IDENTITY_PROFILE_ENTITY_STORAGE_TYPE,
+			context.envVars.WORKBENCH_IDENTITY_PROFILE_ENTITY_STORAGE_TYPE,
 			nameof<IdentityProfile>()
 		);
 		connector = new EntityStorageIdentityProfileConnector();
 		namespace = EntityStorageIdentityProfileConnector.NAMESPACE;
 	} else {
-		throw new GeneralError("apiServer", "serviceUnknownType", {
+		throw new GeneralError("Workbench", "serviceUnknownType", {
 			type,
 			serviceType: "identityProfileConnector"
 		});

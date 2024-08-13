@@ -2,33 +2,35 @@
 // SPDX-License-Identifier: Apache-2.0.
 import path from "node:path";
 import { GeneralError, I18n, StringHelper } from "@gtsc/core";
+import { DynamoDbEntityStorageConnector } from "@gtsc/entity-storage-connector-dynamodb";
 import { FileEntityStorageConnector } from "@gtsc/entity-storage-connector-file";
 import { MemoryEntityStorageConnector } from "@gtsc/entity-storage-connector-memory";
+import { ScyllaDBTableConnector } from "@gtsc/entity-storage-connector-scylladb";
 import {
 	EntityStorageConnectorFactory,
 	type IEntityStorageConnector
 } from "@gtsc/entity-storage-models";
 import type { IService } from "@gtsc/services";
-import { systemLogInfo } from "./logging.js";
-import type { IOptions } from "../models/IOptions.js";
+import { nodeLogInfo } from "./logging.js";
+import type { IWorkbenchContext } from "../models/IWorkbenchContext.js";
 
 /**
  * Initialise the entity storage connector.
- * @param options The options for the web server.
+ * @param context The context for the node.
  * @param services The services.
  * @param type The type of the connector.
  * @param schema The schema for the entity storage.
  * @throws GeneralError if the connector type is unknown.
  */
 export function initialiseEntityStorageConnector(
-	options: IOptions,
+	context: IWorkbenchContext,
 	services: IService[],
 	type: string,
 	schema: string
 ): void {
 	const storageName = StringHelper.kebabCase(schema);
-	systemLogInfo(
-		I18n.formatMessage("apiServer.configuringEntityStorage", {
+	nodeLogInfo(
+		I18n.formatMessage("workbench.configuringEntityStorage", {
 			element: "Entity Storage",
 			storageName,
 			storageType: type
@@ -44,11 +46,32 @@ export function initialiseEntityStorageConnector(
 		entityStorageConnector = new FileEntityStorageConnector({
 			entitySchema: schema,
 			config: {
-				directory: path.join(options.storageFileRoot, storageName)
+				directory: path.join(context.storageFileRoot, storageName)
+			}
+		});
+	} else if (type === "dynamodb") {
+		entityStorageConnector = new DynamoDbEntityStorageConnector({
+			entitySchema: schema,
+			config: {
+				accessKeyId: context.envVars.WORKBENCH_DYNAMODB_ACCESS_KEY_ID,
+				secretAccessKey: context.envVars.WORKBENCH_DYNAMODB_SECRET_ACCESS_KEY,
+				region: context.envVars.WORKBENCH_DYNAMODB_REGION,
+				tableName: `${context.envVars.WORKBENCH_DYNAMODB_TABLE_PREFIX ?? ""}${storageName}`,
+				endpoint: context.envVars.WORKBENCH_DYNAMODB_ENDPOINT
+			}
+		});
+	} else if (type === "scylladb") {
+		entityStorageConnector = new ScyllaDBTableConnector({
+			entitySchema: schema,
+			config: {
+				hosts: context.envVars.WORKBENCH_SCYLLADB_HOSTS.split(","),
+				localDataCenter: context.envVars.WORKBENCH_SCYLLADB_LOCAL_DATA_CENTER,
+				keyspace: context.envVars.WORKBENCH_SCYLLADB_KEYSPACE,
+				tableName: `${context.envVars.WORKBENCH_SCYLLADB_TABLE_PREFIX ?? ""}${storageName}`
 			}
 		});
 	} else {
-		throw new GeneralError("apiServer", "serviceUnknownType", {
+		throw new GeneralError("Workbench", "serviceUnknownType", {
 			type,
 			serviceType: "entityStorage"
 		});

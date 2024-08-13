@@ -12,18 +12,18 @@ import { NftConnectorFactory, type INftConnector } from "@gtsc/nft-models";
 import { NftService } from "@gtsc/nft-service";
 import { ServiceFactory, type IService } from "@gtsc/services";
 import { initialiseEntityStorageConnector } from "./entityStorage.js";
-import { systemLogInfo } from "./logging.js";
-import type { IOptions } from "../models/IOptions.js";
+import { nodeLogInfo } from "./logging.js";
+import type { IWorkbenchContext } from "../models/IWorkbenchContext.js";
 
 export const NFT_SERVICE_NAME = "nft";
 
 /**
  * Initialise the NFT service.
- * @param options The options for the web server.
+ * @param context The context for the node.
  * @param services The services.
  */
-export function initialiseNftService(options: IOptions, services: IService[]): void {
-	systemLogInfo(I18n.formatMessage("apiServer.configuring", { element: "NFT Service" }));
+export function initialiseNftService(context: IWorkbenchContext, services: IService[]): void {
+	nodeLogInfo(I18n.formatMessage("workbench.configuring", { element: "NFT Service" }));
 
 	const service = new NftService();
 	services.push(service);
@@ -32,42 +32,45 @@ export function initialiseNftService(options: IOptions, services: IService[]): v
 
 /**
  * Initialise the NFT connector factory.
- * @param options The options for the web server.
+ * @param context The context for the node.
  * @param services The services.
  * @throws GeneralError if the connector type is unknown.
  */
-export function initialiseNftConnectorFactory(options: IOptions, services: IService[]): void {
-	systemLogInfo(I18n.formatMessage("apiServer.configuring", { element: "NFT Connector Factory" }));
+export function initialiseNftConnectorFactory(
+	context: IWorkbenchContext,
+	services: IService[]
+): void {
+	nodeLogInfo(I18n.formatMessage("workbench.configuring", { element: "NFT Connector Factory" }));
 
-	const type = options.envVars.SERVER_NFT_CONNECTOR;
+	const type = context.envVars.WORKBENCH_NFT_CONNECTOR;
 
 	let connector: INftConnector;
 	let namespace: string;
 
 	if (type === "iota") {
 		connector = new IotaNftConnector({
-			vaultConnectorType: options.envVars.SERVER_VAULT_CONNECTOR,
+			vaultConnectorType: context.envVars.WORKBENCH_VAULT_CONNECTOR,
 			config: {
 				clientOptions: {
-					nodes: [options.envVars.SERVER_IOTA_NODE_URL],
+					nodes: [context.envVars.WORKBENCH_IOTA_NODE_URL],
 					localPow: true
 				},
-				coinType: Coerce.number(options.envVars.SERVER_IOTA_COIN_TYPE)
+				coinType: Coerce.number(context.envVars.WORKBENCH_IOTA_COIN_TYPE)
 			}
 		});
 		namespace = IotaNftConnector.NAMESPACE;
 	} else if (type === "entity-storage") {
 		initSchemaNft();
 		initialiseEntityStorageConnector(
-			options,
+			context,
 			services,
-			options.envVars.SERVER_NFT_ENTITY_STORAGE_TYPE,
+			context.envVars.WORKBENCH_NFT_ENTITY_STORAGE_TYPE,
 			nameof<Nft>()
 		);
 		connector = new EntityStorageNftConnector();
 		namespace = EntityStorageNftConnector.NAMESPACE;
 	} else {
-		throw new GeneralError("apiServer", "serviceUnknownType", {
+		throw new GeneralError("Workbench", "serviceUnknownType", {
 			type,
 			serviceType: "nftConnector"
 		});

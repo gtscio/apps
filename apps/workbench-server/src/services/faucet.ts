@@ -5,21 +5,22 @@ import type { IService } from "@gtsc/services";
 import { EntityStorageFaucetConnector } from "@gtsc/wallet-connector-entity-storage";
 import { IotaFaucetConnector } from "@gtsc/wallet-connector-iota";
 import { FaucetConnectorFactory, type IFaucetConnector } from "@gtsc/wallet-models";
-import { systemLogInfo } from "./logging.js";
-import type { IOptions } from "../models/IOptions.js";
+import { nodeLogInfo } from "./logging.js";
+import type { IWorkbenchContext } from "../models/IWorkbenchContext.js";
 
 /**
  * Initialise the faucet connector factory.
- * @param options The options for the web server.
+ * @param context The context for the node.
  * @param services The services.
  * @throws GeneralError if the connector type is unknown.
  */
-export function initialiseFaucetConnectorFactory(options: IOptions, services: IService[]): void {
-	systemLogInfo(
-		I18n.formatMessage("apiServer.configuring", { element: "Faucet Connector Factory" })
-	);
+export function initialiseFaucetConnectorFactory(
+	context: IWorkbenchContext,
+	services: IService[]
+): void {
+	nodeLogInfo(I18n.formatMessage("workbench.configuring", { element: "Faucet Connector Factory" }));
 
-	const type = options.envVars.SERVER_FAUCET_CONNECTOR;
+	const type = context.envVars.WORKBENCH_FAUCET_CONNECTOR;
 
 	let connector: IFaucetConnector;
 	let namespace: string;
@@ -28,10 +29,10 @@ export function initialiseFaucetConnectorFactory(options: IOptions, services: IS
 		connector = new IotaFaucetConnector({
 			config: {
 				clientOptions: {
-					nodes: [options.envVars.SERVER_IOTA_NODE_URL],
+					nodes: [context.envVars.WORKBENCH_IOTA_NODE_URL],
 					localPow: true
 				},
-				endpoint: options.envVars.SERVER_IOTA_FAUCET_URL
+				endpoint: context.envVars.WORKBENCH_IOTA_FAUCET_URL
 			}
 		});
 		namespace = IotaFaucetConnector.NAMESPACE;
@@ -39,7 +40,7 @@ export function initialiseFaucetConnectorFactory(options: IOptions, services: IS
 		connector = new EntityStorageFaucetConnector();
 		namespace = EntityStorageFaucetConnector.NAMESPACE;
 	} else {
-		throw new GeneralError("apiServer", "serviceUnknownType", {
+		throw new GeneralError("Workbench", "serviceUnknownType", {
 			type,
 			serviceType: "faucetConnector"
 		});

@@ -7,46 +7,46 @@ import {
 	type AuthenticationUser
 } from "@gtsc/api-auth-entity-storage-service";
 import type { IHttpRestRouteProcessor } from "@gtsc/api-models";
-import { LoggingProcessor, RouteProcessor, SystemIdentityProcessor } from "@gtsc/api-processors";
+import { LoggingProcessor, NodeIdentityProcessor, RouteProcessor } from "@gtsc/api-processors";
 import { GeneralError } from "@gtsc/core";
 import { nameof } from "@gtsc/nameof";
 import { ServiceFactory, type IService } from "@gtsc/services";
 import { initialiseEntityStorageConnector } from "./entityStorage.js";
-import type { IOptions } from "../models/IOptions.js";
+import type { IWorkbenchContext } from "../models/IWorkbenchContext.js";
 
 export const AUTH_SERVICE_NAME = "authentication";
 export const AUTH_SIGNING_NAME_VAULT_KEY = "signing";
 
 /**
  * Build the processor for the REST routes.
- * @param options The options for the web server.
+ * @param context The context for the node.
  * @param services The services.
  * @returns The REST route processors.
  * @throws If the processor type is unknown.
  */
 export function buildProcessors(
-	options: IOptions,
+	context: IWorkbenchContext,
 	services: IService[]
 ): IHttpRestRouteProcessor[] {
 	const restRouteProcessors: IHttpRestRouteProcessor[] = [];
 
 	restRouteProcessors.push(
 		new LoggingProcessor({
-			loggingConnectorType: options.systemLoggingConnectorName,
+			loggingConnectorType: context.nodeLoggingConnectorName,
 			config: {
-				includeBody: options.debug
+				includeBody: context.debug
 			}
 		})
 	);
 
-	restRouteProcessors.push(new SystemIdentityProcessor());
+	restRouteProcessors.push(new NodeIdentityProcessor());
 
-	buildAuthProcessors(options, restRouteProcessors, services);
+	buildAuthProcessors(context, restRouteProcessors, services);
 
 	restRouteProcessors.push(
 		new RouteProcessor({
 			config: {
-				includeErrorStack: options.debug
+				includeErrorStack: context.debug
 			}
 		})
 	);
@@ -58,27 +58,27 @@ export function buildProcessors(
 
 /**
  * Build the authentication pre processors.
- * @param options The options for the web server.
+ * @param context The context for the node.
  * @param restRouteProcessors The REST route processors.
  * @param services The services.
  * @throws If the auth processor type is unknown.
  */
 function buildAuthProcessors(
-	options: IOptions,
+	context: IWorkbenchContext,
 	restRouteProcessors: IHttpRestRouteProcessor[],
 	services: IService[]
 ): void {
-	if (options.envVars.SERVER_AUTH_PROCESSOR_TYPE === "entity-storage") {
+	if (context.envVars.WORKBENCH_AUTH_PROCESSOR_TYPE === "entity-storage") {
 		initSchemaAuthEntityStorage();
 		initialiseEntityStorageConnector(
-			options,
+			context,
 			services,
-			options.envVars.SERVER_AUTH_USER_ENTITY_STORAGE_TYPE,
+			context.envVars.WORKBENCH_AUTH_USER_ENTITY_STORAGE_TYPE,
 			nameof<AuthenticationUser>()
 		);
 
 		const authenticationService = new EntityStorageAuthenticationService({
-			vaultConnectorType: options.envVars.SERVER_VAULT_CONNECTOR,
+			vaultConnectorType: context.envVars.WORKBENCH_VAULT_CONNECTOR,
 			config: {
 				signingKeyName: AUTH_SIGNING_NAME_VAULT_KEY
 			}
@@ -89,15 +89,15 @@ function buildAuthProcessors(
 
 		restRouteProcessors.push(
 			new AuthHeaderProcessor({
-				vaultConnectorType: options.envVars.SERVER_VAULT_CONNECTOR,
+				vaultConnectorType: context.envVars.WORKBENCH_VAULT_CONNECTOR,
 				config: {
 					signingKeyName: AUTH_SIGNING_NAME_VAULT_KEY
 				}
 			})
 		);
 	} else {
-		throw new GeneralError("apiServer", "processorUnknownType", {
-			type: options.envVars.SERVER_AUTH_PROCESSOR_TYPE,
+		throw new GeneralError("Workbench", "processorUnknownType", {
+			type: context.envVars.WORKBENCH_AUTH_PROCESSOR_TYPE,
 			processorType: "authProcessor"
 		});
 	}

@@ -28,9 +28,9 @@ import { initialiseInformationService } from "./services/information.js";
 import {
 	initialiseLoggingConnectorFactory,
 	initialiseLoggingService,
-	initialiseSystemLoggingConnector,
-	systemLogError,
-	systemLogInfo
+	initialiseNodeLoggingConnector,
+	nodeLogError,
+	nodeLogInfo
 } from "./services/logging.js";
 import { initialiseNftConnectorFactory, initialiseNftService } from "./services/nft.js";
 import { buildProcessors } from "./services/processors.js";
@@ -52,68 +52,68 @@ try {
 	const rootPackageFolder = findRootPackageFolder();
 	await initialiseLocales(rootPackageFolder);
 
-	const options = await configure(rootPackageFolder);
+	const context = await configure(rootPackageFolder);
 
-	if (options.debug) {
-		CLIDisplay.value(I18n.formatMessage("apiServer.debuggingEnabled"), "true");
+	if (context.debug) {
+		CLIDisplay.value(I18n.formatMessage("workbench.debuggingEnabled"), "true");
 		CLIDisplay.break();
 	}
 
 	const services: IService[] = [];
-	initialiseSystemLoggingConnector(options, services);
+	initialiseNodeLoggingConnector(context, services);
 
-	initialiseInformationService(options, services, serverInfo);
+	initialiseInformationService(context, services, serverInfo);
 
-	initialiseVaultConnectorFactory(options, services);
+	initialiseVaultConnectorFactory(context, services);
 
-	initialiseWalletStorage(options, services);
-	initialiseFaucetConnectorFactory(options, services);
-	initialiseWalletConnectorFactory(options, services);
+	initialiseWalletStorage(context, services);
+	initialiseFaucetConnectorFactory(context, services);
+	initialiseWalletConnectorFactory(context, services);
 
-	initialiseIdentityConnectorFactory(options, services);
-	initialiseIdentityService(options, services);
+	initialiseIdentityConnectorFactory(context, services);
+	initialiseIdentityService(context, services);
 
-	initialiseIdentityProfileConnectorFactory(options, services);
-	initialiseIdentityProfileService(options, services);
+	initialiseIdentityProfileConnectorFactory(context, services);
+	initialiseIdentityProfileService(context, services);
 
-	initialiseLoggingConnectorFactory(options, services);
-	initialiseLoggingService(options, services);
+	initialiseLoggingConnectorFactory(context, services);
+	initialiseLoggingService(context, services);
 
-	initialiseTelemetryConnectorFactory(options, services);
-	initialiseTelemetryService(options, services);
+	initialiseTelemetryConnectorFactory(context, services);
+	initialiseTelemetryService(context, services);
 
-	initialiseBlobStorageConnectorFactory(options, services);
-	initialiseBlobStorageService(options, services);
+	initialiseBlobStorageConnectorFactory(context, services);
+	initialiseBlobStorageService(context, services);
 
-	initialiseNftConnectorFactory(options, services);
-	initialiseNftService(options, services);
+	initialiseNftConnectorFactory(context, services);
+	initialiseNftService(context, services);
 
-	initialiseAttestationConnectorFactory(options, services);
-	initialiseAttestationService(options, services);
+	initialiseAttestationConnectorFactory(context, services);
+	initialiseAttestationService(context, services);
 
-	const processors = buildProcessors(options, services);
+	const processors = buildProcessors(context, services);
 
-	if (options.bootstrap) {
-		await bootstrap(options, services);
+	if (context.bootstrap) {
+		await bootstrap(context, services);
 	}
 
 	for (const service of services) {
 		if (Is.function(service.start)) {
-			systemLogInfo(I18n.formatMessage("apiServer.starting", { element: service.CLASS_NAME }));
-			await service.start(options.systemConfig.systemIdentity, options.systemLoggingConnectorName);
+			nodeLogInfo(I18n.formatMessage("workbench.starting", { element: service.CLASS_NAME }));
+			await service.start(context.config.nodeIdentity, context.nodeLoggingConnectorName);
 		}
 	}
 
-	await startWebServer(options, processors, buildRoutes(), async () => {
+	await startWebServer(context, processors, buildRoutes(), async () => {
 		for (const service of services) {
 			if (Is.function(service.stop)) {
-				systemLogInfo(I18n.formatMessage("apiServer.stopping", { element: service.CLASS_NAME }));
-				await service.stop(options.systemConfig.systemIdentity, options.systemLoggingConnectorName);
+				nodeLogInfo(I18n.formatMessage("workbench.stopping", { element: service.CLASS_NAME }));
+				await service.stop(context.config.nodeIdentity, context.nodeLoggingConnectorName);
 			}
 		}
 	});
 } catch (err) {
-	systemLogError(BaseError.fromError(err));
+	nodeLogError(BaseError.fromError(err));
 	// eslint-disable-next-line unicorn/no-process-exit
 	process.exit(1);
 }
