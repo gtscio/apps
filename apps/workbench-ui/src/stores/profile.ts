@@ -54,19 +54,23 @@ async function profileRefresh(): Promise<void> {
 
 /**
  * Update the profile.
- * @param firstName The profile first name.
- * @param lastName The profile last name.
+ * @param fields The profile fields.
+ * @param fields.firstName The profile first name.
+ * @param fields.lastName The profile last name.
+ * @param fields.displayName The profile display name.
  * @returns The error if one occurred.
  */
-export async function profileUpdate(
-	firstName: string,
-	lastName: string
-): Promise<string | undefined> {
+export async function profileUpdate(fields: {
+	firstName: string;
+	lastName: string;
+	displayName: string;
+}): Promise<string | undefined> {
 	if (Is.object(identityProfileClient)) {
 		try {
 			const properties = get(profileProperties);
-			PropertyHelper.setText(properties, "firstName", firstName);
-			PropertyHelper.setText(properties, "lastName", lastName);
+			PropertyHelper.setText(properties, "firstName", fields.firstName);
+			PropertyHelper.setText(properties, "lastName", fields.lastName);
+			PropertyHelper.setText(properties, "displayName", fields.displayName, { isPublic: true });
 			profileProperties.set(properties);
 
 			await identityProfileClient.update(properties);

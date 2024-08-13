@@ -3,7 +3,7 @@
 	// SPDX-License-Identifier: Apache-2.0.
 	import { Is, Validation, type IValidationFailure } from '@gtsc/core';
 	import { PropertyHelper } from '@gtsc/schema';
-	import { Input, Label } from 'flowbite-svelte';
+	import { Helper, Input, Label } from 'flowbite-svelte';
 	import ValidatedForm from '../../../components/validatedForm.svelte';
 	import ValidationError from '../../../components/validationError.svelte';
 	import { i18n } from '../../../stores/i18n';
@@ -11,8 +11,10 @@
 
 	let firstName = PropertyHelper.getText($profileProperties, 'firstName') ?? '';
 	let lastName = PropertyHelper.getText($profileProperties, 'lastName') ?? '';
-	let validationErrors: { [field in 'firstName' | 'lastName']?: IValidationFailure[] | undefined } =
-		{};
+	let displayName = PropertyHelper.getText($profileProperties, 'displayName') ?? '';
+	let validationErrors: {
+		[field in 'firstName' | 'lastName' | 'displayName']?: IValidationFailure[] | undefined;
+	} = {};
 	let isBusy = false;
 
 	async function validate(validationFailures: IValidationFailure[]): Promise<void> {
@@ -28,10 +30,16 @@
 			validationFailures,
 			$i18n('pages.identityProfile.lastName')
 		);
+		Validation.stringValue(
+			'displayName',
+			displayName,
+			validationFailures,
+			$i18n('pages.identityProfile.displayName')
+		);
 	}
 
 	async function action(): Promise<string | undefined> {
-		return profileUpdate(firstName, lastName);
+		return profileUpdate({ firstName, lastName, displayName });
 	}
 </script>
 
@@ -65,6 +73,18 @@
 					disabled={isBusy}
 				/>
 				<ValidationError validationErrors={validationErrors.lastName} />
+			</Label>
+			<Label class="space-y-2">
+				<span>{$i18n('pages.identityProfile.displayName')}</span>
+				<Helper>{$i18n('pages.identityProfile.displayNameDescription')}</Helper>
+				<Input
+					type="text"
+					name="displayName"
+					color={Is.arrayValue(validationErrors.lastName) ? 'red' : 'base'}
+					bind:value={displayName}
+					disabled={isBusy}
+				/>
+				<ValidationError validationErrors={validationErrors.displayName} />
 			</Label>
 		</svelte:fragment>
 	</ValidatedForm>

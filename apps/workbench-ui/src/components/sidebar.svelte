@@ -4,10 +4,8 @@
 	import { page } from '$app/stores';
 	import { Sidebar, SidebarGroup, SidebarItem, SidebarWrapper } from 'flowbite-svelte';
 	import {
-		ImageSolid,
 		LockOpenSolid,
 		LockSolid,
-		RectangleListSolid,
 		ShieldCheckSolid,
 		SwatchbookSolid
 	} from 'flowbite-svelte-icons';
@@ -31,6 +29,14 @@
 						/>
 					</svelte:fragment>
 				</SidebarItem>
+				<SidebarItem label={$i18n('navigation.attestation')} href="/secure/attestation">
+					<svelte:fragment slot="icon">
+						<ShieldCheckSolid
+							class="h-6 w-6 text-gray-500 transition duration-75 group-hover:text-gray-900 dark:text-gray-400 dark:group-hover:text-white"
+						/>
+					</svelte:fragment>
+				</SidebarItem>
+				<!--
 				<SidebarItem label={$i18n('navigation.telemetry')} href="/secure/telemetry">
 					<svelte:fragment slot="icon">
 						<SwatchbookSolid
@@ -45,20 +51,13 @@
 						/>
 					</svelte:fragment>
 				</SidebarItem>
-				<SidebarItem label={$i18n('navigation.attestation')} href="/secure/attestation">
-					<svelte:fragment slot="icon">
-						<ShieldCheckSolid
-							class="h-6 w-6 text-gray-500 transition duration-75 group-hover:text-gray-900 dark:text-gray-400 dark:group-hover:text-white"
-						/>
-					</svelte:fragment>
-				</SidebarItem>
 				<SidebarItem label={$i18n('navigation.nft')} href="/secure/nft">
 					<svelte:fragment slot="icon">
 						<ImageSolid
 							class="h-6 w-6 text-gray-500 transition duration-75 group-hover:text-gray-900 dark:text-gray-400 dark:group-hover:text-white"
 						/>
 					</svelte:fragment>
-				</SidebarItem>
+				</SidebarItem> -->
 				<SidebarGroup border>
 					<SidebarItem label={$i18n('navigation.logout')} href="/authentication/logout">
 						<svelte:fragment slot="icon">
@@ -71,7 +70,7 @@
 			{/if}
 			{#if !$isAuthenticated}
 				<SidebarGroup>
-					<SidebarItem label={$i18n('navigation.login')} href="/authentication/login">
+					<SidebarItem label={$i18n('navigation.login')} href="/">
 						<svelte:fragment slot="icon">
 							<LockSolid
 								class="h-6 w-6 text-gray-500 transition duration-75 group-hover:text-gray-900 dark:text-gray-400 dark:group-hover:text-white"

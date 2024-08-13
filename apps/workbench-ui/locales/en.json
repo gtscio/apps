@@ -3,11 +3,8 @@
 		"name": "Workbench"
 	},
 	"navigation": {
-		"home": "Home",
-		"about": "About",
 		"login": "Login",
 		"logout": "Logout",
-		"privacyPolicy": "Privacy Policy",
 		"dashboard": "Dashboard",
 		"telemetry": "Telemetry",
 		"logging": "Logging",
@@ -37,7 +34,9 @@
 		"identityProfile": {
 			"title": "Profile",
 			"firstName": "First Name",
-			"lastName": "Last Name"
+			"lastName": "Last Name",
+			"displayName": "Display Name",
+			"displayNameDescription": "This will be the name that is displayed publicly when viewing your identity"
 		}
 	},
 	"actions": {

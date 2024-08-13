@@ -52,7 +52,7 @@ export async function init(apiUrl: string): Promise<void> {
 export function checkAuth(url: URL): void {
 	const authenticated = get(isAuthenticated);
 	if (!authenticated) {
-		redirect(307, `/authentication/login?returnUrl=${url.pathname}`);
+		redirect(307, `/?returnUrl=${url.pathname}`);
 	}
 }
 

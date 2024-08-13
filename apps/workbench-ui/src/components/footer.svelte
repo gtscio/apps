@@ -1,14 +1,7 @@
 <script lang="ts">
 	// Copyright 2024 IOTA Stiftung.
 	// SPDX-License-Identifier: Apache-2.0.
-	import {
-		DarkMode,
-		Footer,
-		FooterCopyright,
-		FooterLink,
-		FooterLinkGroup,
-		Select
-	} from 'flowbite-svelte';
+	import { DarkMode, Footer, FooterCopyright, Select } from 'flowbite-svelte';
 	import { currentLocale, i18n, locales } from '../stores/i18n';
 </script>
 
@@ -38,10 +31,5 @@
 				btnClass="text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg text-xl p-2"
 			/>
 		</div>
-		<FooterLinkGroup
-			ulClass="flex flex-wrap items-center mt-3 text-sm text-gray-500 dark:text-gray-400 sm:mt-0"
-		>
-			<FooterLink href="/privacy">{$i18n('navigation.privacyPolicy')}</FooterLink>
-		</FooterLinkGroup>
 	</div>
 </Footer>
