@@ -5,6 +5,7 @@ import { Coerce } from "@gtsc/core";
 import { init as initApiInformation } from "../stores/apiInformation";
 import { init as initAuthentication } from "../stores/authentication";
 import { init as initLocales } from "../stores/i18n";
+import { init as initIdentity } from "../stores/identity";
 import { init as initIdentityProfile } from "../stores/profile";
 
 /**
@@ -16,6 +17,7 @@ export async function load(): Promise<void> {
 		await initApiInformation(PUBLIC_WORKBENCH_API_URL);
 		await initAuthentication(PUBLIC_WORKBENCH_API_URL);
 		await initIdentityProfile(PUBLIC_WORKBENCH_API_URL);
+		await initIdentity(PUBLIC_WORKBENCH_API_URL);
 	} catch (err) {
 		// eslint-disable-next-line no-console
 		console.error("Error during init load", err);

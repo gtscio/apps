@@ -67,7 +67,6 @@
 		"@gtsc/nft-connector-iota": "next",
 		"@gtsc/nft-service": "next",
 		"@gtsc/schema": "next",
-		"@gtsc/services": "next",
 		"@gtsc/telemetry-models": "next",
 		"@gtsc/telemetry-connector-entity-storage": "next",
 		"@gtsc/telemetry-service": "next",

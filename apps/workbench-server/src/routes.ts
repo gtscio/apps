@@ -12,14 +12,14 @@ import {
 import { generateRestRoutesLogging } from "@gtsc/logging-service";
 import { generateRestRoutesNft } from "@gtsc/nft-service";
 import { generateRestRoutesTelemetry } from "@gtsc/telemetry-service";
-import { ATTESTATION_SERVICE_NAME } from "./services/attestation.js";
-import { BLOB_STORAGE_SERVICE_NAME } from "./services/blobStorage.js";
-import { IDENTITY_PROFILE_SERVICE_NAME, IDENTITY_SERVICE_NAME } from "./services/identity.js";
-import { INFORMATION_SERVICE_NAME } from "./services/information.js";
-import { LOGGING_SERVICE_NAME } from "./services/logging.js";
-import { NFT_SERVICE_NAME } from "./services/nft.js";
-import { AUTH_SERVICE_NAME } from "./services/processors.js";
-import { TELEMETRY_SERVICE_NAME } from "./services/telemetry.js";
+import { ATTESTATION_SERVICE_NAME } from "./components/attestation.js";
+import { BLOB_STORAGE_SERVICE_NAME } from "./components/blobStorage.js";
+import { IDENTITY_PROFILE_SERVICE_NAME, IDENTITY_SERVICE_NAME } from "./components/identity.js";
+import { INFORMATION_SERVICE_NAME } from "./components/information.js";
+import { LOGGING_SERVICE_NAME } from "./components/logging.js";
+import { NFT_SERVICE_NAME } from "./components/nft.js";
+import { AUTH_SERVICE_NAME } from "./components/processors.js";
+import { TELEMETRY_SERVICE_NAME } from "./components/telemetry.js";
 
 /**
  * The routes for the application.

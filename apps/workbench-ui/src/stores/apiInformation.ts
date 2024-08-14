@@ -25,8 +25,7 @@ let healthInterval: NodeJS.Timeout | undefined;
  */
 export async function init(apiUrl: string): Promise<void> {
 	informationClient = new InformationClient({
-		endpoint: apiUrl,
-		pathPrefix: ""
+		endpoint: apiUrl
 	});
 
 	await getHealth();

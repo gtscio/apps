@@ -3,7 +3,7 @@
 	// SPDX-License-Identifier: Apache-2.0.
 	import { Is } from '@gtsc/core';
 	import { PropertyHelper } from '@gtsc/schema';
-	import { Avatar, Navbar, NavBrand, NavHamburger } from 'flowbite-svelte';
+	import { Avatar, Navbar, NavBrand } from 'flowbite-svelte';
 	import '../app.css';
 	import { isAuthenticated } from '../stores/authentication';
 	import { i18n } from '../stores/i18n';
@@ -47,7 +47,6 @@
 			>{$i18n('app.name')}</span
 		>
 	</NavBrand>
-	<NavHamburger />
 	{#if $isAuthenticated}
 		<a href="/secure/identity-profile"
 			><Avatar border class="ring-primary-600 dark:ring-primary-600 cursor-pointer"

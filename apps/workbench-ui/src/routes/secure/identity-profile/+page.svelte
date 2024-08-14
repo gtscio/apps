@@ -1,13 +1,15 @@
 <script lang="ts">
 	// Copyright 2024 IOTA Stiftung.
 	// SPDX-License-Identifier: Apache-2.0.
+	import { page } from '$app/stores';
 	import { Is, Validation, type IValidationFailure } from '@gtsc/core';
 	import { PropertyHelper } from '@gtsc/schema';
 	import { Helper, Input, Label } from 'flowbite-svelte';
+	import Qr from '../../../components/qr.svelte';
 	import ValidatedForm from '../../../components/validatedForm.svelte';
 	import ValidationError from '../../../components/validationError.svelte';
 	import { i18n } from '../../../stores/i18n';
-	import { profileProperties, profileUpdate } from '../../../stores/profile';
+	import { profileIdentity, profileProperties, profileUpdate } from '../../../stores/profile';
 
 	let firstName = PropertyHelper.getText($profileProperties, 'firstName') ?? '';
 	let lastName = PropertyHelper.getText($profileProperties, 'lastName') ?? '';
@@ -38,12 +40,14 @@
 		);
 	}
 
+	const profileViewUrl = `${$page.url.origin}/public/identity/${$profileIdentity}`;
+
 	async function action(): Promise<string | undefined> {
 		return profileUpdate({ firstName, lastName, displayName });
 	}
 </script>
 
-<section class="flex justify-center">
+<section class="flex justify-center gap-5">
 	<ValidatedForm
 		titleResource="pages.identityProfile.title"
 		validationMethod={validate}
@@ -85,6 +89,12 @@
 					disabled={isBusy}
 				/>
 				<ValidationError validationErrors={validationErrors.displayName} />
+			</Label>
+		</svelte:fragment>
+		<svelte:fragment slot="fields-right">
+			<Label class="flex flex-col space-y-2">
+				<span>{$i18n('pages.identityProfile.qr')}</span>
+				<Qr qrData={profileViewUrl} labelResource="pages.identityProfile.qr" dimensions={128} />
 			</Label>
 		</svelte:fragment>
 	</ValidatedForm>

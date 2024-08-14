@@ -1,3 +1,27 @@
 @import 'tailwindcss/base';
 @import 'tailwindcss/components';
 @import 'tailwindcss/utilities';
+
+::-webkit-scrollbar-track {
+	@apply bg-gray-200;
+	@apply rounded-lg;
+	@apply dark:bg-gray-800;
+}
+
+::-webkit-scrollbar {
+	@apply bg-gray-200;
+	@apply dark:bg-gray-800;
+	@apply w-3;
+	@apply h-3;
+	@apply rounded-lg;
+}
+
+::-webkit-scrollbar-thumb {
+	@apply bg-gray-400;
+	@apply dark:bg-gray-600;
+	@apply rounded-lg;
+}
+
+::-webkit-scrollbar-corner {
+	background: transparent;
+}

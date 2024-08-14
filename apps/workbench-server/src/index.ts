@@ -2,44 +2,43 @@
 // SPDX-License-Identifier: Apache-2.0.
 import type { IServerInfo } from "@gtsc/api-models";
 import { CLIDisplay } from "@gtsc/cli-core";
-import { BaseError, I18n, Is } from "@gtsc/core";
-import type { IService } from "@gtsc/services";
+import { BaseError, I18n, type IComponent, Is } from "@gtsc/core";
 import { bootstrap } from "./bootstrap.js";
-import { configure, findRootPackageFolder } from "./configure.js";
-import { initialiseLocales } from "./locales.js";
-import { buildRoutes } from "./routes.js";
-import { startWebServer } from "./server.js";
 import {
 	initialiseAttestationConnectorFactory,
 	initialiseAttestationService
-} from "./services/attestation.js";
+} from "./components/attestation.js";
 import {
 	initialiseBlobStorageConnectorFactory,
 	initialiseBlobStorageService
-} from "./services/blobStorage.js";
-import { initialiseFaucetConnectorFactory } from "./services/faucet.js";
+} from "./components/blobStorage.js";
+import { initialiseFaucetConnectorFactory } from "./components/faucet.js";
 import {
 	initialiseIdentityConnectorFactory,
 	initialiseIdentityProfileConnectorFactory,
 	initialiseIdentityProfileService,
 	initialiseIdentityService
-} from "./services/identity.js";
-import { initialiseInformationService } from "./services/information.js";
+} from "./components/identity.js";
+import { initialiseInformationService } from "./components/information.js";
 import {
 	initialiseLoggingConnectorFactory,
 	initialiseLoggingService,
 	initialiseNodeLoggingConnector,
 	nodeLogError,
 	nodeLogInfo
-} from "./services/logging.js";
-import { initialiseNftConnectorFactory, initialiseNftService } from "./services/nft.js";
-import { buildProcessors } from "./services/processors.js";
+} from "./components/logging.js";
+import { initialiseNftConnectorFactory, initialiseNftService } from "./components/nft.js";
+import { buildProcessors } from "./components/processors.js";
 import {
 	initialiseTelemetryConnectorFactory,
 	initialiseTelemetryService
-} from "./services/telemetry.js";
-import { initialiseVaultConnectorFactory } from "./services/vault.js";
-import { initialiseWalletConnectorFactory, initialiseWalletStorage } from "./services/wallet.js";
+} from "./components/telemetry.js";
+import { initialiseVaultConnectorFactory } from "./components/vault.js";
+import { initialiseWalletConnectorFactory, initialiseWalletStorage } from "./components/wallet.js";
+import { configure, findRootPackageFolder } from "./configure.js";
+import { initialiseLocales } from "./locales.js";
+import { buildRoutes } from "./routes.js";
+import { startWebServer } from "./server.js";
 
 try {
 	const serverInfo: IServerInfo = {
@@ -59,56 +58,56 @@ try {
 		CLIDisplay.break();
 	}
 
-	const services: IService[] = [];
-	initialiseNodeLoggingConnector(context, services);
+	const components: IComponent[] = [];
+	initialiseNodeLoggingConnector(context, components);
 
-	initialiseInformationService(context, services, serverInfo);
+	initialiseInformationService(context, components, serverInfo);
 
-	initialiseVaultConnectorFactory(context, services);
+	initialiseVaultConnectorFactory(context, components);
 
-	initialiseWalletStorage(context, services);
-	initialiseFaucetConnectorFactory(context, services);
-	initialiseWalletConnectorFactory(context, services);
+	initialiseWalletStorage(context, components);
+	initialiseFaucetConnectorFactory(context, components);
+	initialiseWalletConnectorFactory(context, components);
 
-	initialiseIdentityConnectorFactory(context, services);
-	initialiseIdentityService(context, services);
+	initialiseIdentityConnectorFactory(context, components);
+	initialiseIdentityService(context, components);
 
-	initialiseIdentityProfileConnectorFactory(context, services);
-	initialiseIdentityProfileService(context, services);
+	initialiseIdentityProfileConnectorFactory(context, components);
+	initialiseIdentityProfileService(context, components);
 
-	initialiseLoggingConnectorFactory(context, services);
-	initialiseLoggingService(context, services);
+	initialiseLoggingConnectorFactory(context, components);
+	initialiseLoggingService(context, components);
 
-	initialiseTelemetryConnectorFactory(context, services);
-	initialiseTelemetryService(context, services);
+	initialiseTelemetryConnectorFactory(context, components);
+	initialiseTelemetryService(context, components);
 
-	initialiseBlobStorageConnectorFactory(context, services);
-	initialiseBlobStorageService(context, services);
+	initialiseBlobStorageConnectorFactory(context, components);
+	initialiseBlobStorageService(context, components);
 
-	initialiseNftConnectorFactory(context, services);
-	initialiseNftService(context, services);
+	initialiseNftConnectorFactory(context, components);
+	initialiseNftService(context, components);
 
-	initialiseAttestationConnectorFactory(context, services);
-	initialiseAttestationService(context, services);
+	initialiseAttestationConnectorFactory(context, components);
+	initialiseAttestationService(context, components);
 
-	const processors = buildProcessors(context, services);
+	const processors = buildProcessors(context, components);
 
 	if (context.bootstrap) {
-		await bootstrap(context, services);
+		await bootstrap(context, components);
 	}
 
-	for (const service of services) {
-		if (Is.function(service.start)) {
-			nodeLogInfo(I18n.formatMessage("workbench.starting", { element: service.CLASS_NAME }));
-			await service.start(context.config.nodeIdentity, context.nodeLoggingConnectorName);
+	for (const component of components) {
+		if (Is.function(component.start)) {
+			nodeLogInfo(I18n.formatMessage("workbench.starting", { element: component.CLASS_NAME }));
+			await component.start(context.config.nodeIdentity, context.nodeLoggingConnectorName);
 		}
 	}
 
 	await startWebServer(context, processors, buildRoutes(), async () => {
-		for (const service of services) {
-			if (Is.function(service.stop)) {
-				nodeLogInfo(I18n.formatMessage("workbench.stopping", { element: service.CLASS_NAME }));
-				await service.stop(context.config.nodeIdentity, context.nodeLoggingConnectorName);
+		for (const component of components) {
+			if (Is.function(component.stop)) {
+				nodeLogInfo(I18n.formatMessage("workbench.stopping", { element: component.CLASS_NAME }));
+				await component.stop(context.config.nodeIdentity, context.nodeLoggingConnectorName);
 			}
 		}
 	});

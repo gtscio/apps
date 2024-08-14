@@ -33,10 +33,16 @@
 		},
 		"identityProfile": {
 			"title": "Profile",
+			"qr": "Public Profile View",
 			"firstName": "First Name",
 			"lastName": "Last Name",
 			"displayName": "Display Name",
 			"displayNameDescription": "This will be the name that is displayed publicly when viewing your identity"
+		},
+		"identityPublic": {
+			"identity": "Identity",
+			"displayName": "Name",
+			"didDocument": "DID Document"
 		}
 	},
 	"actions": {

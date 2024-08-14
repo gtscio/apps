@@ -1,8 +1,7 @@
 // Copyright 2024 IOTA Stiftung.
 // SPDX-License-Identifier: Apache-2.0.
-import { Coerce, GeneralError, I18n } from "@gtsc/core";
+import { Coerce, GeneralError, I18n, type IComponent } from "@gtsc/core";
 import { nameof } from "@gtsc/nameof";
-import type { IService } from "@gtsc/services";
 import {
 	EntityStorageWalletConnector,
 	initSchema as initSchemaWallet,
@@ -17,10 +16,13 @@ import type { IWorkbenchContext } from "../models/IWorkbenchContext.js";
 /**
  * Initialise the wallet connector factory.
  * @param context The context for the node.
- * @param services The services.
+ * @param components The components.
  * @throws GeneralError if the connector type is unknown.
  */
-export function initialiseWalletStorage(context: IWorkbenchContext, services: IService[]): void {
+export function initialiseWalletStorage(
+	context: IWorkbenchContext,
+	components: IComponent[]
+): void {
 	const type = context.envVars.WORKBENCH_WALLET_CONNECTOR;
 
 	if (type === "iota") {
@@ -29,7 +31,7 @@ export function initialiseWalletStorage(context: IWorkbenchContext, services: IS
 		initSchemaWallet();
 		initialiseEntityStorageConnector(
 			context,
-			services,
+			components,
 			context.envVars.WORKBENCH_NFT_ENTITY_STORAGE_TYPE,
 			nameof<WalletAddress>()
 		);
@@ -44,12 +46,12 @@ export function initialiseWalletStorage(context: IWorkbenchContext, services: IS
 /**
  * Initialise the wallet connector factory.
  * @param context The context for the node.
- * @param services The services.
+ * @param components The components.
  * @throws GeneralError if the connector type is unknown.
  */
 export function initialiseWalletConnectorFactory(
 	context: IWorkbenchContext,
-	services: IService[]
+	components: IComponent[]
 ): void {
 	nodeLogInfo(I18n.formatMessage("workbench.configuring", { element: "Wallet Connector Factory" }));
 
@@ -85,6 +87,6 @@ export function initialiseWalletConnectorFactory(
 		});
 	}
 
-	services.push(connector);
+	components.push(connector);
 	WalletConnectorFactory.register(namespace, () => connector);
 }

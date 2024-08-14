@@ -1,7 +1,15 @@
 // Copyright 2024 IOTA Stiftung.
 // SPDX-License-Identifier: Apache-2.0.
 import { CLIDisplay } from "@gtsc/cli-core";
-import { ErrorHelper, GeneralError, I18n, Is, type IError } from "@gtsc/core";
+import {
+	ComponentFactory,
+	ErrorHelper,
+	GeneralError,
+	I18n,
+	Is,
+	type IComponent,
+	type IError
+} from "@gtsc/core";
 import { ConsoleLoggingConnector } from "@gtsc/logging-connector-console";
 import {
 	EntityStorageLoggingConnector,
@@ -15,7 +23,6 @@ import {
 } from "@gtsc/logging-models";
 import { LoggingService } from "@gtsc/logging-service";
 import { nameof } from "@gtsc/nameof";
-import { ServiceFactory, type IService } from "@gtsc/services";
 import { initialiseEntityStorageConnector } from "./entityStorage.js";
 import type { IWorkbenchContext } from "../models/IWorkbenchContext.js";
 
@@ -27,11 +34,11 @@ let showDetail: boolean;
 /**
  * Initialise the logging connector.
  * @param context The context for the node.
- * @param services The services.
+ * @param components The components.
  */
 export function initialiseNodeLoggingConnector(
 	context: IWorkbenchContext,
-	services: IService[]
+	components: IComponent[]
 ): void {
 	// Create a regular console logger which automatically translates messages and hides groups.
 	// to display the node messages to the console
@@ -39,7 +46,7 @@ export function initialiseNodeLoggingConnector(
 		translateMessages: true,
 		hideGroups: true
 	});
-	services.push(consoleLoggingConnector);
+	components.push(consoleLoggingConnector);
 
 	nodeLoggingConnector = consoleLoggingConnector;
 
@@ -51,25 +58,28 @@ export function initialiseNodeLoggingConnector(
 /**
  * Initialise the logging service.
  * @param context The context for the node.
- * @param services The services.
+ * @param components The components.
  */
-export function initialiseLoggingService(context: IWorkbenchContext, services: IService[]): void {
+export function initialiseLoggingService(
+	context: IWorkbenchContext,
+	components: IComponent[]
+): void {
 	nodeLogInfo(I18n.formatMessage("workbench.configuring", { element: "Logging Service" }));
 
 	const service = new LoggingService();
-	services.push(service);
-	ServiceFactory.register(LOGGING_SERVICE_NAME, () => service);
+	components.push(service);
+	ComponentFactory.register(LOGGING_SERVICE_NAME, () => service);
 }
 
 /**
  * Initialise the logging connector factory.
  * @param context The context for the node.
- * @param services The services.
+ * @param components The components.
  * @throws GeneralError if the connector type is unknown.
  */
 export function initialiseLoggingConnectorFactory(
 	context: IWorkbenchContext,
-	services: IService[]
+	components: IComponent[]
 ): void {
 	nodeLogInfo(
 		I18n.formatMessage("workbench.configuring", { element: "Logging Connector Factory" })
@@ -90,7 +100,7 @@ export function initialiseLoggingConnectorFactory(
 			initSchemaLogging();
 			initialiseEntityStorageConnector(
 				context,
-				services,
+				components,
 				context.envVars.WORKBENCH_LOGGING_ENTITY_STORAGE_TYPE,
 				nameof<LogEntry>()
 			);
@@ -103,7 +113,7 @@ export function initialiseLoggingConnectorFactory(
 			});
 		}
 
-		services.push(connector);
+		components.push(connector);
 		LoggingConnectorFactory.register(namespace, () => connector);
 	}
 
@@ -113,7 +123,7 @@ export function initialiseLoggingConnectorFactory(
 	const multiConnector = new MultiLoggingConnector({
 		loggingConnectorTypes: types
 	});
-	services.push(multiConnector);
+	components.push(multiConnector);
 	LoggingConnectorFactory.register("logging", () => multiConnector);
 }
 

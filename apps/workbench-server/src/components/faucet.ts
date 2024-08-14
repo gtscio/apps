@@ -1,7 +1,6 @@
 // Copyright 2024 IOTA Stiftung.
 // SPDX-License-Identifier: Apache-2.0.
-import { GeneralError, I18n } from "@gtsc/core";
-import type { IService } from "@gtsc/services";
+import { GeneralError, I18n, type IComponent } from "@gtsc/core";
 import { EntityStorageFaucetConnector } from "@gtsc/wallet-connector-entity-storage";
 import { IotaFaucetConnector } from "@gtsc/wallet-connector-iota";
 import { FaucetConnectorFactory, type IFaucetConnector } from "@gtsc/wallet-models";
@@ -11,12 +10,12 @@ import type { IWorkbenchContext } from "../models/IWorkbenchContext.js";
 /**
  * Initialise the faucet connector factory.
  * @param context The context for the node.
- * @param services The services.
+ * @param components The components.
  * @throws GeneralError if the connector type is unknown.
  */
 export function initialiseFaucetConnectorFactory(
 	context: IWorkbenchContext,
-	services: IService[]
+	components: IComponent[]
 ): void {
 	nodeLogInfo(I18n.formatMessage("workbench.configuring", { element: "Faucet Connector Factory" }));
 
@@ -46,6 +45,6 @@ export function initialiseFaucetConnectorFactory(
 		});
 	}
 
-	services.push(connector);
+	components.push(connector);
 	FaucetConnectorFactory.register(namespace, () => connector);
 }

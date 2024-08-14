@@ -2,7 +2,15 @@
 // SPDX-License-Identifier: Apache-2.0.
 import { PasswordHelper, type AuthenticationUser } from "@gtsc/api-auth-entity-storage-service";
 import { CLIDisplay } from "@gtsc/cli-core";
-import { Converter, GeneralError, I18n, Is, RandomHelper, StringHelper } from "@gtsc/core";
+import {
+	Converter,
+	GeneralError,
+	I18n,
+	Is,
+	RandomHelper,
+	StringHelper,
+	type IComponent
+} from "@gtsc/core";
 import { Bip39, PasswordGenerator } from "@gtsc/crypto";
 import {
 	EntityStorageConnectorFactory,
@@ -12,23 +20,25 @@ import { IotaIdentityUtils } from "@gtsc/identity-connector-iota";
 import { IdentityConnectorFactory, IdentityProfileConnectorFactory } from "@gtsc/identity-models";
 import { nameof } from "@gtsc/nameof";
 import { SchemaOrgDataTypes } from "@gtsc/schema";
-import type { IService } from "@gtsc/services";
 import { VaultConnectorFactory, VaultKeyType } from "@gtsc/vault-models";
 import type { WalletAddress } from "@gtsc/wallet-connector-entity-storage";
 import { WalletConnectorFactory } from "@gtsc/wallet-models";
+import { nodeLogInfo } from "./components/logging.js";
+import { AUTH_SIGNING_NAME_VAULT_KEY } from "./components/processors.js";
 import { writeConfig } from "./configure.js";
 import type { IWorkbenchContext } from "./models/IWorkbenchContext.js";
-import { nodeLogInfo } from "./services/logging.js";
-import { AUTH_SIGNING_NAME_VAULT_KEY } from "./services/processors.js";
 
 export const DEFAULT_NODE_ADMIN_EMAIL = "admin@node";
 
 /**
  * Bootstrap the application.
  * @param context The context for the node.
- * @param services The services to bootstrap.
+ * @param components The components to bootstrap.
  */
-export async function bootstrap(context: IWorkbenchContext, services: IService[]): Promise<void> {
+export async function bootstrap(
+	context: IWorkbenchContext,
+	components: IComponent[]
+): Promise<void> {
 	CLIDisplay.break();
 	CLIDisplay.task(
 		I18n.formatMessage("workbench.bootstrapStarted", { filename: context.workbenchConfigFilename })
@@ -37,10 +47,10 @@ export async function bootstrap(context: IWorkbenchContext, services: IService[]
 
 	const hasIdentity = Is.stringValue(context.config.nodeIdentity);
 
-	for (const service of services) {
-		if (Is.function(service.bootstrap)) {
-			nodeLogInfo(I18n.formatMessage("workbench.bootstrapping", { element: service.CLASS_NAME }));
-			const result = await service.bootstrap(context.nodeLoggingConnectorName);
+	for (const component of components) {
+		if (Is.function(component.bootstrap)) {
+			nodeLogInfo(I18n.formatMessage("workbench.bootstrapping", { element: component.CLASS_NAME }));
+			const result = await component.bootstrap(context.nodeLoggingConnectorName);
 			if (!result) {
 				throw new GeneralError("Workbench", "bootstrapFailed");
 			}

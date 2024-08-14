@@ -3,10 +3,11 @@
 import { BaseError, ErrorHelper, Is, NotFoundError } from "@gtsc/core";
 import type { IIdentityProfileProperty } from "@gtsc/identity-models";
 import { IdentityProfileClient } from "@gtsc/identity-rest-client";
-import { PropertyHelper } from "@gtsc/schema";
+import { PropertyHelper, type IProperty } from "@gtsc/schema";
 import { get, writable } from "svelte/store";
 import { isAuthenticated } from "./authentication";
 
+export const profileIdentity = writable<string>("");
 export const profileProperties = writable<IIdentityProfileProperty[]>([]);
 
 let identityProfileClient: IdentityProfileClient | undefined;
@@ -17,32 +18,32 @@ let identityProfileClient: IdentityProfileClient | undefined;
  */
 export async function init(apiUrl: string): Promise<void> {
 	identityProfileClient = new IdentityProfileClient({
-		endpoint: apiUrl,
-		pathPrefix: "identity/profile"
+		endpoint: apiUrl
 	});
 
 	isAuthenticated.subscribe(async value => {
 		if (value) {
-			await profileRefresh();
+			await profileGet();
 		} else {
+			profileIdentity.set("");
 			profileProperties.set([]);
 		}
 	});
 }
 
 /**
- * Refresh the profile details.
+ * Get the profile details.
  */
-async function profileRefresh(): Promise<void> {
+async function profileGet(): Promise<void> {
+	profileIdentity.set("");
 	profileProperties.set([]);
 
 	if (Is.object(identityProfileClient)) {
 		try {
 			const profile = await identityProfileClient.get();
 
-			const properties = profile.properties ?? [];
-
-			profileProperties.set(properties);
+			profileIdentity.set(profile.identity);
+			profileProperties.set(profile.properties ?? []);
 		} catch (err) {
 			const error = BaseError.fromError(err);
 			if (BaseError.isErrorName(error, NotFoundError.CLASS_NAME)) {
@@ -76,6 +77,33 @@ export async function profileUpdate(fields: {
 			await identityProfileClient.update(properties);
 		} catch (err) {
 			return ErrorHelper.formatErrors(err).join("\n");
+		}
+	}
+}
+
+/**
+ * Get the public profile for the identity.
+ * @param identity The identity to get the profile for.
+ * @returns The error if one occurred.
+ */
+export async function profileGetPublic(identity: string): Promise<
+	| {
+			properties?: IProperty[];
+			error?: string | undefined;
+	  }
+	| undefined
+> {
+	if (Is.object(identityProfileClient)) {
+		try {
+			const profile = await identityProfileClient.getPublic(undefined, identity);
+
+			return {
+				properties: profile.properties
+			};
+		} catch (err) {
+			return {
+				error: ErrorHelper.formatErrors(err).join("\n")
+			};
 		}
 	}
 }
