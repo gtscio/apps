@@ -1,6 +1,6 @@
-# GTSC Apps
+# GTSC Workbench
 
-This mono-repository contains applications built using the GTSC framework packages.
+This mono-repository contains the Workbench app which demonstrates some of the GTSC framework packages.
 
 ## Packages
 
