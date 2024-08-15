@@ -13,7 +13,7 @@ import { init as initIdentityProfile } from "../stores/profile";
  */
 export async function load(): Promise<void> {
 	try {
-		Guards.stringValue("Workbench", "apiUrl", env.PUBLIC_WORKBENCH_API_URL);
+		Guards.stringValue("Workbench", "PUBLIC_WORKBENCH_API_URL", env.PUBLIC_WORKBENCH_API_URL);
 
 		await initLocales(Coerce.boolean(env.PUBLIC_WORKBENCH_DEBUG_LANGUAGES) ?? false);
 		await initApiInformation(env.PUBLIC_WORKBENCH_API_URL);
