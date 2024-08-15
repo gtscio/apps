@@ -15,8 +15,8 @@
 		"configuringEntityStorage": "Configuring {element} with name \"{storageName}\" using \"{storageType}\" connector",
 		"starting": "Starting {element}",
 		"stopping": "Stopping {element}",
-		"bootstrapStarted": "{filename} not found, starting bootstrap process",
-		"bootstrapComplete": "Bootstrap process complete",
+		"bootstrapStarted": "Starting bootstrap process",
+		"bootstrapComplete": "Bootstrap process complete, some of the details logged will not be shown again, please record them",
 		"bootstrapping": "Bootstrap {element}",
 		"generatingMnemonic": "Generating and storing mnemonic \"{mnemonic}\"",
 		"fundingWallet": "Funding wallet \"{address}\"",
@@ -25,8 +25,6 @@
 		"addingAttestation": "Adding attestation verification method",
 		"nodeIdentity": "Node identity \"{identity}\"",
 		"nodeAdminUserEmail": "Node Admin User Email \"{email}\"",
-		"nodeAdminUserPassword": "Node Admin User Password \"{password}\"",
-		"nodeConfigRecord": "Node configuration created in \"{filename}\", some of these details will not be shown again, please record them",
-		"nodeConfigExists": "Node configuration already exists, please check \"{filename}\" for details"
+		"nodeAdminUserPassword": "Node Admin User Password \"{password}\""
 	}
 }

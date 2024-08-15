@@ -1,6 +1,6 @@
 // Copyright 2024 IOTA Stiftung.
 // SPDX-License-Identifier: Apache-2.0.
-import { Coerce, ComponentFactory, GeneralError, I18n, type IComponent } from "@gtsc/core";
+import { Coerce, ComponentFactory, GeneralError, I18n } from "@gtsc/core";
 import {
 	EntityStorageIdentityConnector,
 	EntityStorageIdentityProfileConnector,
@@ -27,29 +27,21 @@ export const IDENTITY_PROFILE_SERVICE_NAME = "identity-profile";
 /**
  * Initialise the identity service.
  * @param context The context for the node.
- * @param components The components.
  */
-export function initialiseIdentityService(
-	context: IWorkbenchContext,
-	components: IComponent[]
-): void {
+export function initialiseIdentityService(context: IWorkbenchContext): void {
 	nodeLogInfo(I18n.formatMessage("workbench.configuring", { element: "Identity Service" }));
 
 	const service = new IdentityService();
-	components.push(service);
+	context.componentInstances.push({ instanceName: IDENTITY_SERVICE_NAME, component: service });
 	ComponentFactory.register(IDENTITY_SERVICE_NAME, () => service);
 }
 
 /**
  * Initialise the identity connector factory.
  * @param context The context for the node.
- * @param components The components.
  * @throws GeneralError if the connector type is unknown.
  */
-export function initialiseIdentityConnectorFactory(
-	context: IWorkbenchContext,
-	components: IComponent[]
-): void {
+export function initialiseIdentityConnectorFactory(context: IWorkbenchContext): void {
 	nodeLogInfo(
 		I18n.formatMessage("workbench.configuring", { element: "Identity Connector Factory" })
 	);
@@ -75,7 +67,6 @@ export function initialiseIdentityConnectorFactory(
 		initSchemaIdentityStorage({ includeProfile: false });
 		initialiseEntityStorageConnector(
 			context,
-			components,
 			context.envVars.WORKBENCH_IDENTITY_ENTITY_STORAGE_TYPE,
 			nameof<IdentityDocument>()
 		);
@@ -90,38 +81,33 @@ export function initialiseIdentityConnectorFactory(
 		});
 	}
 
-	components.push(connector);
+	context.componentInstances.push({ instanceName: namespace, component: connector });
 	IdentityConnectorFactory.register(namespace, () => connector);
 }
 
 /**
  * Initialise the identity profile service.
  * @param context The context for the node.
- * @param components The components.
  */
-export function initialiseIdentityProfileService(
-	context: IWorkbenchContext,
-	components: IComponent[]
-): void {
+export function initialiseIdentityProfileService(context: IWorkbenchContext): void {
 	nodeLogInfo(I18n.formatMessage("workbench.configuring", { element: "Identity Profile Service" }));
 
 	const serviceProfile = new IdentityProfileService({
 		profileEntityConnectorType: context.envVars.WORKBENCH_IDENTITY_PROFILE_CONNECTOR
 	});
-	components.push(serviceProfile);
+	context.componentInstances.push({
+		instanceName: IDENTITY_PROFILE_SERVICE_NAME,
+		component: serviceProfile
+	});
 	ComponentFactory.register(IDENTITY_PROFILE_SERVICE_NAME, () => serviceProfile);
 }
 
 /**
  * Initialise the identity profile connector factory.
  * @param context The context for the node.
- * @param components The components.
  * @throws GeneralError if the connector type is unknown.
  */
-export function initialiseIdentityProfileConnectorFactory(
-	context: IWorkbenchContext,
-	components: IComponent[]
-): void {
+export function initialiseIdentityProfileConnectorFactory(context: IWorkbenchContext): void {
 	nodeLogInfo(
 		I18n.formatMessage("workbench.configuring", { element: "Identity Profile Connector Factory" })
 	);
@@ -135,7 +121,6 @@ export function initialiseIdentityProfileConnectorFactory(
 
 		initialiseEntityStorageConnector(
 			context,
-			components,
 			context.envVars.WORKBENCH_IDENTITY_PROFILE_ENTITY_STORAGE_TYPE,
 			nameof<IdentityProfile>()
 		);
@@ -148,6 +133,6 @@ export function initialiseIdentityProfileConnectorFactory(
 		});
 	}
 
-	components.push(connector);
+	context.componentInstances.push({ instanceName: namespace, component: connector });
 	IdentityProfileConnectorFactory.register(namespace, () => connector);
 }

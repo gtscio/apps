@@ -2,7 +2,7 @@
 // SPDX-License-Identifier: Apache-2.0.
 import type { IServerInfo } from "@gtsc/api-models";
 import { CLIDisplay } from "@gtsc/cli-core";
-import { BaseError, I18n, type IComponent, Is } from "@gtsc/core";
+import { BaseError, I18n, Is } from "@gtsc/core";
 import { bootstrap } from "./bootstrap.js";
 import {
 	initialiseAttestationConnectorFactory,
@@ -58,56 +58,56 @@ try {
 		CLIDisplay.break();
 	}
 
-	const components: IComponent[] = [];
-	initialiseNodeLoggingConnector(context, components);
+	initialiseNodeLoggingConnector(context);
 
-	initialiseInformationService(context, components, serverInfo);
+	initialiseInformationService(context, serverInfo);
 
-	initialiseVaultConnectorFactory(context, components);
+	initialiseVaultConnectorFactory(context);
 
-	initialiseWalletStorage(context, components);
-	initialiseFaucetConnectorFactory(context, components);
-	initialiseWalletConnectorFactory(context, components);
+	initialiseWalletStorage(context);
+	initialiseFaucetConnectorFactory(context);
+	initialiseWalletConnectorFactory(context);
 
-	initialiseIdentityConnectorFactory(context, components);
-	initialiseIdentityService(context, components);
+	initialiseIdentityConnectorFactory(context);
+	initialiseIdentityService(context);
 
-	initialiseIdentityProfileConnectorFactory(context, components);
-	initialiseIdentityProfileService(context, components);
+	initialiseIdentityProfileConnectorFactory(context);
+	initialiseIdentityProfileService(context);
 
-	initialiseLoggingConnectorFactory(context, components);
-	initialiseLoggingService(context, components);
+	initialiseLoggingConnectorFactory(context);
+	initialiseLoggingService(context);
 
-	initialiseTelemetryConnectorFactory(context, components);
-	initialiseTelemetryService(context, components);
+	initialiseTelemetryConnectorFactory(context);
+	initialiseTelemetryService(context);
 
-	initialiseBlobStorageConnectorFactory(context, components);
-	initialiseBlobStorageService(context, components);
+	initialiseBlobStorageConnectorFactory(context);
+	initialiseBlobStorageService(context);
 
-	initialiseNftConnectorFactory(context, components);
-	initialiseNftService(context, components);
+	initialiseNftConnectorFactory(context);
+	initialiseNftService(context);
 
-	initialiseAttestationConnectorFactory(context, components);
-	initialiseAttestationService(context, components);
+	initialiseAttestationConnectorFactory(context);
+	initialiseAttestationService(context);
 
-	const processors = buildProcessors(context, components);
+	const processors = buildProcessors(context);
 
-	if (context.bootstrap) {
-		await bootstrap(context, components);
-	}
+	await bootstrap(context);
 
-	for (const component of components) {
-		if (Is.function(component.start)) {
-			nodeLogInfo(I18n.formatMessage("workbench.starting", { element: component.CLASS_NAME }));
-			await component.start(context.config.nodeIdentity, context.nodeLoggingConnectorName);
+	for (const instance of context.componentInstances) {
+		if (Is.function(instance.component.start)) {
+			nodeLogInfo(I18n.formatMessage("workbench.starting", { element: instance.instanceName }));
+			await instance.component.start(context.config.nodeIdentity, context.nodeLoggingConnectorName);
 		}
 	}
 
 	await startWebServer(context, processors, buildRoutes(), async () => {
-		for (const component of components) {
-			if (Is.function(component.stop)) {
-				nodeLogInfo(I18n.formatMessage("workbench.stopping", { element: component.CLASS_NAME }));
-				await component.stop(context.config.nodeIdentity, context.nodeLoggingConnectorName);
+		for (const instance of context.componentInstances) {
+			if (Is.function(instance.component.stop)) {
+				nodeLogInfo(I18n.formatMessage("workbench.stopping", { element: instance.instanceName }));
+				await instance.component.stop(
+					context.config.nodeIdentity,
+					context.nodeLoggingConnectorName
+				);
 			}
 		}
 	});

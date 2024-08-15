@@ -1,7 +1,7 @@
 // Copyright 2024 IOTA Stiftung.
 // SPDX-License-Identifier: Apache-2.0.
 import path from "node:path";
-import { GeneralError, I18n, type IComponent, StringHelper } from "@gtsc/core";
+import { GeneralError, I18n, StringHelper } from "@gtsc/core";
 import { DynamoDbEntityStorageConnector } from "@gtsc/entity-storage-connector-dynamodb";
 import { FileEntityStorageConnector } from "@gtsc/entity-storage-connector-file";
 import { MemoryEntityStorageConnector } from "@gtsc/entity-storage-connector-memory";
@@ -16,14 +16,12 @@ import type { IWorkbenchContext } from "../models/IWorkbenchContext.js";
 /**
  * Initialise the entity storage connector.
  * @param context The context for the node.
- * @param components The components.
  * @param type The type of the connector.
  * @param schema The schema for the entity storage.
  * @throws GeneralError if the connector type is unknown.
  */
 export function initialiseEntityStorageConnector(
 	context: IWorkbenchContext,
-	components: IComponent[],
 	type: string,
 	schema: string
 ): void {
@@ -76,6 +74,6 @@ export function initialiseEntityStorageConnector(
 		});
 	}
 
-	components.push(entityStorageConnector);
+	context.componentInstances.push({ instanceName: storageName, component: entityStorageConnector });
 	EntityStorageConnectorFactory.register(storageName, () => entityStorageConnector);
 }

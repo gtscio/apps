@@ -1,6 +1,6 @@
 // Copyright 2024 IOTA Stiftung.
 // SPDX-License-Identifier: Apache-2.0.
-import { Coerce, GeneralError, I18n, type IComponent } from "@gtsc/core";
+import { Coerce, GeneralError, I18n } from "@gtsc/core";
 import { nameof } from "@gtsc/nameof";
 import {
 	EntityStorageWalletConnector,
@@ -16,13 +16,9 @@ import type { IWorkbenchContext } from "../models/IWorkbenchContext.js";
 /**
  * Initialise the wallet connector factory.
  * @param context The context for the node.
- * @param components The components.
  * @throws GeneralError if the connector type is unknown.
  */
-export function initialiseWalletStorage(
-	context: IWorkbenchContext,
-	components: IComponent[]
-): void {
+export function initialiseWalletStorage(context: IWorkbenchContext): void {
 	const type = context.envVars.WORKBENCH_WALLET_CONNECTOR;
 
 	if (type === "iota") {
@@ -31,7 +27,6 @@ export function initialiseWalletStorage(
 		initSchemaWallet();
 		initialiseEntityStorageConnector(
 			context,
-			components,
 			context.envVars.WORKBENCH_NFT_ENTITY_STORAGE_TYPE,
 			nameof<WalletAddress>()
 		);
@@ -46,13 +41,9 @@ export function initialiseWalletStorage(
 /**
  * Initialise the wallet connector factory.
  * @param context The context for the node.
- * @param components The components.
  * @throws GeneralError if the connector type is unknown.
  */
-export function initialiseWalletConnectorFactory(
-	context: IWorkbenchContext,
-	components: IComponent[]
-): void {
+export function initialiseWalletConnectorFactory(context: IWorkbenchContext): void {
 	nodeLogInfo(I18n.formatMessage("workbench.configuring", { element: "Wallet Connector Factory" }));
 
 	const type = context.envVars.WORKBENCH_WALLET_CONNECTOR;
@@ -87,6 +78,6 @@ export function initialiseWalletConnectorFactory(
 		});
 	}
 
-	components.push(connector);
+	context.componentInstances.push({ instanceName: namespace, component: connector });
 	WalletConnectorFactory.register(namespace, () => connector);
 }

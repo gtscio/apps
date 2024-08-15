@@ -2,15 +2,7 @@
 // SPDX-License-Identifier: Apache-2.0.
 import { PasswordHelper, type AuthenticationUser } from "@gtsc/api-auth-entity-storage-service";
 import { CLIDisplay } from "@gtsc/cli-core";
-import {
-	Converter,
-	GeneralError,
-	I18n,
-	Is,
-	RandomHelper,
-	StringHelper,
-	type IComponent
-} from "@gtsc/core";
+import { Converter, GeneralError, I18n, Is, RandomHelper, StringHelper } from "@gtsc/core";
 import { Bip39, PasswordGenerator } from "@gtsc/crypto";
 import {
 	EntityStorageConnectorFactory,
@@ -33,51 +25,52 @@ export const DEFAULT_NODE_ADMIN_EMAIL = "admin@node";
 /**
  * Bootstrap the application.
  * @param context The context for the node.
- * @param components The components to bootstrap.
  */
-export async function bootstrap(
-	context: IWorkbenchContext,
-	components: IComponent[]
-): Promise<void> {
-	CLIDisplay.break();
-	CLIDisplay.task(
-		I18n.formatMessage("workbench.bootstrapStarted", { filename: context.workbenchConfigFilename })
-	);
-	CLIDisplay.break();
+export async function bootstrap(context: IWorkbenchContext): Promise<void> {
+	try {
+		for (const instance of context.componentInstances) {
+			if (Is.function(instance.component.bootstrap)) {
+				const bootstrapName = `${instance.component.CLASS_NAME}-${instance.instanceName}`;
 
-	const hasIdentity = Is.stringValue(context.config.nodeIdentity);
-
-	for (const component of components) {
-		if (Is.function(component.bootstrap)) {
-			nodeLogInfo(I18n.formatMessage("workbench.bootstrapping", { element: component.CLASS_NAME }));
-			const result = await component.bootstrap(context.nodeLoggingConnectorName);
-			if (!result) {
-				throw new GeneralError("Workbench", "bootstrapFailed");
+				if (!context.config.bootstrappedComponents.includes(bootstrapName)) {
+					displayBootstrapStarted(context);
+					nodeLogInfo(
+						I18n.formatMessage("workbench.bootstrapping", {
+							element: bootstrapName
+						})
+					);
+					const result = await instance.component.bootstrap(context.nodeLoggingConnectorName);
+					if (!result) {
+						throw new GeneralError("Workbench", "bootstrapFailed");
+					}
+					context.config.bootstrappedComponents.push(bootstrapName);
+					context.configUpdated = true;
+				}
 			}
 		}
+
+		await bootstrapNode(context);
+		await bootstrapAuth(context);
+	} finally {
+		if (context.configUpdated) {
+			await writeConfig(context.storageFileRoot, context.workbenchConfigFilename, context.config);
+			context.configUpdated = false;
+			CLIDisplay.task(I18n.formatMessage("workbench.bootstrapComplete"));
+			CLIDisplay.break();
+		}
 	}
+}
 
-	await bootstrapNode(context);
-	await bootstrapAuth(context);
-
-	if (!hasIdentity) {
-		nodeLogInfo(
-			I18n.formatMessage("workbench.nodeConfigRecord", {
-				filename: context.workbenchConfigFilename
-			})
-		);
+/**
+ * Display that the bootstrap has started.
+ * @param context The context for the node.
+ */
+function displayBootstrapStarted(context: IWorkbenchContext): void {
+	if (!context.configUpdated) {
 		CLIDisplay.break();
-		await writeConfig(context.storageFileRoot, context.workbenchConfigFilename, context.config);
-	} else {
-		nodeLogInfo(
-			I18n.formatMessage("workbench.nodeConfigExists", {
-				filename: context.workbenchConfigFilename
-			})
-		);
+		CLIDisplay.task(I18n.formatMessage("workbench.bootstrapStarted"));
+		CLIDisplay.break();
 	}
-
-	CLIDisplay.task(I18n.formatMessage("workbench.bootstrapComplete"));
-	CLIDisplay.break();
 }
 
 /**
@@ -88,6 +81,8 @@ export async function bootstrapNode(context: IWorkbenchContext): Promise<void> {
 	// If there is no identity set in the node config then we need
 	// to setup the identity for the node
 	if (!Is.stringValue(context.config.nodeIdentity)) {
+		displayBootstrapStarted(context);
+
 		// When we bootstrap the node we need to generate an identity for it,
 		// But we have a chicken and egg problem in that we can't create the identity
 		// to store the mnemonic in the vault without an identity. We use a temporary identity
@@ -148,6 +143,7 @@ export async function bootstrapNode(context: IWorkbenchContext): Promise<void> {
 
 		context.config.nodeIdentity = identityDocument.id;
 		context.config.addresses = addresses;
+		context.configUpdated = true;
 
 		// Now that we have an identity we can remove the temporary one
 		// and store the mnemonic with the new identity
@@ -178,7 +174,13 @@ export async function bootstrapNode(context: IWorkbenchContext): Promise<void> {
  * @param context The context for the node.
  */
 export async function bootstrapAuth(context: IWorkbenchContext): Promise<void> {
-	if (context.envVars.WORKBENCH_AUTH_PROCESSOR_TYPE === "entity-storage") {
+	if (
+		context.envVars.WORKBENCH_AUTH_PROCESSOR_TYPE === "entity-storage" &&
+		Is.stringValue(context.config.nodeIdentity) &&
+		!context.config.bootstrappedComponents.includes("LoginUser")
+	) {
+		displayBootstrapStarted(context);
+
 		// Create a new JWT signing key and a user login for the node if one does not exist
 		// Create the signing key for the JWT token
 		let hasSigningKey = false;
@@ -265,6 +267,8 @@ export async function bootstrapAuth(context: IWorkbenchContext): Promise<void> {
 					}
 				]);
 			}
+			context.config.bootstrappedComponents.push("LoginUser");
+			context.configUpdated = true;
 		}
 	}
 }

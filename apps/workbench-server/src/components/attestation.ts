@@ -4,7 +4,7 @@ import { EntityStorageAttestationConnector } from "@gtsc/attestation-connector-e
 import { IotaAttestationConnector } from "@gtsc/attestation-connector-iota";
 import { AttestationConnectorFactory, type IAttestationConnector } from "@gtsc/attestation-models";
 import { AttestationService } from "@gtsc/attestation-service";
-import { ComponentFactory, GeneralError, I18n, type IComponent } from "@gtsc/core";
+import { ComponentFactory, GeneralError, I18n } from "@gtsc/core";
 import { nodeLogInfo } from "./logging.js";
 import type { IWorkbenchContext } from "../models/IWorkbenchContext.js";
 
@@ -13,29 +13,21 @@ export const ATTESTATION_SERVICE_NAME = "attestation";
 /**
  * Initialise the attestation service.
  * @param context The context for the node.
- * @param components The components.
  */
-export function initialiseAttestationService(
-	context: IWorkbenchContext,
-	components: IComponent[]
-): void {
+export function initialiseAttestationService(context: IWorkbenchContext): void {
 	nodeLogInfo(I18n.formatMessage("workbench.configuring", { element: "Attestation Service" }));
 
 	const service = new AttestationService();
-	components.push(service);
+	context.componentInstances.push({ instanceName: ATTESTATION_SERVICE_NAME, component: service });
 	ComponentFactory.register(ATTESTATION_SERVICE_NAME, () => service);
 }
 
 /**
  * Initialise the attestation connector factory.
  * @param context The context for the node.
- * @param components The components.
  * @throws GeneralError if the connector type is unknown.
  */
-export function initialiseAttestationConnectorFactory(
-	context: IWorkbenchContext,
-	components: IComponent[]
-): void {
+export function initialiseAttestationConnectorFactory(context: IWorkbenchContext): void {
 	nodeLogInfo(
 		I18n.formatMessage("workbench.configuring", { element: "Attestation Connector Factory" })
 	);
@@ -64,6 +56,6 @@ export function initialiseAttestationConnectorFactory(
 		});
 	}
 
-	components.push(connector);
+	context.componentInstances.push({ instanceName: namespace, component: connector });
 	AttestationConnectorFactory.register(namespace, () => connector);
 }

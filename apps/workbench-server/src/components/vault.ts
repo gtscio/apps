@@ -1,6 +1,6 @@
 // Copyright 2024 IOTA Stiftung.
 // SPDX-License-Identifier: Apache-2.0.
-import { GeneralError, I18n, type IComponent } from "@gtsc/core";
+import { GeneralError, I18n } from "@gtsc/core";
 import { nameof } from "@gtsc/nameof";
 import {
 	EntityStorageVaultConnector,
@@ -16,13 +16,9 @@ import type { IWorkbenchContext } from "../models/IWorkbenchContext.js";
 /**
  * Initialise the vault connector factory.
  * @param context The context for the node.
- * @param components The components.
  * @throws GeneralError if the connector type is unknown.
  */
-export function initialiseVaultConnectorFactory(
-	context: IWorkbenchContext,
-	components: IComponent[]
-): void {
+export function initialiseVaultConnectorFactory(context: IWorkbenchContext): void {
 	nodeLogInfo(I18n.formatMessage("workbench.configuring", { element: "Vault Connector Factory" }));
 
 	const type = context.envVars.WORKBENCH_VAULT_CONNECTOR;
@@ -34,13 +30,11 @@ export function initialiseVaultConnectorFactory(
 		initSchema();
 		initialiseEntityStorageConnector(
 			context,
-			components,
 			context.envVars.WORKBENCH_VAULT_KEY_ENTITY_STORAGE_TYPE,
 			nameof<VaultKey>()
 		);
 		initialiseEntityStorageConnector(
 			context,
-			components,
 			context.envVars.WORKBENCH_VAULT_SECRET_ENTITY_STORAGE_TYPE,
 			nameof<VaultSecret>()
 		);
@@ -53,6 +47,6 @@ export function initialiseVaultConnectorFactory(
 		});
 	}
 
-	components.push(connector);
+	context.componentInstances.push({ instanceName: namespace, component: connector });
 	VaultConnectorFactory.register(namespace, () => connector);
 }

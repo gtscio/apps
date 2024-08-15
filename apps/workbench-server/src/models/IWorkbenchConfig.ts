@@ -8,10 +8,15 @@ export interface IWorkbenchConfig {
 	/**
 	 * The identity for the node.
 	 */
-	nodeIdentity: string;
+	nodeIdentity?: string;
 
 	/**
 	 * List of addresses for the node.
 	 */
 	addresses?: string[];
+
+	/**
+	 * The instance names of the bootstrapped components.
+	 */
+	bootstrappedComponents: string[];
 }

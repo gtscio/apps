@@ -69,23 +69,24 @@ export async function configure(rootPackageFolder: string): Promise<IWorkbenchCo
 	};
 
 	const workbenchConfigFilename = envVars.WORKBENCH_CONFIG_FILENAME ?? DEFAULT_CONFIG_FILENAME;
-	const workbenchConfig = (await readConfig(storageFileRoot, workbenchConfigFilename)) ?? {
-		nodeIdentity: ""
-	};
-	// If there is no node identity then we need to bootstrap the node.
-	const bootstrap = !Is.stringValue(workbenchConfig.nodeIdentity);
+	const workbenchConfig: IWorkbenchConfig = (await readConfig(
+		storageFileRoot,
+		workbenchConfigFilename
+	)) ?? { bootstrappedComponents: [] };
+	workbenchConfig.bootstrappedComponents ??= [];
 
 	return {
 		webServerOptions,
 		rootPackageFolder,
 		debug: Coerce.boolean(envVars.WORKBENCH_DEBUG) ?? false,
-		bootstrap,
 		envVars,
 		storageFileRoot,
 		workbenchConfigFilename,
 		config: workbenchConfig,
+		configUpdated: false,
 		nodeLoggingConnectorName:
-			envVars.WORKBENCH_NODE_LOGGING_CONNECTOR_NAME ?? DEFAULT_NODE_LOGGING_CONNECTOR
+			envVars.WORKBENCH_NODE_LOGGING_CONNECTOR_NAME ?? DEFAULT_NODE_LOGGING_CONNECTOR,
+		componentInstances: []
 	};
 }
 

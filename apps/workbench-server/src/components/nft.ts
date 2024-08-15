@@ -1,6 +1,6 @@
 // Copyright 2024 IOTA Stiftung.
 // SPDX-License-Identifier: Apache-2.0.
-import { Coerce, ComponentFactory, GeneralError, I18n, type IComponent } from "@gtsc/core";
+import { Coerce, ComponentFactory, GeneralError, I18n } from "@gtsc/core";
 import { nameof } from "@gtsc/nameof";
 import {
 	EntityStorageNftConnector,
@@ -19,26 +19,21 @@ export const NFT_SERVICE_NAME = "nft";
 /**
  * Initialise the NFT service.
  * @param context The context for the node.
- * @param components The components.
  */
-export function initialiseNftService(context: IWorkbenchContext, components: IComponent[]): void {
+export function initialiseNftService(context: IWorkbenchContext): void {
 	nodeLogInfo(I18n.formatMessage("workbench.configuring", { element: "NFT Service" }));
 
 	const service = new NftService();
-	components.push(service);
+	context.componentInstances.push({ instanceName: NFT_SERVICE_NAME, component: service });
 	ComponentFactory.register(NFT_SERVICE_NAME, () => service);
 }
 
 /**
  * Initialise the NFT connector factory.
  * @param context The context for the node.
- * @param components The components.
  * @throws GeneralError if the connector type is unknown.
  */
-export function initialiseNftConnectorFactory(
-	context: IWorkbenchContext,
-	components: IComponent[]
-): void {
+export function initialiseNftConnectorFactory(context: IWorkbenchContext): void {
 	nodeLogInfo(I18n.formatMessage("workbench.configuring", { element: "NFT Connector Factory" }));
 
 	const type = context.envVars.WORKBENCH_NFT_CONNECTOR;
@@ -62,7 +57,6 @@ export function initialiseNftConnectorFactory(
 		initSchemaNft();
 		initialiseEntityStorageConnector(
 			context,
-			components,
 			context.envVars.WORKBENCH_NFT_ENTITY_STORAGE_TYPE,
 			nameof<Nft>()
 		);
@@ -75,6 +69,6 @@ export function initialiseNftConnectorFactory(
 		});
 	}
 
-	components.push(connector);
+	context.componentInstances.push({ instanceName: namespace, component: connector });
 	NftConnectorFactory.register(namespace, () => connector);
 }

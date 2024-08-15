@@ -1,6 +1,6 @@
 // Copyright 2024 IOTA Stiftung.
 // SPDX-License-Identifier: Apache-2.0.
-import { ComponentFactory, GeneralError, I18n, type IComponent } from "@gtsc/core";
+import { ComponentFactory, GeneralError, I18n } from "@gtsc/core";
 import { nameof } from "@gtsc/nameof";
 import {
 	EntityStorageTelemetryConnector,
@@ -19,31 +19,23 @@ export const TELEMETRY_SERVICE_NAME = "telemetry";
 /**
  * Initialise the telemetry service.
  * @param context The context for the node.
- * @param components The components.
  */
-export function initialiseTelemetryService(
-	context: IWorkbenchContext,
-	components: IComponent[]
-): void {
+export function initialiseTelemetryService(context: IWorkbenchContext): void {
 	nodeLogInfo(I18n.formatMessage("workbench.configuring", { element: "Telemetry Service" }));
 
 	const service = new TelemetryService({
 		telemetryConnectorType: context.envVars.WORKBENCH_TELEMETRY_CONNECTOR
 	});
-	components.push(service);
+	context.componentInstances.push({ instanceName: TELEMETRY_SERVICE_NAME, component: service });
 	ComponentFactory.register(TELEMETRY_SERVICE_NAME, () => service);
 }
 
 /**
  * Initialise the telemetry connector factory.
  * @param context The context for the node.
- * @param components The components.
  * @throws GeneralError if the connector type is unknown.
  */
-export function initialiseTelemetryConnectorFactory(
-	context: IWorkbenchContext,
-	components: IComponent[]
-): void {
+export function initialiseTelemetryConnectorFactory(context: IWorkbenchContext): void {
 	nodeLogInfo(
 		I18n.formatMessage("workbench.configuring", { element: "Telemetry Connector Factory" })
 	);
@@ -56,13 +48,11 @@ export function initialiseTelemetryConnectorFactory(
 		initSchemaTelemetry();
 		initialiseEntityStorageConnector(
 			context,
-			components,
 			context.envVars.WORKBENCH_TELEMETRY_ENTITY_STORAGE_TYPE,
 			nameof<TelemetryMetric>()
 		);
 		initialiseEntityStorageConnector(
 			context,
-			components,
 			context.envVars.WORKBENCH_TELEMETRY_ENTITY_STORAGE_TYPE,
 			nameof<TelemetryMetricValue>()
 		);
@@ -77,6 +67,6 @@ export function initialiseTelemetryConnectorFactory(
 		});
 	}
 
-	components.push(connector);
+	context.componentInstances.push({ instanceName: namespace, component: connector });
 	TelemetryConnectorFactory.register(namespace, () => connector);
 }

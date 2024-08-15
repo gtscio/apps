@@ -10,7 +10,7 @@ import {
 	BlobStorageService,
 	initSchema as initSchemaBlobStorage
 } from "@gtsc/blob-storage-service";
-import { ComponentFactory, GeneralError, I18n, type IComponent } from "@gtsc/core";
+import { ComponentFactory, GeneralError, I18n } from "@gtsc/core";
 import { nameof } from "@gtsc/nameof";
 import { initialiseEntityStorageConnector } from "./entityStorage.js";
 import { nodeLogInfo } from "./logging.js";
@@ -21,37 +21,28 @@ export const BLOB_STORAGE_SERVICE_NAME = "blob-storage";
 /**
  * Initialise the blob storage service.
  * @param context The context for the node.
- * @param components The components.
  */
-export function initialiseBlobStorageService(
-	context: IWorkbenchContext,
-	components: IComponent[]
-): void {
+export function initialiseBlobStorageService(context: IWorkbenchContext): void {
 	nodeLogInfo(I18n.formatMessage("workbench.configuring", { element: "Blob Storage Service" }));
 
 	initSchemaBlobStorage();
 	initialiseEntityStorageConnector(
 		context,
-		components,
 		context.envVars.WORKBENCH_BLOB_STORAGE_METADATA_ENTITY_STORAGE_TYPE,
 		nameof<BlobMetadata>()
 	);
 
 	const service = new BlobStorageService();
-	components.push(service);
+	context.componentInstances.push({ instanceName: BLOB_STORAGE_SERVICE_NAME, component: service });
 	ComponentFactory.register(BLOB_STORAGE_SERVICE_NAME, () => service);
 }
 
 /**
  * Initialise the blob storage connector factory.
  * @param context The context for the node.
- * @param components The components.
  * @throws GeneralError if the connector type is unknown.
  */
-export function initialiseBlobStorageConnectorFactory(
-	context: IWorkbenchContext,
-	components: IComponent[]
-): void {
+export function initialiseBlobStorageConnectorFactory(context: IWorkbenchContext): void {
 	nodeLogInfo(
 		I18n.formatMessage("workbench.configuring", { element: "Blob Storage Connector Factory" })
 	);
@@ -85,6 +76,6 @@ export function initialiseBlobStorageConnectorFactory(
 		});
 	}
 
-	components.push(connector);
+	context.componentInstances.push({ instanceName: namespace, component: connector });
 	BlobStorageConnectorFactory.register(namespace, () => connector);
 }

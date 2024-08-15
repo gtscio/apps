@@ -1,6 +1,7 @@
 // Copyright 2024 IOTA Stiftung.
 // SPDX-License-Identifier: Apache-2.0.
 import type { IWebServerOptions } from "@gtsc/api-models";
+import type { IComponent } from "@gtsc/core";
 import type { IWorkbenchConfig } from "./IWorkbenchConfig";
 
 /**
@@ -21,11 +22,6 @@ export interface IWorkbenchContext {
 	 * Whether to run in debug mode.
 	 */
 	debug: boolean;
-
-	/**
-	 * Whether to bootstrap the application.
-	 */
-	bootstrap: boolean;
 
 	/**
 	 * The environment variables.
@@ -51,4 +47,14 @@ export interface IWorkbenchContext {
 	 * The workbench config.
 	 */
 	config: IWorkbenchConfig;
+
+	/**
+	 * The configuration has been updated so needs saving.
+	 */
+	configUpdated: boolean;
+
+	/**
+	 * The components.
+	 */
+	componentInstances: { instanceName: string; component: IComponent }[];
 }
