@@ -33,7 +33,7 @@
 </script>
 
 {#if !$isAuthenticated || true}
-	<section class="flex justify-center">
+	<section class="flex w-full justify-center">
 		<ValidatedForm
 			titleResource="pages.login.title"
 			actionButtonResource="pages.login.signIn"

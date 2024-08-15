@@ -21,6 +21,7 @@
 		"@gtsc/entity-storage-connector-file",
 		"@gtsc/entity-storage-connector-memory",
 		"@gtsc/entity-storage-models",
+		"@gtsc/framework",
 		"@gtsc/identity-models",
 		"@gtsc/identity-connector-entity-storage",
 		"@gtsc/identity-connector-iota",
@@ -43,6 +44,7 @@
 		"@gtsc/vault-connector-entity-storage",
 		"@gtsc/wallet-models",
 		"@gtsc/wallet-connector-entity-storage",
-		"@gtsc/wallet-connector-iota"
+		"@gtsc/wallet-connector-iota",
+		"@gtsc/web"
 	]
 }

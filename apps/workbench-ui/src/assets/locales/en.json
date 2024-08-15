@@ -43,6 +43,22 @@
       "identity": "Identity",
       "displayName": "Name",
       "didDocument": "DID Document"
+    },
+    "attestation": {
+      "title": "Attestation",
+      "filename": "Filename",
+      "uploading": "Uploading document to storage",
+      "attest": "Attest",
+      "attesting": "Attesting",
+      "attestSuccess": "Attestation was successful"
+    },
+    "blob": {
+      "title": "Blob Storage",
+      "id": "id",
+      "filename": "Filename",
+      "mimeType": "MIME Type",
+      "document": "Document",
+      "download": "Download"
     }
   },
   "actions": {
@@ -489,17 +505,6 @@
   "errorMessages": {
     "fetch": "Fetch"
   },
-  "identityRole": {
-    "organization": "Organization",
-    "user": "User",
-    "node": "Node"
-  },
-  "verifiableCredentialStates": {
-    "pendingVerification": "Pending Verification",
-    "rejected": "Rejected",
-    "issued": "Issued",
-    "revoked": "Revoked"
-  },
   "data-type-names": {
     "http://schema.org/Text": "Text",
     "http://schema.org/URL": "Url",
@@ -515,6 +520,17 @@
     "URN": "Urn",
     "TimestampMilliseconds": "Milliseconds since 1970",
     "TimestampSeconds": "Seconds since 1970"
+  },
+  "identityRole": {
+    "organization": "Organization",
+    "user": "User",
+    "node": "Node"
+  },
+  "verifiableCredentialStates": {
+    "pendingVerification": "Pending Verification",
+    "rejected": "Rejected",
+    "issued": "Issued",
+    "revoked": "Revoked"
   },
   "entityStorageAttestationConnector": {
     "verificationFailures": {
@@ -537,7 +553,8 @@
     "started": "The Web Server started on {addresses}",
     "stopped": "The Web Server was stopped",
     "badRequest": "The web server could not handle the request",
-    "restRouteAdded": "Added REST route \"{route}\" \"{method}\""
+    "restRouteAdded": "Added REST route \"{route}\" \"{method}\"",
+    "noProcessors": "You must configure at least one processor"
   },
   "info": {
     "fileBlobStorageConnector": {

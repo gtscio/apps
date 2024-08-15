@@ -2,7 +2,7 @@
 // SPDX-License-Identifier: Apache-2.0.
 import { PasswordHelper, type AuthenticationUser } from "@gtsc/api-auth-entity-storage-service";
 import { CLIDisplay } from "@gtsc/cli-core";
-import { Converter, GeneralError, I18n, Is, RandomHelper, StringHelper } from "@gtsc/core";
+import { Coerce, Converter, GeneralError, I18n, Is, RandomHelper, StringHelper } from "@gtsc/core";
 import { Bip39, PasswordGenerator } from "@gtsc/crypto";
 import {
 	EntityStorageConnectorFactory,
@@ -15,6 +15,7 @@ import { SchemaOrgDataTypes } from "@gtsc/schema";
 import { VaultConnectorFactory, VaultKeyType } from "@gtsc/vault-models";
 import type { WalletAddress } from "@gtsc/wallet-connector-entity-storage";
 import { WalletConnectorFactory } from "@gtsc/wallet-models";
+import { BLOB_ENCRYPTION_KEY } from "./components/blobStorage.js";
 import { nodeLogInfo } from "./components/logging.js";
 import { AUTH_SIGNING_NAME_VAULT_KEY } from "./components/processors.js";
 import { writeConfig } from "./configure.js";
@@ -49,8 +50,10 @@ export async function bootstrap(context: IWorkbenchContext): Promise<void> {
 			}
 		}
 
-		await bootstrapNode(context);
+		await bootstrapNodeIdentity(context);
+		await bootstrapNodeUser(context);
 		await bootstrapAuth(context);
+		await bootstrapBlobEncryption(context);
 	} finally {
 		if (context.configUpdated) {
 			await writeConfig(context.storageFileRoot, context.workbenchConfigFilename, context.config);
@@ -77,7 +80,7 @@ function displayBootstrapStarted(context: IWorkbenchContext): void {
  * Bootstrap the node creating any necessary resources.
  * @param context The context for the node.
  */
-export async function bootstrapNode(context: IWorkbenchContext): Promise<void> {
+export async function bootstrapNodeIdentity(context: IWorkbenchContext): Promise<void> {
 	// If there is no identity set in the node config then we need
 	// to setup the identity for the node
 	if (!Is.stringValue(context.config.nodeIdentity)) {
@@ -87,7 +90,7 @@ export async function bootstrapNode(context: IWorkbenchContext): Promise<void> {
 		// But we have a chicken and egg problem in that we can't create the identity
 		// to store the mnemonic in the vault without an identity. We use a temporary identity
 		// and then replace it with the new identity later in the process.
-		const bootstrapNodeIdentity = `bootstrap-${Converter.bytesToBase64(RandomHelper.generate(32))}`;
+		const nodeIdentity = `bootstrap-${Converter.bytesToBase64(RandomHelper.generate(32))}`;
 
 		// Create a secure mnemonic and store it in the vault so that wallet operations
 		// can be performed
@@ -95,11 +98,11 @@ export async function bootstrapNode(context: IWorkbenchContext): Promise<void> {
 		nodeLogInfo(I18n.formatMessage("workbench.generatingMnemonic", { mnemonic }));
 
 		const vaultConnector = VaultConnectorFactory.get(context.envVars.WORKBENCH_VAULT_CONNECTOR);
-		await vaultConnector.setSecret(`${bootstrapNodeIdentity}/mnemonic`, mnemonic);
+		await vaultConnector.setSecret(`${nodeIdentity}/mnemonic`, mnemonic);
 
 		// Generate an address from the wallet, this will use the mnemonic from above
 		const walletConnector = WalletConnectorFactory.get(context.envVars.WORKBENCH_WALLET_CONNECTOR);
-		const addresses = await walletConnector.getAddresses(bootstrapNodeIdentity, 0, 5);
+		const addresses = await walletConnector.getAddresses(nodeIdentity, 0, 5);
 
 		let address0 = addresses[0];
 
@@ -110,7 +113,7 @@ export async function bootstrapNode(context: IWorkbenchContext): Promise<void> {
 		nodeLogInfo(I18n.formatMessage("workbench.fundingWallet", { address: address0 }));
 
 		// Add some funds to the wallet from the faucet
-		await walletConnector.ensureBalance(bootstrapNodeIdentity, addresses[0], 1000000000n);
+		await walletConnector.ensureBalance(nodeIdentity, addresses[0], 1000000000n);
 
 		nodeLogInfo(I18n.formatMessage("workbench.generatingNodeIdentity"));
 
@@ -118,7 +121,7 @@ export async function bootstrapNode(context: IWorkbenchContext): Promise<void> {
 		const identityConnector = IdentityConnectorFactory.get(
 			context.envVars.WORKBENCH_IDENTITY_CONNECTOR
 		);
-		const identityDocument = await identityConnector.createDocument(bootstrapNodeIdentity);
+		const identityDocument = await identityConnector.createDocument(nodeIdentity);
 
 		if (context.envVars.WORKBENCH_IDENTITY_CONNECTOR === "iota") {
 			nodeLogInfo(
@@ -147,7 +150,7 @@ export async function bootstrapNode(context: IWorkbenchContext): Promise<void> {
 
 		// Now that we have an identity we can remove the temporary one
 		// and store the mnemonic with the new identity
-		await vaultConnector.removeSecret(`${bootstrapNodeIdentity}/mnemonic`);
+		await vaultConnector.removeSecret(`${nodeIdentity}/mnemonic`);
 
 		await vaultConnector.setSecret(`${identityDocument.id}/mnemonic`, mnemonic);
 
@@ -170,10 +173,10 @@ export async function bootstrapNode(context: IWorkbenchContext): Promise<void> {
 }
 
 /**
- * Bootstrap the users.
+ * Bootstrap the user.
  * @param context The context for the node.
  */
-export async function bootstrapAuth(context: IWorkbenchContext): Promise<void> {
+export async function bootstrapNodeUser(context: IWorkbenchContext): Promise<void> {
 	if (
 		context.envVars.WORKBENCH_AUTH_PROCESSOR_TYPE === "entity-storage" &&
 		Is.stringValue(context.config.nodeIdentity) &&
@@ -181,94 +184,116 @@ export async function bootstrapAuth(context: IWorkbenchContext): Promise<void> {
 	) {
 		displayBootstrapStarted(context);
 
-		// Create a new JWT signing key and a user login for the node if one does not exist
-		// Create the signing key for the JWT token
-		let hasSigningKey = false;
-		const vaultConnector = VaultConnectorFactory.get(context.envVars.WORKBENCH_VAULT_CONNECTOR);
-
-		try {
-			const vaultKey = await vaultConnector.getKey(
-				`${context.config.nodeIdentity}/${AUTH_SIGNING_NAME_VAULT_KEY}`
-			);
-			hasSigningKey = Is.notEmpty(vaultKey);
-		} catch {}
-
-		if (!hasSigningKey) {
-			await vaultConnector.createKey(
-				`${context.config.nodeIdentity}/${AUTH_SIGNING_NAME_VAULT_KEY}`,
-				VaultKeyType.Ed25519
-			);
-		}
-
 		// Create the login for the node user
 		const authUserEntityStorage = EntityStorageConnectorFactory.get<
 			IEntityStorageConnector<AuthenticationUser>
 		>(StringHelper.kebabCase(nameof<AuthenticationUser>()));
 
-		let hasNodeAdminUser = false;
-		try {
-			const nodeAdminUser = await authUserEntityStorage.get(DEFAULT_NODE_ADMIN_EMAIL);
-			hasNodeAdminUser = Is.notEmpty(nodeAdminUser);
-		} catch {}
+		const generatedPassword = PasswordGenerator.generate(16);
+		const passwordBytes = Converter.utf8ToBytes(generatedPassword);
+		const saltBytes = RandomHelper.generate(16);
 
-		if (!hasNodeAdminUser) {
-			const generatedPassword = PasswordGenerator.generate(16);
-			const passwordBytes = Converter.utf8ToBytes(generatedPassword);
-			const saltBytes = RandomHelper.generate(16);
+		const hashedPassword = await PasswordHelper.hashPassword(passwordBytes, saltBytes);
 
-			const hashedPassword = await PasswordHelper.hashPassword(passwordBytes, saltBytes);
+		const nodeAdminUser: AuthenticationUser = {
+			email: DEFAULT_NODE_ADMIN_EMAIL,
+			password: hashedPassword,
+			salt: Converter.bytesToBase64(saltBytes),
+			identity: context.config.nodeIdentity
+		};
 
-			const nodeAdminUser: AuthenticationUser = {
-				email: DEFAULT_NODE_ADMIN_EMAIL,
-				password: hashedPassword,
-				salt: Converter.bytesToBase64(saltBytes),
-				identity: context.config.nodeIdentity
-			};
+		nodeLogInfo(I18n.formatMessage("workbench.nodeAdminUserEmail", { email: nodeAdminUser.email }));
+		nodeLogInfo(
+			I18n.formatMessage("workbench.nodeAdminUserPassword", { password: generatedPassword })
+		);
 
-			nodeLogInfo(
-				I18n.formatMessage("workbench.nodeAdminUserEmail", { email: nodeAdminUser.email })
-			);
-			nodeLogInfo(
-				I18n.formatMessage("workbench.nodeAdminUserPassword", { password: generatedPassword })
-			);
+		await authUserEntityStorage.set(nodeAdminUser);
 
-			await authUserEntityStorage.set(nodeAdminUser);
+		// We have create a node user, now we need to create a profile for the user
+		const identityProfileConnector = IdentityProfileConnectorFactory.get(
+			context.envVars.WORKBENCH_IDENTITY_PROFILE_CONNECTOR
+		);
 
-			// We have create a node user, now we need to create a profile for the user
-			const identityProfileConnector = IdentityProfileConnectorFactory.get(
-				context.envVars.WORKBENCH_IDENTITY_PROFILE_CONNECTOR
-			);
-
-			if (identityProfileConnector) {
-				await identityProfileConnector.create(context.config.nodeIdentity, [
-					{
-						key: "role",
-						type: SchemaOrgDataTypes.TYPE_TEXT,
-						value: "Node",
-						isPublic: false
-					},
-					{
-						key: "firstName",
-						type: SchemaOrgDataTypes.TYPE_TEXT,
-						value: "Node",
-						isPublic: false
-					},
-					{
-						key: "lastName",
-						type: SchemaOrgDataTypes.TYPE_TEXT,
-						value: "Administrator",
-						isPublic: false
-					},
-					{
-						key: "email",
-						type: SchemaOrgDataTypes.TYPE_TEXT,
-						value: nodeAdminUser.email,
-						isPublic: false
-					}
-				]);
-			}
-			context.config.bootstrappedComponents.push("LoginUser");
-			context.configUpdated = true;
+		if (identityProfileConnector) {
+			await identityProfileConnector.create(context.config.nodeIdentity, [
+				{
+					key: "role",
+					type: SchemaOrgDataTypes.TYPE_TEXT,
+					value: "Node",
+					isPublic: false
+				},
+				{
+					key: "firstName",
+					type: SchemaOrgDataTypes.TYPE_TEXT,
+					value: "Node",
+					isPublic: false
+				},
+				{
+					key: "lastName",
+					type: SchemaOrgDataTypes.TYPE_TEXT,
+					value: "Administrator",
+					isPublic: false
+				},
+				{
+					key: "email",
+					type: SchemaOrgDataTypes.TYPE_TEXT,
+					value: nodeAdminUser.email,
+					isPublic: false
+				}
+			]);
 		}
+		context.config.bootstrappedComponents.push("LoginUser");
+		context.configUpdated = true;
+	}
+}
+
+/**
+ * Bootstrap the keys for blob encryption.
+ * @param context The context for the node.
+ */
+export async function bootstrapBlobEncryption(context: IWorkbenchContext): Promise<void> {
+	const enableBlobEncryption =
+		Coerce.boolean(context.envVars.WORKBENCH_BLOB_STORAGE_ENABLE_ENCRYPTION) ?? false;
+	if (
+		enableBlobEncryption &&
+		Is.stringValue(context.config.nodeIdentity) &&
+		!context.config.bootstrappedComponents.includes("BlobEncryption")
+	) {
+		displayBootstrapStarted(context);
+
+		// Create a new key for encrypting blobs
+		const vaultConnector = VaultConnectorFactory.get(context.envVars.WORKBENCH_VAULT_CONNECTOR);
+
+		await vaultConnector.createKey(
+			`${context.config.nodeIdentity}/${BLOB_ENCRYPTION_KEY}`,
+			VaultKeyType.Ed25519
+		);
+
+		context.config.bootstrappedComponents.push("BlobEncryption");
+		context.configUpdated = true;
+	}
+}
+
+/**
+ * Bootstrap the JWT signing key.
+ * @param context The context for the node.
+ */
+export async function bootstrapAuth(context: IWorkbenchContext): Promise<void> {
+	if (
+		context.envVars.WORKBENCH_AUTH_PROCESSOR_TYPE === "entity-storage" &&
+		Is.stringValue(context.config.nodeIdentity) &&
+		!context.config.bootstrappedComponents.includes("JwtKey")
+	) {
+		displayBootstrapStarted(context);
+
+		// Create a new JWT signing key and a user login for the node
+		const vaultConnector = VaultConnectorFactory.get(context.envVars.WORKBENCH_VAULT_CONNECTOR);
+		await vaultConnector.createKey(
+			`${context.config.nodeIdentity}/${AUTH_SIGNING_NAME_VAULT_KEY}`,
+			VaultKeyType.Ed25519
+		);
+
+		context.config.bootstrappedComponents.push("JwtKey");
+		context.configUpdated = true;
 	}
 }

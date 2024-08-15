@@ -4,8 +4,8 @@
 	import { HealthStatus } from '@gtsc/api-models';
 	import { Is } from '@gtsc/core';
 	import { Badge } from 'flowbite-svelte';
-	import { serverHealthStatus, serverName, serverVersion } from '../stores/apiInformation';
 	import { i18n } from '../stores/i18n';
+	import { serverHealthStatus, serverName, serverVersion } from '../stores/information';
 </script>
 
 {#if !Is.empty($serverHealthStatus)}

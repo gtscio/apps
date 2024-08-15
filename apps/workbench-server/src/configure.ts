@@ -62,7 +62,9 @@ export async function configure(rootPackageFolder: string): Promise<IWorkbenchCo
 		allowedHeaders: Is.stringValue(envVars.WORKBENCH_HTTP_ALLOWED_HEADERS)
 			? envVars.WORKBENCH_HTTP_ALLOWED_HEADERS.split(",")
 			: undefined,
-		exposedHeaders: Is.stringValue(envVars.WORKBENCH_) ? envVars.WORKBENCH_.split(",") : undefined,
+		exposedHeaders: Is.stringValue(envVars.WORKBENCH_HTTP_EXPOSED_HEADERS)
+			? envVars.WORKBENCH_HTTP_EXPOSED_HEADERS.split(",")
+			: undefined,
 		corsOrigins: Is.stringValue(envVars.WORKBENCH_CORS_ORIGINS)
 			? envVars.WORKBENCH_CORS_ORIGINS.split(",")
 			: undefined

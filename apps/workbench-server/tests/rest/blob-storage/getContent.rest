@@ -1,14 +1,5 @@
-### Creates a telemetry metric
+### Gets a blob content
 
-POST http://localhost:3000/telemetry/metric
+GET http://localhost:3000/blob-storage/blob:file:5c15f3a70dffb7bf79576858c75c173f5240f676ebe21161130466bf1db7c1af/content
 cookie: access_token=eyJhbGciOiJFZERTQSIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJkaWQ6ZW50aXR5LXN0b3JhZ2U6MHg2YjE1OGM0YTRlMjI4YmY4Y2IxOGNlMjUzMmMyZjA0MGQ2ZDE1NGYzOTE5NzMzZTBlOTkyYmFlM2NmMmEzNWY3IiwiZXhwIjoxNzIzNzE1Nzc0fQ.ztjOHs9BNugO97oxA1rIMBSy2JP3pYqOjeGZsvv9NqhzaXhK5DLr4rnlf3bpoyIvFlJfxKNnwGTi7pUcmQ6oDw
 content-type: application/json
-
-{
-	"id": "my-counter",
-	"label": "My Counter",
-	"type": "Counter",
-	"description": "This is a counter",
-	"unit": "count"
-}
-

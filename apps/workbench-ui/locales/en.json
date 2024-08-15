@@ -43,6 +43,22 @@
 			"identity": "Identity",
 			"displayName": "Name",
 			"didDocument": "DID Document"
+		},
+		"attestation": {
+			"title": "Attestation",
+			"filename": "Filename",
+			"uploading": "Uploading document to storage",
+			"attest": "Attest",
+			"attesting": "Attesting",
+			"attestSuccess": "Attestation was successful"
+		},
+		"blob": {
+			"title": "Blob Storage",
+			"id": "id",
+			"filename": "Filename",
+			"mimeType": "MIME Type",
+			"document": "Document",
+			"download": "Download"
 		}
 	},
 	"actions": {

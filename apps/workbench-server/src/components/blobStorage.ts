@@ -10,13 +10,14 @@ import {
 	BlobStorageService,
 	initSchema as initSchemaBlobStorage
 } from "@gtsc/blob-storage-service";
-import { ComponentFactory, GeneralError, I18n } from "@gtsc/core";
+import { Coerce, ComponentFactory, GeneralError, I18n } from "@gtsc/core";
 import { nameof } from "@gtsc/nameof";
 import { initialiseEntityStorageConnector } from "./entityStorage.js";
 import { nodeLogInfo } from "./logging.js";
 import type { IWorkbenchContext } from "../models/IWorkbenchContext.js";
 
 export const BLOB_STORAGE_SERVICE_NAME = "blob-storage";
+export const BLOB_ENCRYPTION_KEY = "blob-encryption";
 
 /**
  * Initialise the blob storage service.
@@ -32,7 +33,15 @@ export function initialiseBlobStorageService(context: IWorkbenchContext): void {
 		nameof<BlobMetadata>()
 	);
 
-	const service = new BlobStorageService();
+	const enableBlobEncryption =
+		Coerce.boolean(context.envVars.WORKBENCH_BLOB_STORAGE_ENABLE_ENCRYPTION) ?? false;
+
+	const service = new BlobStorageService({
+		vaultConnectorType: enableBlobEncryption
+			? context.envVars.WORKBENCH_VAULT_CONNECTOR
+			: undefined,
+		config: { vaultKeyId: BLOB_ENCRYPTION_KEY }
+	});
 	context.componentInstances.push({ instanceName: BLOB_STORAGE_SERVICE_NAME, component: service });
 	ComponentFactory.register(BLOB_STORAGE_SERVICE_NAME, () => service);
 }

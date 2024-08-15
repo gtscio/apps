@@ -59,35 +59,32 @@
 	}
 </script>
 
-<Card class="w-auto max-w-full">
+<Card class="w-96">
 	<form class="flex flex-col space-y-6">
 		<h3 class="p-0 text-xl font-medium text-gray-900 dark:text-white">
 			{$i18n(titleResource)}
 		</h3>
-		<div class="flex flex-col gap-10 lg:flex-row">
-			<div class="flex flex-col space-y-6">
-				<slot name="fields"></slot>
-				{#if isBusy}
-					<Button type="button" class="w-full gap-2" disabled
-						>{$i18n(actionButtonBusyResource)}
-						<Spinner size={5} color="white" />
-					</Button>
-				{:else}
-					<Button type="button" class="w-full" on:click={async () => handleSubmit()}
-						>{$i18n(actionButtonResource)}
-					</Button>
-				{/if}
-				<slot name="after-action"></slot>
-				{#if Is.notEmpty(submitResult)}
-					<p
-						class={`whitespace-pre-line text-sm ${submitResultIsError ? 'text-red-500 dark:text-red-400' : 'text-green-500 dark:text-green-400'}`}
-					>
-						{submitResult}
-					</p>
-				{/if}
-				<slot name="after-result"></slot>
-			</div>
-			<slot name="fields-right"></slot>
+		<div class="flex flex-col gap-5">
+			<slot name="fields"></slot>
+			{#if isBusy}
+				<Button type="button" class="w-full gap-2" disabled
+					>{$i18n(actionButtonBusyResource)}
+					<Spinner size={5} color="white" />
+				</Button>
+			{:else}
+				<Button type="button" class="w-full" on:click={async () => handleSubmit()}
+					>{$i18n(actionButtonResource)}
+				</Button>
+			{/if}
+			<slot name="after-action"></slot>
+			{#if Is.stringValue(submitResult)}
+				<p
+					class={`whitespace-pre-line text-sm ${submitResultIsError ? 'text-red-500 dark:text-red-400' : 'text-green-500 dark:text-green-400'}`}
+				>
+					{submitResult}
+				</p>
+			{/if}
+			<slot name="after-result"></slot>
 		</div>
 	</form>
 </Card>
