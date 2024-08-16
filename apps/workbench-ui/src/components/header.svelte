@@ -3,11 +3,11 @@
 	// SPDX-License-Identifier: Apache-2.0.
 	import { Is } from '@gtsc/core';
 	import { PropertyHelper } from '@gtsc/schema';
-	import { Avatar, Navbar, NavBrand } from 'flowbite-svelte';
+	import { Avatar, Navbar, NavBrand, Span } from 'flowbite-svelte';
 	import '../app.css';
 	import { isAuthenticated } from '../stores/authentication';
 	import { i18n } from '../stores/i18n';
-	import { profileProperties } from '../stores/profile';
+	import { profileProperties } from '../stores/identityProfile';
 
 	let finalInitials: string = '';
 
@@ -43,8 +43,8 @@
 >
 	<NavBrand href="/">
 		<img src="/images/logo.svg" class="me-3 h-6 sm:h-9" alt={$i18n('app.name')} />
-		<span class="self-center whitespace-nowrap text-xl font-semibold dark:text-white"
-			>{$i18n('app.name')}</span
+		<Span class="self-center whitespace-nowrap text-xl font-semibold dark:text-white"
+			>{$i18n('app.name')}</Span
 		>
 	</NavBrand>
 	{#if $isAuthenticated}

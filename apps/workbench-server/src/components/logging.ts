@@ -31,8 +31,10 @@ export function initialiseNodeLoggingConnector(context: IWorkbenchContext): void
 	// Create a regular console logger which automatically translates messages and hides groups.
 	// to display the node messages to the console
 	const consoleLoggingConnector = new ConsoleLoggingConnector({
-		translateMessages: true,
-		hideGroups: true
+		config: {
+			translateMessages: true,
+			hideGroups: true
+		}
 	});
 
 	nodeLoggingConnector = consoleLoggingConnector;
@@ -75,8 +77,10 @@ export function initialiseLoggingConnectorFactory(context: IWorkbenchContext): v
 		let namespace: string;
 		if (type === "console") {
 			connector = new ConsoleLoggingConnector({
-				translateMessages: true,
-				hideGroups: true
+				config: {
+					translateMessages: true,
+					hideGroups: true
+				}
 			});
 			namespace = ConsoleLoggingConnector.NAMESPACE;
 		} else if (type === "entity-storage") {

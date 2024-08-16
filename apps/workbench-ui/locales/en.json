@@ -40,6 +40,8 @@
 			"displayNameDescription": "This will be the name that is displayed publicly when viewing your identity"
 		},
 		"identityPublic": {
+			"title": "Identity Public Profile",
+			"qr": "Public Profile View",
 			"identity": "Identity",
 			"displayName": "Name",
 			"didDocument": "DID Document"
@@ -47,23 +49,36 @@
 		"attestation": {
 			"title": "Attestation",
 			"filename": "Filename",
-			"uploading": "Uploading document to storage",
+			"assertionMethod": "Assertion Method",
+			"selectAssertionMethod": "Select assertion method",
+			"blobQr": "Blob Storage QR Code",
+			"blobId": "Blob Id",
+			"attestationId": "Attestation Id",
+			"attestationQr": "Attestation QR Code",
+			"signature": "Signature",
 			"attest": "Attest",
-			"attesting": "Attesting",
-			"attestSuccess": "Attestation was successful"
+			"attesting": "Attesting...",
+			"attestSuccess": "Attestation was successful",
+			"progressUploading": "Uploading document to storage",
+			"progressAttesting": "Attesting the document",
+			"resultTitle": "Attestation Result"
 		},
 		"blob": {
 			"title": "Blob Storage",
-			"id": "id",
+			"id": "Id",
 			"filename": "Filename",
 			"mimeType": "MIME Type",
 			"document": "Document",
 			"download": "Download"
+		},
+		"error": {
+			"title": "Error",
+			"notFound": "The requested page could not be found"
 		}
 	},
 	"actions": {
 		"save": "Save",
-		"saving": "Saving",
+		"saving": "Saving...",
 		"saveSuccess": "Saved successfully"
 	}
 }

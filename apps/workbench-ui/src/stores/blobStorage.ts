@@ -54,20 +54,26 @@ export async function blobStorageUpload(
 /**
  * Get a file from blob storage.
  * @param id The if of the blob to get.
+ * @param includeContent Should the content be included.
  * @returns The blob data and the properties.
  */
-export async function blobStorageGet(id: string): Promise<
+export async function blobStorageGet(
+	id: string,
+	includeContent: boolean
+): Promise<
 	| {
 			error?: string;
 			metadata?: IProperty[];
+			blob?: Uint8Array;
 	  }
 	| undefined
 > {
 	if (Is.object(blobStorageClient)) {
 		try {
-			const result = await blobStorageClient.get(id, false);
+			const result = await blobStorageClient.get(id, includeContent);
 			return {
-				metadata: result.metadata
+				metadata: result.metadata,
+				blob: Is.stringBase64(result.blob) ? Converter.base64ToBytes(result.blob) : undefined
 			};
 		} catch (err) {
 			return {

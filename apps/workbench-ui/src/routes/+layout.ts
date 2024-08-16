@@ -3,15 +3,9 @@
 import { env } from "$env/dynamic/public";
 import { Coerce, ErrorHelper, Guards } from "@gtsc/core";
 import { init as initApp } from "../stores/app";
-import { init as initAuthentication } from "../stores/authentication";
-import { init as initBlobStorage } from "../stores/blobStorage";
-import { init as initLocales } from "../stores/i18n";
-import { init as initIdentity } from "../stores/identity";
-import { init as initApiInformation } from "../stores/information";
-import { init as initIdentityProfile } from "../stores/profile";
 
 /**
- * Perform a load.
+ * Perform a load and initialize the application.
  */
 export async function load(): Promise<void> {
 	try {
@@ -27,13 +21,12 @@ export async function load(): Promise<void> {
 			env.PUBLIC_WORKBENCH_PRIVATE_BASE_URL
 		);
 
-		await initApp(env.PUBLIC_WORKBENCH_PUBLIC_BASE_URL, env.PUBLIC_WORKBENCH_PRIVATE_BASE_URL);
-		await initLocales(Coerce.boolean(env.PUBLIC_WORKBENCH_DEBUG_LANGUAGES) ?? false);
-		await initApiInformation(env.PUBLIC_WORKBENCH_API_URL);
-		await initAuthentication(env.PUBLIC_WORKBENCH_API_URL);
-		await initIdentityProfile(env.PUBLIC_WORKBENCH_API_URL);
-		await initIdentity(env.PUBLIC_WORKBENCH_API_URL);
-		await initBlobStorage(env.PUBLIC_WORKBENCH_API_URL);
+		await initApp({
+			apiUrl: env.PUBLIC_WORKBENCH_API_URL,
+			envPublicBaseUrl: env.PUBLIC_WORKBENCH_PUBLIC_BASE_URL,
+			envPrivateBaseUrl: env.PUBLIC_WORKBENCH_PRIVATE_BASE_URL,
+			debugLanguages: Coerce.boolean(env.PUBLIC_WORKBENCH_DEBUG_LANGUAGES) ?? false
+		});
 	} catch (err) {
 		// Nothing else is initialized yet so we need to console log manually
 		// eslint-disable-next-line no-console

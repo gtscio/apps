@@ -11,12 +11,14 @@
 	export let dimensions: number;
 	export let foreground: string = '#000000';
 	export let background: string = '#FFFFFF';
+	export let className: string | undefined;
+	export { className as class };
 
 	let pngBase64: string;
 	const linkItem: boolean = qrData.startsWith('http');
 
 	onMount(async () => {
-		const qr = new QR();
+		const qr = new QR(0);
 		qr.addText(qrData);
 
 		const cellData = qr.generate();
@@ -26,20 +28,13 @@
 	});
 </script>
 
-{#if linkItem}
-	<a href={qrData} target="_blank">
-		<img
-			src={pngBase64}
-			alt={$i18n(labelResource)}
-			width={`${dimensions}px`}
-			height={`${dimensions}px`}
-		/></a
-	>
-{:else}
-	<img
-		src={pngBase64}
-		alt={$i18n(labelResource)}
-		width={`${dimensions}px`}
-		height={`${dimensions}px`}
-	/>
-{/if}
+<div
+	class={className}
+	style="width:{`${dimensions}px`};height:{`${dimensions}px`};min-width:{`${dimensions}px`};min-height:{`${dimensions}px`}"
+>
+	{#if linkItem}
+		<a href={qrData} target="_blank"> <img src={pngBase64} alt={$i18n(labelResource)} /></a>
+	{:else}
+		<img src={pngBase64} alt={$i18n(labelResource)} />
+	{/if}
+</div>

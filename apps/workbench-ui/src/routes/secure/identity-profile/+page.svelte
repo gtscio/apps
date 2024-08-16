@@ -9,7 +9,11 @@
 	import ValidationError from '../../../components/validationError.svelte';
 	import { createPublicUrl } from '../../../stores/app';
 	import { i18n } from '../../../stores/i18n';
-	import { profileIdentity, profileProperties, profileUpdate } from '../../../stores/profile';
+	import {
+		profileIdentity,
+		profileProperties,
+		profileUpdate
+	} from '../../../stores/identityProfile';
 
 	let firstName = PropertyHelper.getText($profileProperties, 'firstName') ?? '';
 	let lastName = PropertyHelper.getText($profileProperties, 'lastName') ?? '';
@@ -54,16 +58,16 @@
 		bind:isBusy
 	>
 		<svelte:fragment slot="fields">
-			<Label class="flex flex-col space-y-2">
-				<span>{$i18n('pages.identityProfile.qr')}</span>
+			<Label class="flex flex-col gap-2">
+				{$i18n('pages.identityProfile.qr')}
 				<Qr
 					qrData={createPublicUrl(`identity/${$profileIdentity}`)}
 					labelResource="pages.identityProfile.qr"
 					dimensions={128}
 				/>
 			</Label>
-			<Label class="space-y-2">
-				<span>{$i18n('pages.identityProfile.firstName')}</span>
+			<Label class="flex flex-col gap-2">
+				{$i18n('pages.identityProfile.firstName')}
 				<Input
 					type="text"
 					name="firstName"
@@ -73,8 +77,8 @@
 				/>
 				<ValidationError validationErrors={validationErrors.firstName} />
 			</Label>
-			<Label class="space-y-2">
-				<span>{$i18n('pages.identityProfile.lastName')}</span>
+			<Label class="flex flex-col gap-2">
+				{$i18n('pages.identityProfile.lastName')}
 				<Input
 					type="text"
 					name="lastName"
@@ -84,8 +88,8 @@
 				/>
 				<ValidationError validationErrors={validationErrors.lastName} />
 			</Label>
-			<Label class="space-y-2">
-				<span>{$i18n('pages.identityProfile.displayName')}</span>
+			<Label class="flex flex-col gap-2">
+				{$i18n('pages.identityProfile.displayName')}
 				<Helper>{$i18n('pages.identityProfile.displayNameDescription')}</Helper>
 				<Input
 					type="text"

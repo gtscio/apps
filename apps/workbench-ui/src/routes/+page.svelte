@@ -4,7 +4,7 @@
 	import { goto } from '$app/navigation';
 	import { page } from '$app/stores';
 	import { Is, Validation, type IValidationFailure } from '@gtsc/core';
-	import { Input, Label } from 'flowbite-svelte';
+	import { Input, Label, P } from 'flowbite-svelte';
 	import ValidatedForm from '../components/validatedForm.svelte';
 	import ValidationError from '../components/validationError.svelte';
 	import { isAuthenticated, login } from '../stores/authentication';
@@ -45,20 +45,22 @@
 			bind:isBusy
 		>
 			<svelte:fragment slot="fields">
-				<Label class="space-y-2">
-					<span>{$i18n('pages.login.email')}</span>
+				<Label class="flex flex-col gap-2">
+					{$i18n('pages.login.email')}
 					<Input
 						type="email"
 						name="email"
+						autocomplete="email"
 						placeholder="name@example.com"
 						bind:value={email}
 						color={Is.arrayValue(validationErrors.email) ? 'red' : 'base'}
 						disabled={isBusy}
+						spellcheck="false"
 					/>
 					<ValidationError validationErrors={validationErrors.email} />
 				</Label>
-				<Label class="space-y-2">
-					<span>{$i18n('pages.login.password')}</span>
+				<Label class="flex flex-col gap-2">
+					{$i18n('pages.login.password')}
 					<Input
 						type="password"
 						name="password"
@@ -66,19 +68,20 @@
 						bind:value={password}
 						color={Is.arrayValue(validationErrors.password) ? 'red' : 'base'}
 						disabled={isBusy}
+						spellcheck="false"
 					/>
 					<ValidationError validationErrors={validationErrors.password} />
 				</Label>
 			</svelte:fragment>
 			<svelte:fragment slot="after-action">
-				<p class="text-sm font-light text-gray-500 dark:text-gray-400">
+				<P class="text-sm font-light text-gray-500 dark:text-gray-400">
 					{$i18n('pages.login.noAccount')}
 					<a
 						href="/authentication/signup"
 						class="text-primary-600 dark:text-primary-500 font-medium hover:underline"
 						>{$i18n('pages.login.signUp')}</a
 					>
-				</p>
+				</P>
 			</svelte:fragment>
 		</ValidatedForm>
 	</section>

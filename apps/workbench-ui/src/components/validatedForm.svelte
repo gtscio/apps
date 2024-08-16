@@ -2,7 +2,7 @@
 	// Copyright 2024 IOTA Stiftung.
 	// SPDX-License-Identifier: Apache-2.0.
 	import { Is, Validation, type IValidationFailure } from '@gtsc/core';
-	import { Button, Card, Spinner } from 'flowbite-svelte';
+	import { Button, Card, Heading, P, Spinner } from 'flowbite-svelte';
 	import { i18n } from '../stores/i18n';
 
 	export let titleResource: string;
@@ -36,7 +36,7 @@
 		if (Object.keys(validationErrors).length === 0 && Is.function(actionMethod)) {
 			isBusy = true;
 			const timeStart = Date.now();
-			submitResult = await actionMethod();
+			submitResult = (await actionMethod()) ?? '';
 			submitResultIsError = Is.stringValue(submitResult);
 
 			// If the operation is fast, show the spinner for at least 1 second
@@ -60,31 +60,23 @@
 </script>
 
 <Card class="w-96">
-	<form class="flex flex-col space-y-6">
-		<h3 class="p-0 text-xl font-medium text-gray-900 dark:text-white">
-			{$i18n(titleResource)}
-		</h3>
-		<div class="flex flex-col gap-5">
-			<slot name="fields"></slot>
+	<form class="flex flex-col gap-4">
+		<div class="flex flex-row justify-between gap-5">
+			<Heading tag="h5">{$i18n(titleResource)}</Heading>
 			{#if isBusy}
-				<Button type="button" class="w-full gap-2" disabled
-					>{$i18n(actionButtonBusyResource)}
-					<Spinner size={5} color="white" />
-				</Button>
-			{:else}
-				<Button type="button" class="w-full" on:click={async () => handleSubmit()}
-					>{$i18n(actionButtonResource)}
-				</Button>
+				<Spinner size={5} color="white" />
 			{/if}
-			<slot name="after-action"></slot>
-			{#if Is.stringValue(submitResult)}
-				<p
-					class={`whitespace-pre-line text-sm ${submitResultIsError ? 'text-red-500 dark:text-red-400' : 'text-green-500 dark:text-green-400'}`}
-				>
-					{submitResult}
-				</p>
-			{/if}
-			<slot name="after-result"></slot>
 		</div>
+		<slot name="fields"></slot>
+		<Button type="button" class="w-full" on:click={async () => handleSubmit()} disabled={isBusy}
+			>{$i18n(isBusy ? actionButtonBusyResource : actionButtonResource)}
+		</Button>
+		<slot name="after-action"></slot>
+		<P
+			class={`whitespace-pre-line text-sm ${submitResultIsError ? 'text-red-500 dark:text-red-400' : 'text-green-500 dark:text-green-400'}`}
+		>
+			{submitResult}
+		</P>
+		<slot name="after-result"></slot>
 	</form>
 </Card>

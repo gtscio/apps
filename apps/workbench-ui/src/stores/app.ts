@@ -1,18 +1,41 @@
 // Copyright 2024 IOTA Stiftung.
 // SPDX-License-Identifier: Apache-2.0.
 import { StringHelper } from "@gtsc/core";
+import { init as initAttestation } from "./attestation";
+import { init as initAuthentication } from "./authentication";
+import { init as initBlobStorage } from "./blobStorage";
+import { init as initLocales } from "./i18n";
+import { init as initIdentity } from "./identity";
+import { init as initIdentityProfile } from "./identityProfile";
+import { init as initInformation } from "./information";
 
 export let publicBaseUrl = "";
 export let privateBaseUrl = "";
 
 /**
  * Initialize the app.
- * @param envPublicBaseUrl The base url to use for generating publicly accessible links.
- * @param envPrivateBaseUrl The base url to use for generating privately accessible links.
+ * @param options The options for the application.
+ * @param options.apiUrl The API url.
+ * @param options.envPublicBaseUrl The base url to use for generating publicly accessible links.
+ * @param options.envPrivateBaseUrl The base url to use for generating privately accessible links.
+ * @param options.debugLanguages Should the languages show the debug entries.
  */
-export async function init(envPublicBaseUrl: string, envPrivateBaseUrl: string): Promise<void> {
-	publicBaseUrl = StringHelper.trimTrailingSlashes(envPublicBaseUrl);
-	privateBaseUrl = StringHelper.trimTrailingSlashes(envPrivateBaseUrl);
+export async function init(options: {
+	apiUrl: string;
+	envPublicBaseUrl: string;
+	envPrivateBaseUrl: string;
+	debugLanguages: boolean;
+}): Promise<void> {
+	publicBaseUrl = StringHelper.trimTrailingSlashes(options.envPublicBaseUrl);
+	privateBaseUrl = StringHelper.trimTrailingSlashes(options.envPrivateBaseUrl);
+
+	await initLocales(options.debugLanguages);
+	await initInformation(options.apiUrl);
+	await initAuthentication(options.apiUrl);
+	await initIdentityProfile(options.apiUrl);
+	await initIdentity(options.apiUrl);
+	await initBlobStorage(options.apiUrl);
+	await initAttestation(options.apiUrl);
 }
 
 /**

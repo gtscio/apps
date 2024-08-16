@@ -17,6 +17,7 @@
 			<div class="text-sm text-gray-500 dark:text-gray-400">{$i18n('footer.language')}</div>
 			<Select
 				class="w-48"
+				name="language"
 				placeholder={$i18n('footer.selectLanguage')}
 				items={$locales.map(locale => ({
 					value: locale.code,

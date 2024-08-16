@@ -17,7 +17,9 @@ export const ATTESTATION_SERVICE_NAME = "attestation";
 export function initialiseAttestationService(context: IWorkbenchContext): void {
 	nodeLogInfo(I18n.formatMessage("workbench.configuring", { element: "Attestation Service" }));
 
-	const service = new AttestationService();
+	const service = new AttestationService({
+		walletConnectorType: context.envVars.WORKBENCH_WALLET_CONNECTOR
+	});
 	context.componentInstances.push({ instanceName: ATTESTATION_SERVICE_NAME, component: service });
 	ComponentFactory.register(ATTESTATION_SERVICE_NAME, () => service);
 }
