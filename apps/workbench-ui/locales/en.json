@@ -34,6 +34,8 @@
 		"identityProfile": {
 			"title": "Profile",
 			"qr": "Public Profile View",
+			"identity": "Identity",
+			"explore": "Explore",
 			"firstName": "First Name",
 			"lastName": "Last Name",
 			"displayName": "Display Name",
@@ -44,6 +46,7 @@
 			"qr": "Public Profile View",
 			"identity": "Identity",
 			"displayName": "Name",
+			"explore": "Explore",
 			"didDocument": "DID Document"
 		},
 		"attestation": {
@@ -62,6 +65,19 @@
 			"progressUploading": "Uploading document to storage",
 			"progressAttesting": "Attesting the document",
 			"resultTitle": "Attestation Result"
+		},
+		"attestationPublic": {
+			"title": "Attestation",
+			"id": "Id",
+			"exploreNft": "Explore NFT",
+			"attestationQr": "Attestation QR Code",
+			"verified": "Verified",
+			"created": "Created",
+			"ownerIdentity": "Owner Identity",
+			"transferred": "Transferred",
+			"holderIdentity": "Holder Identity",
+			"data": "Data",
+			"proof": "Proof"
 		},
 		"blob": {
 			"title": "Blob Storage",

@@ -63,7 +63,7 @@
 			}
 			blobId = resultBlob?.id ?? '';
 
-			signature = Converter.bytesToBase64(Blake2b.sum256(bytes));
+			signature = `b2b256:${Converter.bytesToBase64(Blake2b.sum256(bytes))}`;
 
 			const data: IDocumentAttestation = {
 				blobId,
@@ -106,7 +106,7 @@
 	});
 </script>
 
-<section class="flex flex-col justify-center gap-5 align-top lg:flex-row">
+<section class="flex flex-col items-start justify-center gap-5 lg:flex-row">
 	<ValidatedForm
 		titleResource="pages.attestation.title"
 		actionButtonResource="pages.attestation.attest"

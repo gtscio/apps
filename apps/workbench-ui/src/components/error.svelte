@@ -8,7 +8,7 @@
 </script>
 
 {#if Is.stringValue(error)}
-	<Helper color="red">
+	<Helper color="red" class="whitespace-pre-line">
 		{error}
 	</Helper>
 {/if}

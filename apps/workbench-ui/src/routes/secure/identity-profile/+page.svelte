@@ -1,9 +1,11 @@
 <script lang="ts">
 	// Copyright 2024 IOTA Stiftung.
 	// SPDX-License-Identifier: Apache-2.0.
-	import { Is, Validation, type IValidationFailure } from '@gtsc/core';
+	import { Is, Urn, Validation, type IValidationFailure } from '@gtsc/core';
 	import { PropertyHelper } from '@gtsc/schema';
-	import { Helper, Input, Label } from 'flowbite-svelte';
+	import { Button, Helper, Input, Label } from 'flowbite-svelte';
+	import { CloudArrowUpOutline } from 'flowbite-svelte-icons';
+	import LabelledValue from '../../../components/labelledValue.svelte';
 	import Qr from '../../../components/qr.svelte';
 	import ValidatedForm from '../../../components/validatedForm.svelte';
 	import ValidationError from '../../../components/validationError.svelte';
@@ -14,6 +16,7 @@
 		profileProperties,
 		profileUpdate
 	} from '../../../stores/identityProfile';
+	import { createExplorerIdentityUrl } from '../../../stores/iota';
 
 	let firstName = PropertyHelper.getText($profileProperties, 'firstName') ?? '';
 	let lastName = PropertyHelper.getText($profileProperties, 'lastName') ?? '';
@@ -21,7 +24,14 @@
 	let validationErrors: {
 		[field in 'firstName' | 'lastName' | 'displayName']?: IValidationFailure[] | undefined;
 	} = {};
+	let exploreUrl: string | undefined;
+
 	let isBusy = false;
+
+	const urn = Urn.fromValidString($profileIdentity);
+	if (urn.namespaceMethod() === 'iota') {
+		exploreUrl = createExplorerIdentityUrl($profileIdentity);
+	}
 
 	async function validate(validationFailures: IValidationFailure[]): Promise<void> {
 		Validation.stringValue(
@@ -47,6 +57,10 @@
 	async function action(): Promise<string | undefined> {
 		return profileUpdate({ firstName, lastName, displayName });
 	}
+
+	function openExplorer(): void {
+		window.open(exploreUrl, '_blank');
+	}
 </script>
 
 <section class="flex justify-center gap-5">
@@ -58,14 +72,29 @@
 		bind:isBusy
 	>
 		<svelte:fragment slot="fields">
-			<Label class="flex flex-col gap-2">
-				{$i18n('pages.identityProfile.qr')}
-				<Qr
-					qrData={createPublicUrl(`identity/${$profileIdentity}`)}
-					labelResource="pages.identityProfile.qr"
-					dimensions={128}
-				/>
-			</Label>
+			<div class="flex flex-row gap-5">
+				<div class="flex flex-col gap-5">
+					<Label class="flex flex-col gap-2">
+						{$i18n('pages.identityProfile.identity')}
+						<LabelledValue>{$profileIdentity}</LabelledValue>
+					</Label>
+					{#if Is.stringValue(exploreUrl)}
+						<Label>
+							<Button size="xs" on:click={openExplorer} class="gap-2"
+								>{$i18n('pages.identityPublic.explore')}<CloudArrowUpOutline size="sm" /></Button
+							>
+						</Label>
+					{/if}
+				</div>
+				<Label class="flex flex-col gap-2">
+					{$i18n('pages.identityProfile.qr')}
+					<Qr
+						qrData={createPublicUrl(`identity/${$profileIdentity}`)}
+						labelResource="pages.identityProfile.qr"
+						dimensions={128}
+					/>
+				</Label>
+			</div>
 			<Label class="flex flex-col gap-2">
 				{$i18n('pages.identityProfile.firstName')}
 				<Input

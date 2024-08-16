@@ -235,6 +235,12 @@ export async function bootstrapNodeUser(context: IWorkbenchContext): Promise<voi
 					isPublic: false
 				},
 				{
+					key: "displayName",
+					type: SchemaOrgDataTypes.TYPE_TEXT,
+					value: "Node Administrator",
+					isPublic: true
+				},
+				{
 					key: "email",
 					type: SchemaOrgDataTypes.TYPE_TEXT,
 					value: nodeAdminUser.email,

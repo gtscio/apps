@@ -8,6 +8,7 @@ import { init as initLocales } from "./i18n";
 import { init as initIdentity } from "./identity";
 import { init as initIdentityProfile } from "./identityProfile";
 import { init as initInformation } from "./information";
+import { init as initIota } from "./iota";
 
 export let publicBaseUrl = "";
 export let privateBaseUrl = "";
@@ -19,11 +20,13 @@ export let privateBaseUrl = "";
  * @param options.envPublicBaseUrl The base url to use for generating publicly accessible links.
  * @param options.envPrivateBaseUrl The base url to use for generating privately accessible links.
  * @param options.debugLanguages Should the languages show the debug entries.
+ * @param options.iotaExplorerUrl The url for IOTA explorer.
  */
 export async function init(options: {
 	apiUrl: string;
 	envPublicBaseUrl: string;
 	envPrivateBaseUrl: string;
+	iotaExplorerUrl: string;
 	debugLanguages: boolean;
 }): Promise<void> {
 	publicBaseUrl = StringHelper.trimTrailingSlashes(options.envPublicBaseUrl);
@@ -36,6 +39,7 @@ export async function init(options: {
 	await initIdentity(options.apiUrl);
 	await initBlobStorage(options.apiUrl);
 	await initAttestation(options.apiUrl);
+	await initIota(options.iotaExplorerUrl);
 }
 
 /**

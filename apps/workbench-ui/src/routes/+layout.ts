@@ -20,12 +20,18 @@ export async function load(): Promise<void> {
 			"PUBLIC_WORKBENCH_PRIVATE_BASE_URL",
 			env.PUBLIC_WORKBENCH_PRIVATE_BASE_URL
 		);
+		Guards.stringValue(
+			"init",
+			"PUBLIC_WORKBENCH_IOTA_EXPLORER_URL",
+			env.PUBLIC_WORKBENCH_IOTA_EXPLORER_URL
+		);
 
 		await initApp({
 			apiUrl: env.PUBLIC_WORKBENCH_API_URL,
 			envPublicBaseUrl: env.PUBLIC_WORKBENCH_PUBLIC_BASE_URL,
 			envPrivateBaseUrl: env.PUBLIC_WORKBENCH_PRIVATE_BASE_URL,
-			debugLanguages: Coerce.boolean(env.PUBLIC_WORKBENCH_DEBUG_LANGUAGES) ?? false
+			debugLanguages: Coerce.boolean(env.PUBLIC_WORKBENCH_DEBUG_LANGUAGES) ?? false,
+			iotaExplorerUrl: env.PUBLIC_WORKBENCH_IOTA_EXPLORER_URL
 		});
 	} catch (err) {
 		// Nothing else is initialized yet so we need to console log manually
