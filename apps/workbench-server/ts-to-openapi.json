@@ -4,7 +4,7 @@
 	"description": "REST API for Global Trade and Supply Chain - API Server.",
 	"licenseName": "Apache 2.0 License",
 	"licenseUrl": "https://opensource.org/licenses/Apache-2.0",
-	"servers": ["http://localhost:3000"],
+	"servers": ["https://workbench-api.gtsc.io"],
 	"restRoutes": [
 		{
 			"package": "@gtsc/api-service"
