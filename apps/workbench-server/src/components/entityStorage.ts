@@ -1,7 +1,7 @@
 // Copyright 2024 IOTA Stiftung.
 // SPDX-License-Identifier: Apache-2.0.
 import path from "node:path";
-import { GeneralError, I18n, StringHelper } from "@gtsc/core";
+import { GeneralError, I18n, Is, StringHelper } from "@gtsc/core";
 import { DynamoDbEntityStorageConnector } from "@gtsc/entity-storage-connector-dynamodb";
 import { FileEntityStorageConnector } from "@gtsc/entity-storage-connector-file";
 import { MemoryEntityStorageConnector } from "@gtsc/entity-storage-connector-memory";
@@ -54,7 +54,9 @@ export function initialiseEntityStorageConnector(
 				secretAccessKey: context.envVars.WORKBENCH_DYNAMODB_SECRET_ACCESS_KEY,
 				region: context.envVars.WORKBENCH_DYNAMODB_REGION,
 				tableName: `${context.envVars.WORKBENCH_DYNAMODB_TABLE_PREFIX ?? ""}${storageName}`,
-				endpoint: context.envVars.WORKBENCH_DYNAMODB_ENDPOINT
+				endpoint: Is.stringValue(context.envVars.WORKBENCH_DYNAMODB_ENDPOINT)
+					? context.envVars.WORKBENCH_DYNAMODB_ENDPOINT
+					: undefined
 			}
 		});
 	} else if (type === "scylladb") {
