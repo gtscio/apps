@@ -138,6 +138,7 @@
 					items={assertionMethods}
 					color={Is.arrayValue(validationErrors.assertionMethod) ? 'red' : 'base'}
 					bind:value={assertionMethod}
+					disabled={isBusy}
 				></Select>
 				<ValidationError validationErrors={validationErrors.assertionMethod} />
 			</Label>

@@ -9,13 +9,13 @@
 </script>
 
 {#if !Is.empty($serverHealthStatus)}
-	<div class="m-3 flex justify-center">
-		{#if $serverHealthStatus !== HealthStatus.Error}
-			<Badge color={$serverHealthStatus === HealthStatus.Ok ? 'green' : 'yellow'}
-				>{$i18n('serverStatus.api')}: {$serverName} v{$serverVersion}</Badge
-			>
-		{:else}
-			<Badge color="red">{$i18n('serverStatus.api')}: {$i18n('serverStatus.notConnected')}</Badge>
-		{/if}
-	</div>
+	{#if $serverHealthStatus !== HealthStatus.Error}
+		<Badge color={$serverHealthStatus === HealthStatus.Ok ? 'green' : 'yellow'} large
+			>{$i18n('serverStatus.api')}: {$serverName} v{$serverVersion}</Badge
+		>
+	{:else}
+		<Badge color="red" large
+			>{$i18n('serverStatus.api')}: {$i18n('serverStatus.notConnected')}</Badge
+		>
+	{/if}
 {/if}
