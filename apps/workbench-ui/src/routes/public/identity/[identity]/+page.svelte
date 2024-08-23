@@ -5,9 +5,16 @@
 	import { Is, Urn } from '@gtsc/core';
 	import { PropertyHelper } from '@gtsc/schema';
 	import type { IDidDocument } from '@gtsc/standards-w3c-did';
-	import { Button, Card, Heading, Label, Spinner } from 'flowbite-svelte';
 	import { CloudArrowUpOutline } from 'flowbite-svelte-icons';
 	import { onMount } from 'svelte';
+	import {
+		Button,
+		Card,
+		Code,
+		Heading,
+		Label,
+		Spinner
+	} from '../../../../components/design-system';
 	import Error from '../../../../components/error.svelte';
 	import LabelledValue from '../../../../components/labelledValue.svelte';
 	import Qr from '../../../../components/qr.svelte';
@@ -91,13 +98,9 @@
 		{#if Is.object(didDocument)}
 			<Label>
 				{$i18n('pages.identityPublic.didDocument')}
-				<div class="mt-2 w-full rounded-md border dark:border-gray-700">
-					<pre class="w-full overflow-auto p-2 text-xs">{JSON.stringify(
-							didDocument,
-							undefined,
-							2
-						)}</pre>
-				</div>
+				<Code>
+					{JSON.stringify(didDocument, undefined, 2)}
+				</Code>
 			</Label>
 		{/if}
 	{/if}

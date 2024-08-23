@@ -19,6 +19,7 @@
 		"**/wordlists/**"
 	],
 	"words": [
+		"Aeonik",
 		"bech",
 		"certbot",
 		"color",
@@ -27,11 +28,14 @@
 		"Fileupload",
 		"flowbite",
 		"GTSC",
+		"hdcoltonwidesemibold",
 		"ipfs",
 		"nameof",
+		"Noto",
 		"openapi",
 		"scylladb",
 		"secp",
+		"Segoe",
 		"Stiftung",
 		"Swatchbook",
 		"tailwindcss",

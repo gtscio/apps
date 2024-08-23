@@ -2,7 +2,7 @@
 	// Copyright 2024 IOTA Stiftung.
 	// SPDX-License-Identifier: Apache-2.0.
 	import { Is, Validation, type IValidationFailure } from '@gtsc/core';
-	import { Button, Card, Heading, P, Spinner } from 'flowbite-svelte';
+	import { Button, Heading, Card, P, Spinner } from './design-system';
 	import { i18n } from '../stores/i18n';
 
 	export let titleResource: string;

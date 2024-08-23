@@ -4,9 +4,9 @@
 	import { page } from '$app/stores';
 	import { Converter, Is } from '@gtsc/core';
 	import { PropertyHelper, type IProperty } from '@gtsc/schema';
-	import { Button, Card, Heading, Label, Spinner } from 'flowbite-svelte';
 	import { ArrowUpRightFromSquareOutline, DownloadOutline } from 'flowbite-svelte-icons';
 	import { onMount } from 'svelte';
+	import { Button, Card, Heading, Label, Spinner } from '../../../../components/design-system';
 	import Error from '../../../../components/error.svelte';
 	import LabelledValue from '../../../../components/labelledValue.svelte';
 	import Qr from '../../../../components/qr.svelte';
@@ -110,13 +110,13 @@
 					</div>
 				</div>
 				{#if Is.stringValue(includeText)}
-					<div class="h-full w-full rounded-md border dark:border-gray-700">
+					<div class="h-full w-full rounded-md border dark:border-neutral-700">
 						<pre class="h-full w-full overflow-auto p-2 text-xs">{includeText}</pre>
 					</div>
 				{:else}
 					<iframe
 						src={blobInlineUrl}
-						class="h-full w-full rounded-md border dark:border-gray-700"
+						class="h-full w-full rounded-md border dark:border-neutral-700"
 						title={$i18n('pages.blob.document')}
 					></iframe>
 				{/if}

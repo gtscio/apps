@@ -102,7 +102,7 @@ export async function bootstrapNodeIdentity(context: IWorkbenchContext): Promise
 
 		// Generate an address from the wallet, this will use the mnemonic from above
 		const walletConnector = WalletConnectorFactory.get(context.envVars.WORKBENCH_WALLET_CONNECTOR);
-		const addresses = await walletConnector.getAddresses(nodeIdentity, 0, 5);
+		const addresses = await walletConnector.getAddresses(nodeIdentity, 0, 0, 5);
 
 		let address0 = addresses[0];
 

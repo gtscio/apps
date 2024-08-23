@@ -4,9 +4,9 @@
 	import { page } from '$app/stores';
 	import type { IAttestationInformation } from '@gtsc/attestation-models';
 	import { Is, Urn } from '@gtsc/core';
-	import { Button, Card, Heading, Label, Spinner } from 'flowbite-svelte';
 	import { CloudArrowUpOutline } from 'flowbite-svelte-icons';
 	import { onMount } from 'svelte';
+	import { Button, Card, Heading, Label, Spinner } from '../../../../components/design-system';
 	import Error from '../../../../components/error.svelte';
 	import LabelledValue from '../../../../components/labelledValue.svelte';
 	import Qr from '../../../../components/qr.svelte';

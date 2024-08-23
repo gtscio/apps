@@ -4,8 +4,8 @@
 	import type { IAttestationInformation } from '@gtsc/attestation-models';
 	import { Converter, Is, Validation, type IValidationFailure } from '@gtsc/core';
 	import { Blake2b } from '@gtsc/crypto';
-	import { Card, Fileupload, Heading, Label, P, Select } from 'flowbite-svelte';
 	import { onMount } from 'svelte';
+	import { Card, Fileupload, Heading, Label, P, Select } from '../../../components/design-system';
 	import LabelledValue from '../../../components/labelledValue.svelte';
 	import Qr from '../../../components/qr.svelte';
 	import ValidatedForm from '../../../components/validatedForm.svelte';

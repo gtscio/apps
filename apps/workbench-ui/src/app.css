@@ -1,6 +1,7 @@
 @import 'tailwindcss/base';
 @import 'tailwindcss/components';
 @import 'tailwindcss/utilities';
+@import './font-face.css';
 
 ::-webkit-scrollbar-track {
 	@apply bg-gray-200;
@@ -24,4 +25,11 @@
 
 ::-webkit-scrollbar-corner {
 	background: transparent;
+}
+
+input:-webkit-autofill,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus,
+input:-webkit-autofill:active {
+	-webkit-box-shadow: 0 0 0 30px white inset !important;
 }

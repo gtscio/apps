@@ -4,7 +4,7 @@
 	import { goto } from '$app/navigation';
 	import { page } from '$app/stores';
 	import { Is, Validation, type IValidationFailure } from '@gtsc/core';
-	import { Input, Label, P } from 'flowbite-svelte';
+	import { P, Input, Label, Link } from '../components/design-system';
 	import ValidatedForm from '../components/validatedForm.svelte';
 	import ValidationError from '../components/validationError.svelte';
 	import { isAuthenticated, login } from '../stores/authentication';
@@ -74,13 +74,9 @@
 				</Label>
 			</svelte:fragment>
 			<svelte:fragment slot="after-action">
-				<P class="text-sm font-light text-gray-500 dark:text-gray-400">
+				<P class="text-sm text-neutral-900 dark:text-neutral-400">
 					{$i18n('pages.login.noAccount')}
-					<a
-						href="/authentication/signup"
-						class="text-primary-600 dark:text-primary-500 font-medium hover:underline"
-						>{$i18n('pages.login.signUp')}</a
-					>
+					<Link href="/authentication/signup">{$i18n('pages.login.signUp')}</Link>
 				</P>
 			</svelte:fragment>
 		</ValidatedForm>

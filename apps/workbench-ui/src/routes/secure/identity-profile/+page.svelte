@@ -3,8 +3,8 @@
 	// SPDX-License-Identifier: Apache-2.0.
 	import { Is, Urn, Validation, type IValidationFailure } from '@gtsc/core';
 	import { PropertyHelper } from '@gtsc/schema';
-	import { Button, Helper, Input, Label } from 'flowbite-svelte';
 	import { CloudArrowUpOutline } from 'flowbite-svelte-icons';
+	import { Button, Helper, Input, Label } from '../../../components/design-system';
 	import LabelledValue from '../../../components/labelledValue.svelte';
 	import Qr from '../../../components/qr.svelte';
 	import ValidatedForm from '../../../components/validatedForm.svelte';

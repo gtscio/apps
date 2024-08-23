@@ -4,6 +4,7 @@
 	import { Converter } from '@gtsc/core';
 	import { PngRenderer, QR } from '@gtsc/qr';
 	import { onMount } from 'svelte';
+	import { Link } from './design-system';
 	import { i18n } from '../stores/i18n';
 
 	export let qrData: string;
@@ -11,8 +12,6 @@
 	export let dimensions: number;
 	export let foreground: string = '#000000';
 	export let background: string = '#FFFFFF';
-	export let className: string | undefined;
-	export { className as class };
 
 	let pngBase64: string;
 	const linkItem: boolean = qrData.startsWith('http');
@@ -29,11 +28,11 @@
 </script>
 
 <div
-	class={className}
+	class={$$restProps.class ?? ''}
 	style="width:{`${dimensions}px`};height:{`${dimensions}px`};min-width:{`${dimensions}px`};min-height:{`${dimensions}px`}"
 >
 	{#if linkItem}
-		<a href={qrData} target="_blank"> <img src={pngBase64} alt={$i18n(labelResource)} /></a>
+		<Link href={qrData} target="_blank"><img src={pngBase64} alt={$i18n(labelResource)} /></Link>
 	{:else}
 		<img src={pngBase64} alt={$i18n(labelResource)} />
 	{/if}

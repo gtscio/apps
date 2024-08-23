@@ -3,7 +3,7 @@
 	// SPDX-License-Identifier: Apache-2.0.
 	import { HealthStatus } from '@gtsc/api-models';
 	import { Is } from '@gtsc/core';
-	import { Badge } from 'flowbite-svelte';
+	import { Badge } from './design-system';
 	import { i18n } from '../stores/i18n';
 	import { serverHealthStatus, serverName, serverVersion } from '../stores/information';
 </script>

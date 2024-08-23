@@ -3,8 +3,8 @@
 	// SPDX-License-Identifier: Apache-2.0.
 	import { Is } from '@gtsc/core';
 	import { PropertyHelper } from '@gtsc/schema';
-	import { Avatar, Navbar, NavBrand, Span } from 'flowbite-svelte';
 	import '../app.css';
+	import { Avatar, Link, Navbar, NavBrand, Span } from './design-system';
 	import { isAuthenticated } from '../stores/authentication';
 	import { i18n } from '../stores/i18n';
 	import { profileProperties } from '../stores/identityProfile';
@@ -39,19 +39,19 @@
 
 <Navbar
 	fluid={true}
-	class="fixed start-0 top-0 z-20 h-16 w-full min-w-72 border-b px-5 py-3 sm:h-20"
+	class="dark:bg-cosmic-indigo fixed start-0 top-0 z-20 h-16 w-full min-w-72 border-b border-neutral-200 px-5 py-3 sm:h-20 dark:border-neutral-900"
 >
 	<NavBrand href="/">
-		<img src="/images/logo.svg" class="me-3 h-6 sm:h-9" alt={$i18n('app.name')} />
-		<Span class="self-center whitespace-nowrap text-xl font-semibold dark:text-white"
+		<img src="/images/logo-primary.svg" class="me-3 h-6 sm:h-9" alt={$i18n('app.name')} />
+		<Span
+			class="font-hdcoltonwidesemibold self-center whitespace-nowrap text-xl font-semibold dark:text-white"
 			>{$i18n('app.name')}</Span
 		>
 	</NavBrand>
 	{#if $isAuthenticated}
-		<a href="/secure/identity-profile"
-			><Avatar border class="ring-primary-600 dark:ring-primary-600 cursor-pointer"
-				>{finalInitials}</Avatar
-			></a
+		<Link href="/secure/identity-profile" class="rounded-full"
+			><Avatar class="ring-primary-600 dark:ring-primary-600 cursor-pointer">{finalInitials}</Avatar
+			></Link
 		>
 	{/if}
 </Navbar>

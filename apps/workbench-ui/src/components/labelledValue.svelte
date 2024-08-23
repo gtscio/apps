@@ -1,11 +1,10 @@
 <script lang="ts">
 	// Copyright 2024 IOTA Stiftung.
 	// SPDX-License-Identifier: Apache-2.0.
-	import { Span } from 'flowbite-svelte';
-	export let className: string | undefined;
-	export { className as class };
+	import { Span } from './design-system';
 </script>
 
-<Span class={`whitespace-pre-wrap break-all text-gray-500 dark:text-white ${className}`}
+<Span
+	class={`whitespace-pre-wrap break-all font-light text-neutral-900 dark:text-white ${$$restProps.class ?? ''}`}
 	><slot></slot></Span
 >
