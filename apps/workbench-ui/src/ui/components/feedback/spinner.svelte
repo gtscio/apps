@@ -2,4 +2,4 @@
 	import { Spinner } from 'flowbite-svelte';
 </script>
 
-<Spinner {...$$props} class={`${$$props.class ?? ''}`} color="primary" />
+<Spinner size={7} {...$$props} class={`${$$props.class ?? ''}`} color="primary" />
