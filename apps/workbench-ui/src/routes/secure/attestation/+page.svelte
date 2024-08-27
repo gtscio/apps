@@ -5,18 +5,17 @@
 	import { Converter, Is, Validation, type IValidationFailure } from '@gtsc/core';
 	import { Blake2b } from '@gtsc/crypto';
 	import { onMount } from 'svelte';
-	import { Card, Fileupload, Heading, Label, P, Select } from '../../../components/design-system';
-	import LabelledValue from '../../../components/labelledValue.svelte';
-	import Qr from '../../../components/qr.svelte';
-	import ValidatedForm from '../../../components/validatedForm.svelte';
-	import ValidationError from '../../../components/validationError.svelte';
-	import type { IDocumentAttestation } from '../../../models/IDocumentAttestation';
-	import { createPrivateUrl, createPublicUrl } from '../../../stores/app';
-	import { attestationAttest } from '../../../stores/attestation';
-	import { blobStorageUpload } from '../../../stores/blobStorage';
-	import { i18n } from '../../../stores/i18n';
-	import { identityGetPublic } from '../../../stores/identity';
-	import { profileIdentity } from '../../../stores/identityProfile';
+	import LabelledValue from '$components/labelledValue.svelte';
+	import ValidatedForm from '$components/validatedForm.svelte';
+	import ValidationError from '$components/validationError.svelte';
+	import type { IDocumentAttestation } from '$models/IDocumentAttestation';
+	import { createPrivateUrl, createPublicUrl } from '$stores/app';
+	import { attestationAttest } from '$stores/attestation';
+	import { blobStorageUpload } from '$stores/blobStorage';
+	import { i18n } from '$stores/i18n';
+	import { identityGetPublic } from '$stores/identity';
+	import { profileIdentity } from '$stores/identityProfile';
+	import { Card, Fileupload, Heading, Label, P, QR, Select } from '$ui/components';
 
 	let filename = '';
 	let files: FileList | undefined;
@@ -122,7 +121,7 @@
 				{$i18n('pages.attestation.filename')}
 				<Fileupload
 					type="text"
-					name="firstName"
+					name="filename"
 					color={Is.arrayValue(validationErrors.filename) ? 'red' : 'base'}
 					bind:value={filename}
 					bind:files
@@ -159,7 +158,7 @@
 				</Label>
 				<Label>
 					{$i18n('pages.attestation.blobQr')}
-					<Qr
+					<QR
 						class="mt-2"
 						qrData={createPrivateUrl(`blob/${blobId}`)}
 						labelResource="pages.attestation.blobQr"
@@ -180,7 +179,7 @@
 				</Label>
 				<Label>
 					{$i18n('pages.attestation.attestationQr')}
-					<Qr
+					<QR
 						class="mt-2"
 						qrData={createPublicUrl(`attestation/${attestationInfo?.id}`)}
 						labelResource="pages.attestation.attestationQr"

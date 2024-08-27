@@ -3,7 +3,7 @@
 import type { IAttestationInformation } from "@gtsc/attestation-models";
 import { AttestationClient } from "@gtsc/attestation-rest-client";
 import { ErrorHelper, Is } from "@gtsc/core";
-import type { IDocumentAttestation } from "../models/IDocumentAttestation";
+import type { IDocumentAttestation } from "$models/IDocumentAttestation";
 
 let attestationClient: AttestationClient | undefined;
 

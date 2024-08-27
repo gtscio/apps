@@ -7,22 +7,14 @@
 	import type { IDidDocument } from '@gtsc/standards-w3c-did';
 	import { CloudArrowUpOutline } from 'flowbite-svelte-icons';
 	import { onMount } from 'svelte';
-	import {
-		Button,
-		Card,
-		Code,
-		Heading,
-		Label,
-		Spinner
-	} from '../../../../components/design-system';
-	import Error from '../../../../components/error.svelte';
-	import LabelledValue from '../../../../components/labelledValue.svelte';
-	import Qr from '../../../../components/qr.svelte';
-	import { createPublicUrl } from '../../../../stores/app';
-	import { i18n } from '../../../../stores/i18n';
-	import { identityGetPublic } from '../../../../stores/identity';
-	import { profileGetPublic } from '../../../../stores/identityProfile';
-	import { createExplorerIdentityUrl } from '../../../../stores/iota';
+	import Error from '$components/error.svelte';
+	import LabelledValue from '$components/labelledValue.svelte';
+	import { createPublicUrl } from '$stores/app';
+	import { i18n } from '$stores/i18n';
+	import { identityGetPublic } from '$stores/identity';
+	import { profileGetPublic } from '$stores/identityProfile';
+	import { createExplorerIdentityUrl } from '$stores/iota';
+	import { Button, Card, Code, Heading, Label, QR, Spinner } from '$ui/components';
 
 	const identity = $page.params.identity;
 	let displayName: string;
@@ -64,7 +56,7 @@
 	<div class="flex flex-row justify-between gap-5">
 		<Heading tag="h5">{$i18n('pages.identityPublic.title')}</Heading>
 		{#if isBusy}
-			<Spinner size={5} color="white" />
+			<Spinner />
 		{/if}
 	</div>
 	<Error {error} />
@@ -89,7 +81,7 @@
 					</Label>
 				{/if}
 			</div>
-			<Qr
+			<QR
 				qrData={createPublicUrl(`identity/${identity}`)}
 				labelResource="pages.identityPublic.qr"
 				dimensions={128}

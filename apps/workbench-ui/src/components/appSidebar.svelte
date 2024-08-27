@@ -8,14 +8,14 @@
 		ShieldCheckSolid,
 		SwatchbookSolid
 	} from 'flowbite-svelte-icons';
-	import { Sidebar, SidebarGroup, SidebarItem, SidebarWrapper } from './design-system';
-	import { isAuthenticated } from '../stores/authentication';
-	import { i18n } from '../stores/i18n';
+	import { isAuthenticated } from '$stores/authentication';
+	import { i18n } from '$stores/i18n';
+	import { Sidebar, SidebarGroup, SidebarItem, SidebarWrapper } from '$ui/components';
 	$: activeUrl = $page.url.pathname;
 </script>
 
 <Sidebar {activeUrl} class="h-full" asideClass="w-16 md:w-64">
-	<SidebarWrapper class="dark:bg-cosmic-indigo h-full">
+	<SidebarWrapper class="dark:bg-cosmic-indigo-600 h-full">
 		<SidebarGroup>
 			{#if $isAuthenticated}
 				<SidebarItem label={$i18n('navigation.dashboard')} href="/secure/dashboard">

@@ -4,11 +4,11 @@
 	import { goto } from '$app/navigation';
 	import { page } from '$app/stores';
 	import { Is, Validation, type IValidationFailure } from '@gtsc/core';
-	import { P, Input, Label, Link } from '../components/design-system';
-	import ValidatedForm from '../components/validatedForm.svelte';
-	import ValidationError from '../components/validationError.svelte';
-	import { isAuthenticated, login } from '../stores/authentication';
-	import { i18n } from '../stores/i18n';
+	import ValidatedForm from '$components/validatedForm.svelte';
+	import ValidationError from '$components/validationError.svelte';
+	import { isAuthenticated, login } from '$stores/authentication';
+	import { i18n } from '$stores/i18n';
+	import { Input, Label, Link, P } from '$ui/components';
 
 	let email = '';
 	let password = '';
@@ -76,7 +76,7 @@
 			<svelte:fragment slot="after-action">
 				<P class="text-sm text-neutral-900 dark:text-neutral-400">
 					{$i18n('pages.login.noAccount')}
-					<Link href="/authentication/signup">{$i18n('pages.login.signUp')}</Link>
+					<Link href="/authentication/signup" class="ml-2 p-1">{$i18n('pages.login.signUp')}</Link>
 				</P>
 			</svelte:fragment>
 		</ValidatedForm>

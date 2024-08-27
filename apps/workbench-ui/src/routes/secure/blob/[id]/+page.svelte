@@ -6,13 +6,12 @@
 	import { PropertyHelper, type IProperty } from '@gtsc/schema';
 	import { ArrowUpRightFromSquareOutline, DownloadOutline } from 'flowbite-svelte-icons';
 	import { onMount } from 'svelte';
-	import { Button, Card, Heading, Label, Spinner } from '../../../../components/design-system';
-	import Error from '../../../../components/error.svelte';
-	import LabelledValue from '../../../../components/labelledValue.svelte';
-	import Qr from '../../../../components/qr.svelte';
-	import { createPrivateUrl } from '../../../../stores/app';
-	import { blobStorageGet, createDownloadLink } from '../../../../stores/blobStorage';
-	import { i18n } from '../../../../stores/i18n';
+	import Error from '$components/error.svelte';
+	import LabelledValue from '$components/labelledValue.svelte';
+	import { createPrivateUrl } from '$stores/app';
+	import { blobStorageGet, createDownloadLink } from '$stores/blobStorage';
+	import { i18n } from '$stores/i18n';
+	import { Button, Card, Heading, Label, QR, Spinner } from '$ui/components';
 
 	const id = $page.params.id;
 	let filename: string | undefined;
@@ -66,7 +65,7 @@
 	<div class="flex flex-row justify-between gap-5">
 		<Heading tag="h5">{$i18n('pages.blob.title')}</Heading>
 		{#if isBusy}
-			<Spinner size={5} color="white" />
+			<Spinner />
 		{/if}
 	</div>
 	{#if !isBusy}
@@ -90,7 +89,7 @@
 					</Label>
 				{/if}
 			</div>
-			<Qr
+			<QR
 				qrData={createPrivateUrl(`blob/${id}`)}
 				labelResource="pages.identityProfile.qr"
 				dimensions={128}

@@ -29,6 +29,8 @@ export default {
 				"ocean-breeze": "#3166DD",
 				"misty-sky": "#EDF0F4",
 				"cosmic-indigo": "#0A132B",
+				"cosmic-indigo-600": "#090f27",
+				"cosmic-indigo-700": "#0d101d",
 				"sunset-glow": "#FF9248",
 				"skyline-blue": "#4585E9",
 				"soft-frost": "#E2E7ED",

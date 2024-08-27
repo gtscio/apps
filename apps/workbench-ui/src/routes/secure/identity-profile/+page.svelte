@@ -4,19 +4,14 @@
 	import { Is, Urn, Validation, type IValidationFailure } from '@gtsc/core';
 	import { PropertyHelper } from '@gtsc/schema';
 	import { CloudArrowUpOutline } from 'flowbite-svelte-icons';
-	import { Button, Helper, Input, Label } from '../../../components/design-system';
-	import LabelledValue from '../../../components/labelledValue.svelte';
-	import Qr from '../../../components/qr.svelte';
-	import ValidatedForm from '../../../components/validatedForm.svelte';
-	import ValidationError from '../../../components/validationError.svelte';
-	import { createPublicUrl } from '../../../stores/app';
-	import { i18n } from '../../../stores/i18n';
-	import {
-		profileIdentity,
-		profileProperties,
-		profileUpdate
-	} from '../../../stores/identityProfile';
-	import { createExplorerIdentityUrl } from '../../../stores/iota';
+	import LabelledValue from '$components/labelledValue.svelte';
+	import ValidatedForm from '$components/validatedForm.svelte';
+	import ValidationError from '$components/validationError.svelte';
+	import { createPublicUrl } from '$stores/app';
+	import { i18n } from '$stores/i18n';
+	import { profileIdentity, profileProperties, profileUpdate } from '$stores/identityProfile';
+	import { createExplorerIdentityUrl } from '$stores/iota';
+	import { Button, Helper, Input, Label, QR } from '$ui/components';
 
 	let firstName = PropertyHelper.getText($profileProperties, 'firstName') ?? '';
 	let lastName = PropertyHelper.getText($profileProperties, 'lastName') ?? '';
@@ -88,7 +83,7 @@
 				</div>
 				<Label class="flex flex-col gap-2">
 					{$i18n('pages.identityProfile.qr')}
-					<Qr
+					<QR
 						qrData={createPublicUrl(`identity/${$profileIdentity}`)}
 						labelResource="pages.identityProfile.qr"
 						dimensions={128}

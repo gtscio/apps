@@ -2,7 +2,7 @@
 	// Copyright 2024 IOTA Stiftung.
 	// SPDX-License-Identifier: Apache-2.0.
 	import { Is } from '@gtsc/core';
-	import { Helper } from './design-system';
+	import { Helper } from '$ui/components';
 
 	export let error: string | undefined;
 </script>

@@ -6,15 +6,14 @@
 	import { Is, Urn } from '@gtsc/core';
 	import { CloudArrowUpOutline } from 'flowbite-svelte-icons';
 	import { onMount } from 'svelte';
-	import { Button, Card, Heading, Label, Spinner } from '../../../../components/design-system';
-	import Error from '../../../../components/error.svelte';
-	import LabelledValue from '../../../../components/labelledValue.svelte';
-	import Qr from '../../../../components/qr.svelte';
-	import type { IDocumentAttestation } from '../../../../models/IDocumentAttestation';
-	import { createPublicUrl } from '../../../../stores/app';
-	import { attestationVerify } from '../../../../stores/attestation';
-	import { i18n } from '../../../../stores/i18n';
-	import { attestationIdToNftId, createExplorerNftUrl } from '../../../../stores/iota';
+	import Error from '$components/error.svelte';
+	import LabelledValue from '$components/labelledValue.svelte';
+	import type { IDocumentAttestation } from '$models/IDocumentAttestation';
+	import { createPublicUrl } from '$stores/app';
+	import { attestationVerify } from '$stores/attestation';
+	import { i18n } from '$stores/i18n';
+	import { attestationIdToNftId, createExplorerNftUrl } from '$stores/iota';
+	import { Button, Card, Heading, Label, QR, Spinner } from '$ui/components';
 
 	const attestationId = $page.params.attestationId;
 	let error: string;
@@ -54,7 +53,7 @@
 	<div class="flex flex-row justify-between gap-5">
 		<Heading tag="h5">{$i18n('pages.attestationPublic.title')}</Heading>
 		{#if isBusy}
-			<Spinner size={5} color="white" />
+			<Spinner />
 		{/if}
 	</div>
 	<Error {error} />
@@ -122,7 +121,7 @@
 					</Label>
 				{/if}
 			</div>
-			<Qr
+			<QR
 				qrData={createPublicUrl(`attestation/${attestationId}`)}
 				labelResource="pages.attestationPublic.qr"
 				dimensions={128}

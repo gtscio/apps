@@ -4,8 +4,8 @@
 	import { Converter } from '@gtsc/core';
 	import { PngRenderer, QR } from '@gtsc/qr';
 	import { onMount } from 'svelte';
-	import { Link } from './design-system';
-	import { i18n } from '../stores/i18n';
+	import { i18n } from '$stores/i18n';
+	import { Link } from '$ui/components';
 
 	export let qrData: string;
 	export let labelResource: string;
@@ -27,13 +27,16 @@
 	});
 </script>
 
-<div
-	class={$$restProps.class ?? ''}
-	style="width:{`${dimensions}px`};height:{`${dimensions}px`};min-width:{`${dimensions}px`};min-height:{`${dimensions}px`}"
->
+<div class={$$restProps.class ?? ''} style="width:{`${dimensions}px`};height:{`${dimensions}px`}">
 	{#if linkItem}
-		<Link href={qrData} target="_blank"><img src={pngBase64} alt={$i18n(labelResource)} /></Link>
+		<Link
+			href={qrData}
+			target="_blank"
+			class="focus:border-primary-500 block border border-transparent"
+		>
+			<img src={pngBase64} alt={$i18n(labelResource)} class="rounded-sm" />
+		</Link>
 	{:else}
-		<img src={pngBase64} alt={$i18n(labelResource)} />
+		<img src={pngBase64} alt={$i18n(labelResource)} class="rounded-sm" />
 	{/if}
 </div>

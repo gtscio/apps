@@ -5,7 +5,7 @@
 
 <Select
 	{...$$props}
-	class={`focus:ring-primary-100 focus:border-primary-500 border-neutral-300 bg-white focus:ring-4 ${$$props.class ?? ''}`}
+	class={`focus:ring-primary-100 focus:border-primary-500 dark:focus:ring-primary-900 border-neutral-300 bg-white focus:ring-4 ${$$props.class ?? ''}`}
 	on:change
 	bind:value
 >

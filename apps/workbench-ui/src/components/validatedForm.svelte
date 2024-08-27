@@ -2,8 +2,8 @@
 	// Copyright 2024 IOTA Stiftung.
 	// SPDX-License-Identifier: Apache-2.0.
 	import { Is, Validation, type IValidationFailure } from '@gtsc/core';
-	import { Button, Heading, Card, P, Spinner } from './design-system';
-	import { i18n } from '../stores/i18n';
+	import { i18n } from '$stores/i18n';
+	import { Button, Card, Heading, P, Spinner } from '$ui/components';
 
 	export let titleResource: string;
 	export let actionButtonResource: string = 'actions.save';
@@ -64,7 +64,7 @@
 		<div class="flex flex-row justify-between gap-5">
 			<Heading tag="h5">{$i18n(titleResource)}</Heading>
 			{#if isBusy}
-				<Spinner size={5} color="white" />
+				<Spinner />
 			{/if}
 		</div>
 		<slot name="fields"></slot>

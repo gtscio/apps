@@ -2,8 +2,8 @@
 	// Copyright 2024 IOTA Stiftung.
 	// SPDX-License-Identifier: Apache-2.0.
 	import { Is, type IValidationFailure } from '@gtsc/core';
-	import { Helper } from './design-system';
-	import { i18n } from '../stores/i18n';
+	import { i18n } from '$stores/i18n';
+	import { Helper } from '$ui/components';
 
 	export let validationErrors: IValidationFailure[] | undefined;
 </script>

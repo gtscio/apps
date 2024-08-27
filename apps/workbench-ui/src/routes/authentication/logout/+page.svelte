@@ -3,7 +3,7 @@
 	// SPDX-License-Identifier: Apache-2.0.
 	import { goto } from '$app/navigation';
 	import { onMount } from 'svelte';
-	import { logout } from '../../../stores/authentication';
+	import { logout } from '$stores/authentication';
 
 	onMount(async () => {
 		await logout();

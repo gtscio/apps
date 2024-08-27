@@ -11,7 +11,7 @@
 	{...$$props}
 	{activeClass}
 	{nonActiveClass}
-	class={`focus:ring-primary-100 focus:border-primary-500 outline-none focus:ring-4 ${$$props.class ?? ''}`}
+	class={`focus:ring-primary-100 focus:border-primary-500 dark:focus:ring-primary-900 outline-none focus:ring-4 ${$$props.class ?? ''}`}
 	spanClass="hidden md:block ms-3"
 >
 	<slot name="icon" slot="icon"></slot>

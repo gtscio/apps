@@ -1,13 +1,13 @@
 <script lang="ts">
 	// Copyright 2024 IOTA Stiftung.
 	// SPDX-License-Identifier: Apache-2.0.
-	import { DarkMode, Footer, Label, Select } from './design-system';
 	import ServerStatus from './serverStatus.svelte';
-	import { currentLocale, i18n, locales } from '../stores/i18n';
+	import { currentLocale, i18n, locales } from '$stores/i18n';
+	import { DarkMode, Footer, Label, Select } from '$ui/components';
 </script>
 
 <Footer
-	class="dark:bg-cosmic-indigo border-t border-neutral-200 bg-white px-4 py-2 dark:border-neutral-900"
+	class="dark:bg-cosmic-indigo-600 border-t border-neutral-200 bg-white px-4 py-2 dark:border-neutral-900"
 >
 	<div class="flex flex-col items-center justify-between gap-2 md:flex-row">
 		<ServerStatus />
