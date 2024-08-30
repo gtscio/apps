@@ -53,7 +53,6 @@ export function initialiseIdentityConnectorFactory(context: IWorkbenchContext): 
 	if (type === "iota") {
 		connector = new IotaIdentityConnector({
 			vaultConnectorType: context.envVars.WORKBENCH_VAULT_CONNECTOR,
-			walletConnectorType: context.envVars.WORKBENCH_WALLET_CONNECTOR,
 			config: {
 				clientOptions: {
 					nodes: [context.envVars.WORKBENCH_IOTA_NODE_URL],

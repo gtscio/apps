@@ -29,6 +29,9 @@
 		},
 		{
 			"package": "@gtsc/attestation-service"
+		},
+		{
+			"package": "@gtsc/auditable-item-graph-service"
 		}
 	],
 	"authMethods": ["jwtBearer"]

@@ -8,6 +8,7 @@ import {
 	initialiseAttestationConnectorFactory,
 	initialiseAttestationService
 } from "./components/attestation.js";
+import { initialiseAuditableItemGraphService } from "./components/auditable-item-graph.js";
 import {
 	initialiseBlobStorageConnectorFactory,
 	initialiseBlobStorageService
@@ -19,6 +20,7 @@ import {
 	initialiseIdentityProfileService,
 	initialiseIdentityService
 } from "./components/identity.js";
+import { initialiseImmutableStorageConnectorFactory } from "./components/immutableStorage.js";
 import { initialiseInformationService } from "./components/information.js";
 import {
 	initialiseLoggingConnectorFactory,
@@ -83,11 +85,15 @@ try {
 	initialiseBlobStorageConnectorFactory(context);
 	initialiseBlobStorageService(context);
 
+	initialiseImmutableStorageConnectorFactory(context);
+
 	initialiseNftConnectorFactory(context);
 	initialiseNftService(context);
 
 	initialiseAttestationConnectorFactory(context);
 	initialiseAttestationService(context);
+
+	initialiseAuditableItemGraphService(context);
 
 	const processors = buildProcessors(context);
 

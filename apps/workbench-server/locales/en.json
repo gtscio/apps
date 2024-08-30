@@ -23,6 +23,7 @@
 		"generatingNodeIdentity": "Generating node identity",
 		"identityExplorer": "Identity explorer \"{url}\"",
 		"addingAttestation": "Adding attestation verification method",
+		"addingAuditableItemGraph": "Adding auditable item graph verification method",
 		"nodeIdentity": "Node identity \"{identity}\"",
 		"nodeAdminUserEmail": "Node Admin User Email \"{email}\"",
 		"nodeAdminUserPassword": "Node Admin User Password \"{password}\""

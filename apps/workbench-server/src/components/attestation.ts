@@ -9,6 +9,7 @@ import { nodeLogInfo } from "./logging.js";
 import type { IWorkbenchContext } from "../models/IWorkbenchContext.js";
 
 export const ATTESTATION_SERVICE_NAME = "attestation";
+export const ATTESTATION_ASSERTION_METHOD_ID = "attestation";
 
 /**
  * Initialise the attestation service.

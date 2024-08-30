@@ -123,7 +123,7 @@
 			</div>
 			<QR
 				qrData={createPublicUrl(`attestation/${attestationId}`)}
-				labelResource="pages.attestationPublic.qr"
+				labelResource="pages.attestationPublic.attestationQr"
 				dimensions={128}
 			/>
 		</div>

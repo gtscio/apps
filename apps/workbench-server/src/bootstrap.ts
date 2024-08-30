@@ -15,6 +15,8 @@ import { SchemaOrgDataTypes } from "@gtsc/schema";
 import { VaultConnectorFactory, VaultKeyType } from "@gtsc/vault-models";
 import type { WalletAddress } from "@gtsc/wallet-connector-entity-storage";
 import { WalletConnectorFactory } from "@gtsc/wallet-models";
+import { ATTESTATION_ASSERTION_METHOD_ID } from "./components/attestation.js";
+import { AIG_ASSERTION_METHOD_ID, AIG_ENCRYPTION_KEY } from "./components/auditable-item-graph.js";
 import { BLOB_ENCRYPTION_KEY } from "./components/blobStorage.js";
 import { nodeLogInfo } from "./components/logging.js";
 import { AUTH_SIGNING_NAME_VAULT_KEY } from "./components/processors.js";
@@ -54,6 +56,9 @@ export async function bootstrap(context: IWorkbenchContext): Promise<void> {
 		await bootstrapNodeUser(context);
 		await bootstrapAuth(context);
 		await bootstrapBlobEncryption(context);
+		await bootstrapAuditableItemGraphEncryption(context);
+		await bootstrapAttestationMethod(context);
+		await bootstrapAuditableItemGraphMethod(context);
 	} finally {
 		if (context.configUpdated) {
 			await writeConfig(context.storageFileRoot, context.workbenchConfigFilename, context.config);
@@ -154,16 +159,6 @@ export async function bootstrapNodeIdentity(context: IWorkbenchContext): Promise
 
 		await vaultConnector.setSecret(`${identityDocument.id}/mnemonic`, mnemonic);
 
-		// Add attestation verification method to DID, the correct node context is now in place
-		// so the keys for the verification method will be stored correctly
-		nodeLogInfo(I18n.formatMessage("workbench.addingAttestation"));
-		await identityConnector.addVerificationMethod(
-			identityDocument.id,
-			identityDocument.id,
-			"assertionMethod",
-			"attestation"
-		);
-
 		nodeLogInfo(
 			I18n.formatMessage("workbench.nodeIdentity", {
 				identity: context.config.nodeIdentity
@@ -254,6 +249,66 @@ export async function bootstrapNodeUser(context: IWorkbenchContext): Promise<voi
 }
 
 /**
+ * Bootstrap the attestation verification methods.
+ * @param context The context for the node.
+ */
+export async function bootstrapAttestationMethod(context: IWorkbenchContext): Promise<void> {
+	if (
+		Is.stringValue(context.config.nodeIdentity) &&
+		!context.config.bootstrappedComponents.includes("AttestationMethod")
+	) {
+		displayBootstrapStarted(context);
+
+		const identityConnector = IdentityConnectorFactory.get(
+			context.envVars.WORKBENCH_IDENTITY_CONNECTOR
+		);
+
+		// Add attestation verification method to DID, the correct node context is now in place
+		// so the keys for the verification method will be stored correctly
+		nodeLogInfo(I18n.formatMessage("workbench.addingAttestation"));
+		await identityConnector.addVerificationMethod(
+			context.config.nodeIdentity,
+			context.config.nodeIdentity,
+			"assertionMethod",
+			ATTESTATION_ASSERTION_METHOD_ID
+		);
+
+		context.config.bootstrappedComponents.push("AttestationMethod");
+		context.configUpdated = true;
+	}
+}
+
+/**
+ * Bootstrap the auditable item graph verification methods.
+ * @param context The context for the node.
+ */
+export async function bootstrapAuditableItemGraphMethod(context: IWorkbenchContext): Promise<void> {
+	if (
+		Is.stringValue(context.config.nodeIdentity) &&
+		!context.config.bootstrappedComponents.includes("AuditableItemGraphMethod")
+	) {
+		displayBootstrapStarted(context);
+
+		const identityConnector = IdentityConnectorFactory.get(
+			context.envVars.WORKBENCH_IDENTITY_CONNECTOR
+		);
+
+		// Add aig verification method to DID, the correct node context is now in place
+		// so the keys for the verification method will be stored correctly
+		nodeLogInfo(I18n.formatMessage("workbench.addingAuditableItemGraph"));
+		await identityConnector.addVerificationMethod(
+			context.config.nodeIdentity,
+			context.config.nodeIdentity,
+			"assertionMethod",
+			AIG_ASSERTION_METHOD_ID
+		);
+
+		context.config.bootstrappedComponents.push("AuditableItemGraphMethod");
+		context.configUpdated = true;
+	}
+}
+
+/**
  * Bootstrap the keys for blob encryption.
  * @param context The context for the node.
  */
@@ -276,6 +331,32 @@ export async function bootstrapBlobEncryption(context: IWorkbenchContext): Promi
 		);
 
 		context.config.bootstrappedComponents.push("BlobEncryption");
+		context.configUpdated = true;
+	}
+}
+
+/**
+ * Bootstrap the keys for aig encryption.
+ * @param context The context for the node.
+ */
+export async function bootstrapAuditableItemGraphEncryption(
+	context: IWorkbenchContext
+): Promise<void> {
+	if (
+		Is.stringValue(context.config.nodeIdentity) &&
+		!context.config.bootstrappedComponents.includes("AuditableItemGraphEncryption")
+	) {
+		displayBootstrapStarted(context);
+
+		// Create a new key for encrypting auditable item graph data
+		const vaultConnector = VaultConnectorFactory.get(context.envVars.WORKBENCH_VAULT_CONNECTOR);
+
+		await vaultConnector.createKey(
+			`${context.config.nodeIdentity}/${AIG_ENCRYPTION_KEY}`,
+			VaultKeyType.Ed25519
+		);
+
+		context.config.bootstrappedComponents.push("AuditableItemGraphEncryption");
 		context.configUpdated = true;
 	}
 }

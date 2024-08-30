@@ -34,9 +34,19 @@
 			target="_blank"
 			class="focus:border-primary-500 block border border-transparent"
 		>
-			<img src={pngBase64} alt={$i18n(labelResource)} class="rounded-sm" />
+			<img
+				src={pngBase64}
+				alt={$i18n(labelResource)}
+				class="rounded-sm"
+				style="width:{`${dimensions - 2}px`};height:{`${dimensions - 2}px`};min-width:{`${dimensions - 2}px`};min-height:{`${dimensions - 2}px`}"
+			/>
 		</Link>
 	{:else}
-		<img src={pngBase64} alt={$i18n(labelResource)} class="rounded-sm" />
+		<img
+			src={pngBase64}
+			alt={$i18n(labelResource)}
+			class="rounded-sm"
+			style="width:{`${dimensions - 2}px`};height:{`${dimensions - 2}px`};min-width:{`${dimensions - 2}px`};min-height:{`${dimensions - 2}px`}"
+		/>
 	{/if}
 </div>

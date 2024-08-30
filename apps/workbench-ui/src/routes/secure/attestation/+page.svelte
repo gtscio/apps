@@ -22,7 +22,7 @@
 	let validationErrors: {
 		[field in 'filename' | 'assertionMethod']?: IValidationFailure[] | undefined;
 	} = {};
-	let isBusy = false;
+	let isBusy = true;
 	let blobId: string | undefined;
 	let signature: string | undefined;
 	let progress: string | undefined;
@@ -102,6 +102,7 @@
 		if (assertionMethods.length > 0) {
 			assertionMethod = assertionMethods[0].value;
 		}
+		isBusy = false;
 	});
 </script>
 
