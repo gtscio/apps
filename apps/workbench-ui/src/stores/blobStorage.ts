@@ -2,7 +2,7 @@
 // SPDX-License-Identifier: Apache-2.0.
 import { BlobStorageClient } from "@gtsc/blob-storage-rest-client";
 import { Converter, ErrorHelper, Is } from "@gtsc/core";
-import { PropertyHelper, type IProperty } from "@gtsc/schema";
+import type { Graph } from "schema-dts";
 
 let blobStorageClient: BlobStorageClient | undefined;
 
@@ -18,14 +18,14 @@ export async function init(apiUrl: string): Promise<void> {
 
 /**
  * Upload a new file to blob storage.
- * @param filename The original name of the file.
  * @param mimeType The mime type of the file.
+ * @param metadata Metadata stored as a graph.
  * @param bytes The bytes to store.
  * @returns The id of the uploaded document or an error if one occurred.
  */
 export async function blobStorageUpload(
-	filename: string,
 	mimeType: string,
+	metadata: Graph,
 	bytes: Uint8Array
 ): Promise<
 	| {
@@ -36,10 +36,12 @@ export async function blobStorageUpload(
 > {
 	if (Is.object(blobStorageClient)) {
 		try {
-			const metadata: IProperty[] = [];
-			PropertyHelper.setText(metadata, "filename", filename);
-			PropertyHelper.setText(metadata, "mimeType", mimeType);
-			const id = await blobStorageClient.create(Converter.bytesToBase64(bytes), metadata);
+			const id = await blobStorageClient.create(
+				Converter.bytesToBase64(bytes),
+				mimeType,
+				undefined,
+				metadata
+			);
 			return {
 				id
 			};
@@ -63,7 +65,9 @@ export async function blobStorageGet(
 ): Promise<
 	| {
 			error?: string;
-			metadata?: IProperty[];
+			mimeType?: string;
+			extension?: string;
+			metadata?: Graph;
 			blob?: Uint8Array;
 	  }
 	| undefined
@@ -72,7 +76,9 @@ export async function blobStorageGet(
 		try {
 			const result = await blobStorageClient.get(id, includeContent);
 			return {
-				metadata: result.metadata,
+				mimeType: result.mimeType,
+				extension: result.extension,
+				metadata: result.metadata as Graph,
 				blob: Is.stringBase64(result.blob) ? Converter.base64ToBytes(result.blob) : undefined
 			};
 		} catch (err) {

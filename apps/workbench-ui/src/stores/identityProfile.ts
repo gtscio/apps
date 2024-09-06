@@ -1,16 +1,18 @@
 // Copyright 2024 IOTA Stiftung.
 // SPDX-License-Identifier: Apache-2.0.
-import { BaseError, ErrorHelper, Is, NotFoundError } from "@gtsc/core";
-import type { IIdentityProfileProperty } from "@gtsc/identity-models";
+import { BaseError, ErrorHelper, Is, NotFoundError, ObjectHelper } from "@gtsc/core";
 import { IdentityProfileClient } from "@gtsc/identity-rest-client";
-import { PropertyHelper, type IProperty } from "@gtsc/schema";
+import type { Person, WithContext } from "schema-dts";
 import { get, writable } from "svelte/store";
 import { isAuthenticated } from "./authentication";
 
 export const profileIdentity = writable<string>("");
-export const profileProperties = writable<IIdentityProfileProperty[]>([]);
+export const publicProfile = writable<WithContext<Person> | undefined>();
+export const privateProfile = writable<WithContext<Person> | undefined>();
 
-let identityProfileClient: IdentityProfileClient | undefined;
+let identityProfileClient:
+	| IdentityProfileClient<WithContext<Person>, WithContext<Person>>
+	| undefined;
 
 /**
  * Initialize the identity profile.
@@ -26,7 +28,8 @@ export async function init(apiUrl: string): Promise<void> {
 			await profileGet();
 		} else {
 			profileIdentity.set("");
-			profileProperties.set([]);
+			publicProfile.set(undefined);
+			privateProfile.set(undefined);
 		}
 	});
 }
@@ -36,18 +39,21 @@ export async function init(apiUrl: string): Promise<void> {
  */
 async function profileGet(): Promise<void> {
 	profileIdentity.set("");
-	profileProperties.set([]);
+	publicProfile.set(undefined);
+	privateProfile.set(undefined);
 
 	if (Is.object(identityProfileClient)) {
 		try {
 			const profile = await identityProfileClient.get();
 
 			profileIdentity.set(profile.identity);
-			profileProperties.set(profile.properties ?? []);
+			publicProfile.set(profile.publicProfile as WithContext<Person>);
+			privateProfile.set(profile.privateProfile as WithContext<Person>);
 		} catch (err) {
 			const error = BaseError.fromError(err);
 			if (BaseError.isErrorName(error, NotFoundError.CLASS_NAME)) {
-				profileProperties.set([]);
+				publicProfile.set(undefined);
+				privateProfile.set(undefined);
 			}
 		}
 	}
@@ -55,26 +61,27 @@ async function profileGet(): Promise<void> {
 
 /**
  * Update the profile.
- * @param fields The profile fields.
- * @param fields.firstName The profile first name.
- * @param fields.lastName The profile last name.
- * @param fields.displayName The profile display name.
+ * @param updatedPublicProfile The updated public profile.
+ * @param updatedPublicProfile.givenName The updated given name.
+ * @param updatedPublicProfile.familyName The updated family name.
+ * @param updatedPrivateProfile The updated private profile.
+ * @param updatedPrivateProfile.name The updated name.
  * @returns The error if one occurred.
  */
-export async function profileUpdate(fields: {
-	firstName: string;
-	lastName: string;
-	displayName: string;
-}): Promise<string | undefined> {
+export async function profileUpdate(
+	updatedPublicProfile: { givenName: string; familyName: string },
+	updatedPrivateProfile: { name: string }
+): Promise<string | undefined> {
 	if (Is.object(identityProfileClient)) {
 		try {
-			const properties = get(profileProperties);
-			PropertyHelper.setText(properties, "firstName", fields.firstName);
-			PropertyHelper.setText(properties, "lastName", fields.lastName);
-			PropertyHelper.setText(properties, "displayName", fields.displayName, { isPublic: true });
-			profileProperties.set(properties);
+			const publicProf = get(publicProfile);
+			ObjectHelper.propertySet(publicProf, "givenName", updatedPublicProfile.givenName);
+			ObjectHelper.propertySet(publicProf, "familyName", updatedPublicProfile.familyName);
 
-			await identityProfileClient.update(properties);
+			const privateProf = get(privateProfile);
+			ObjectHelper.propertySet(privateProf, "name", updatedPrivateProfile.name);
+
+			await identityProfileClient.update(publicProf, privateProf);
 		} catch (err) {
 			return ErrorHelper.formatErrors(err).join("\n");
 		}
@@ -88,17 +95,17 @@ export async function profileUpdate(fields: {
  */
 export async function profileGetPublic(identity: string): Promise<
 	| {
-			properties?: IProperty[];
+			profile?: WithContext<Person>;
 			error?: string | undefined;
 	  }
 	| undefined
 > {
 	if (Is.object(identityProfileClient)) {
 		try {
-			const profile = await identityProfileClient.getPublic(undefined, identity);
+			const profile = await identityProfileClient.getPublic(identity);
 
 			return {
-				properties: profile.properties
+				profile: profile as WithContext<Person>
 			};
 		} catch (err) {
 			return {

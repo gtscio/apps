@@ -31,7 +31,13 @@
 			"package": "@gtsc/attestation-service"
 		},
 		{
-			"package": "@gtsc/auditable-item-graph-service"
+			"package": "@gtsc/auditable-item-graph-service",
+			"entryPoints": [
+				{
+					"name": "auditable-item-graph",
+					"baseRoutePath": "aig"
+				}
+			]
 		}
 	],
 	"authMethods": ["jwtBearer"]

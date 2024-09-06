@@ -1,29 +1,30 @@
 <script lang="ts">
 	// Copyright 2024 IOTA Stiftung.
 	// SPDX-License-Identifier: Apache-2.0.
-	import { Is } from '@gtsc/core';
-	import { PropertyHelper } from '@gtsc/schema';
-	import '../app.css';
+	import { Is, ObjectHelper } from '@gtsc/core';
 	import { isAuthenticated } from '$stores/authentication';
 	import { i18n } from '$stores/i18n';
-	import { profileProperties } from '$stores/identityProfile';
+	import { privateProfile } from '$stores/identityProfile';
 	import { Avatar, Link, Navbar, NavBrand, Span } from '$ui/components';
+	import '../app.css';
 
 	let finalInitials: string = '';
 
-	profileProperties.subscribe(value => {
+	privateProfile.subscribe(value => {
 		const initials: string[] = [];
 
-		const firstName = PropertyHelper.getText(value, 'firstName');
-		if (Is.stringValue(firstName)) {
-			initials.push(firstName[0].toUpperCase());
+		const givenName = ObjectHelper.propertyGet(value, 'givenName');
+		if (Is.stringValue(givenName)) {
+			initials.push(givenName[0].toUpperCase());
 		}
-		const lastName = PropertyHelper.getText(value, 'lastName');
-		if (Is.stringValue(lastName)) {
-			initials.push(lastName[0].toUpperCase());
+
+		const familyName = ObjectHelper.propertyGet(value, 'familyName');
+		if (Is.stringValue(familyName)) {
+			initials.push(familyName[0].toUpperCase());
 		}
+
 		if (initials.length === 0) {
-			const email = PropertyHelper.getText(value, 'email');
+			const email = ObjectHelper.propertyGet(value, 'email');
 			if (Is.stringValue(email)) {
 				initials.push(email[0]);
 			}

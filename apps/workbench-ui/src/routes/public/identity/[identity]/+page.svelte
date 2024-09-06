@@ -2,8 +2,7 @@
 	// Copyright 2024 IOTA Stiftung.
 	// SPDX-License-Identifier: Apache-2.0.
 	import { page } from '$app/stores';
-	import { Is, Urn } from '@gtsc/core';
-	import { PropertyHelper } from '@gtsc/schema';
+	import { Is, ObjectHelper, Urn } from '@gtsc/core';
 	import type { IDidDocument } from '@gtsc/standards-w3c-did';
 	import { CloudArrowUpOutline } from 'flowbite-svelte-icons';
 	import { onMount } from 'svelte';
@@ -17,11 +16,11 @@
 	import { Button, Card, Code, Heading, Label, QR, Spinner } from '$ui/components';
 
 	const identity = $page.params.identity;
-	let displayName: string;
 	let error: string;
 	let didDocument: IDidDocument | undefined;
 	let isBusy = true;
 	let exploreUrl: string | undefined;
+	let displayName: string | undefined;
 
 	const urn = Urn.fromValidString(identity);
 	if (urn.namespaceMethod() === 'iota') {
@@ -35,7 +34,7 @@
 		if (Is.stringValue(resultProfile?.error)) {
 			error = resultProfile.error;
 		} else {
-			displayName = PropertyHelper.getText(resultProfile?.properties, 'displayName') ?? '';
+			displayName = ObjectHelper.propertyGet<string>(resultProfile?.profile, 'name');
 		}
 
 		const resultIdentity = await identityGetPublic(identity);

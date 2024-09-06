@@ -11,10 +11,10 @@ import {
 import { IotaIdentityUtils } from "@gtsc/identity-connector-iota";
 import { IdentityConnectorFactory, IdentityProfileConnectorFactory } from "@gtsc/identity-models";
 import { nameof } from "@gtsc/nameof";
-import { SchemaOrgDataTypes } from "@gtsc/schema";
 import { VaultConnectorFactory, VaultKeyType } from "@gtsc/vault-models";
 import type { WalletAddress } from "@gtsc/wallet-connector-entity-storage";
 import { WalletConnectorFactory } from "@gtsc/wallet-models";
+import type { Person, WithContext } from "schema-dts";
 import { ATTESTATION_ASSERTION_METHOD_ID } from "./components/attestation.js";
 import { AIG_ASSERTION_METHOD_ID, AIG_ENCRYPTION_KEY } from "./components/auditable-item-graph.js";
 import { BLOB_ENCRYPTION_KEY } from "./components/blobStorage.js";
@@ -210,38 +210,23 @@ export async function bootstrapNodeUser(context: IWorkbenchContext): Promise<voi
 		);
 
 		if (identityProfileConnector) {
-			await identityProfileConnector.create(context.config.nodeIdentity, [
-				{
-					key: "role",
-					type: SchemaOrgDataTypes.TYPE_TEXT,
-					value: "Node",
-					isPublic: false
-				},
-				{
-					key: "firstName",
-					type: SchemaOrgDataTypes.TYPE_TEXT,
-					value: "Node",
-					isPublic: false
-				},
-				{
-					key: "lastName",
-					type: SchemaOrgDataTypes.TYPE_TEXT,
-					value: "Administrator",
-					isPublic: false
-				},
-				{
-					key: "displayName",
-					type: SchemaOrgDataTypes.TYPE_TEXT,
-					value: "Node Administrator",
-					isPublic: true
-				},
-				{
-					key: "email",
-					type: SchemaOrgDataTypes.TYPE_TEXT,
-					value: nodeAdminUser.email,
-					isPublic: false
-				}
-			]);
+			const publicProfile: WithContext<Person> = {
+				"@context": "https://schema.org",
+				"@type": "Person",
+				name: "Node Administrator"
+			};
+			const privateProfile: WithContext<Person> = {
+				"@context": "https://schema.org",
+				"@type": "Person",
+				givenName: "Node",
+				familyName: "Administrator",
+				email: nodeAdminUser.email
+			};
+			await identityProfileConnector.create(
+				context.config.nodeIdentity,
+				publicProfile,
+				privateProfile
+			);
 		}
 		context.config.bootstrappedComponents.push("LoginUser");
 		context.configUpdated = true;

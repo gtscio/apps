@@ -1,0 +1,36 @@
+### Update an auditable item graph vertex
+
+PUT http://localhost:3000/aig/aig:8d6cc7d02c1cb59c12256b6ba9eca1a247c0855928fb5d7bd6e0dcc90b4198b3?includeChangesets=true&verifySignatureDepth=all
+cookie: access_token=eyJhbGciOiJFZERTQSIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJkaWQ6aW90YTp0c3Q6MHgwNzI1Zjk1N2QwMGQ1OTdkMTI5NTE2ZmYxYmRlOTc4Nzg5ZWNhZDg3MGYxYThkNTc1NzMxZGExZmMyMGU1ZDNkIiwiZXhwIjoxNzI1MzYzNDA3fQ.9J7uKhRfvm_JGnN6bGFJqZA9MY4zMzr-sWNIejCQjU0R5Gs4s2D849SOc9UXF0R3ur3kPps3GqB9VcySYQbIAA
+content-type: application/json
+
+{
+	"aliases": [
+		{
+			"id": "foo123",
+			"metadataSchema": "TestAliasSchema",
+			"metadata": {
+				"title": "Alias"
+			}
+		}
+	],
+	"resources": [
+		{
+			"id": "resource1",
+			"metadataSchema": "TestResourceSchema",
+			"metadata": {
+				"title": "Resource"
+			}
+		}
+	],
+	"edges": [
+		{
+			"id": "edge1",
+			"relationship": "friend",
+			"metadataSchema": "TestEdgeSchema",
+			"metadata": {
+				"title": "Edge"
+			}
+		}
+	]
+}

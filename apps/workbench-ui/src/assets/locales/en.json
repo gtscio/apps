@@ -83,6 +83,7 @@
       "title": "Blob Storage",
       "id": "Id",
       "filename": "Filename",
+      "extension": "Extension",
       "mimeType": "MIME Type",
       "document": "Document",
       "download": "Download"
@@ -136,6 +137,7 @@
       "failed": "Validation failed",
       "failedObject": "Validation of \"{objectName}\" failed",
       "geo": {
+        "coordinatesNotObject": "The geo coordinates must be an object",
         "coordinatesLatitudeNumber": "The latitude value must be a number",
         "coordinatesLatitudeRange": "The latitude value must be between -90 and 90",
         "coordinatesLongitudeNumber": "The longitude value must be a number",
@@ -143,6 +145,9 @@
       },
       "properties": {
         "keyAlreadyExists": "The key already exists"
+      },
+      "schema": {
+        "failedValidation": "The JSON schema failed validation, {message}"
       }
     },
     "guard": {
@@ -546,9 +551,9 @@
     "http://schema.org/image": "Image",
     "http://schema.org/GeoCoordinates": "Geo Coordinates",
     "http://schema.org/StructuredValue": "Structured Value",
-    "URN": "Urn",
-    "TimestampMilliseconds": "Milliseconds since 1970",
-    "TimestampSeconds": "Seconds since 1970"
+    "http://schema.gtsc.io/URN": "Urn",
+    "http://schema.gtsc.io/TimestampMilliseconds": "Milliseconds since 1970",
+    "http://schema.gtsc.io/TimestampSeconds": "Seconds since 1970"
   },
   "identityRole": {
     "organization": "Organization",

@@ -1,6 +1,7 @@
 // Copyright 2024 IOTA Stiftung.
 // SPDX-License-Identifier: Apache-2.0.
 import {
+	type AuditableItemGraphChangeset,
 	AuditableItemGraphService,
 	type AuditableItemGraphVertex,
 	initSchema
@@ -30,11 +31,15 @@ export function initialiseAuditableItemGraphService(context: IWorkbenchContext):
 		context.envVars.WORKBENCH_AIG_VERTEX_ENTITY_STORAGE_TYPE,
 		nameof<AuditableItemGraphVertex>()
 	);
+	initialiseEntityStorageConnector(
+		context,
+		context.envVars.WORKBENCH_AIG_CHANGESET_ENTITY_STORAGE_TYPE,
+		nameof<AuditableItemGraphChangeset>()
+	);
 
 	const service = new AuditableItemGraphService({
 		vaultConnectorType: context.envVars.WORKBENCH_VAULT_CONNECTOR,
 		identityConnectorType: context.envVars.WORKBENCH_IDENTITY_CONNECTOR,
-		vertexEntityStorageType: "auditable-item-graph-vertex",
 		integrityImmutableStorageType: context.envVars.WORKBENCH_IMMUTABLE_STORAGE_CONNECTOR,
 		config: {
 			vaultKeyId: AIG_ENCRYPTION_KEY,

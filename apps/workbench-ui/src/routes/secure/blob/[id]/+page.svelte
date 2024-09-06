@@ -2,9 +2,9 @@
 	// Copyright 2024 IOTA Stiftung.
 	// SPDX-License-Identifier: Apache-2.0.
 	import { page } from '$app/stores';
-	import { Converter, Is } from '@gtsc/core';
-	import { PropertyHelper, type IProperty } from '@gtsc/schema';
+	import { Converter, Is, ObjectHelper } from '@gtsc/core';
 	import { ArrowUpRightFromSquareOutline, DownloadOutline } from 'flowbite-svelte-icons';
+	import type { Graph } from 'schema-dts';
 	import { onMount } from 'svelte';
 	import Error from '$components/error.svelte';
 	import LabelledValue from '$components/labelledValue.svelte';
@@ -14,11 +14,12 @@
 	import { Button, Card, Heading, Label, QR, Spinner } from '$ui/components';
 
 	const id = $page.params.id;
-	let filename: string | undefined;
 	let mimeType: string | undefined;
+	let extension: string | undefined;
+	let metadata: Graph | undefined;
+	let filename: string | undefined;
 	let blobInlineUrl: string;
 	let blobDownloadUrl: string;
-	let metadata: IProperty[] | undefined;
 	let error: string;
 	let includeText: string = '';
 	let isBusy = true;
@@ -29,11 +30,15 @@
 		if (Is.stringValue(result?.error)) {
 			error = result.error;
 		} else {
+			mimeType = result?.mimeType;
+			extension = result?.extension;
 			metadata = result?.metadata;
+			blobDownloadUrl = createDownloadLink(id, true);
 
-			filename = PropertyHelper.getText(metadata, 'filename');
-			mimeType = PropertyHelper.getText(metadata, 'mimeType');
-			blobDownloadUrl = createDownloadLink(id, true, filename);
+			const filenameThing = metadata?.['@graph']?.find(
+				g => ObjectHelper.propertyGet(g, '@id') === 'filename'
+			);
+			filename = ObjectHelper.propertyGet(filenameThing, 'name');
 
 			if (Is.stringValue(mimeType) && (mimeType.includes('text') || mimeType.includes('xml'))) {
 				const resultWithContent = await blobStorageGet(id, true);
@@ -41,7 +46,7 @@
 					includeText = Converter.bytesToUtf8(resultWithContent?.blob);
 				}
 			} else {
-				blobInlineUrl = createDownloadLink(id, false, filename);
+				blobInlineUrl = createDownloadLink(id, false);
 			}
 		}
 		isBusy = false;
@@ -50,7 +55,7 @@
 	function downloadDocument(): void {
 		const a = document.createElement('a');
 		a.href = blobDownloadUrl;
-		a.download = filename ?? 'document';
+		a.download = filename ?? `document.${extension ?? 'bin'}`;
 		a.click();
 	}
 	function openDocument(): void {
@@ -80,6 +85,12 @@
 					<Label>
 						{$i18n('pages.blob.filename')}
 						<LabelledValue>{filename}</LabelledValue>
+					</Label>
+				{/if}
+				{#if Is.stringValue(extension)}
+					<Label>
+						{$i18n('pages.blob.extension')}
+						<LabelledValue>{extension}</LabelledValue>
 					</Label>
 				{/if}
 				{#if Is.stringValue(mimeType)}

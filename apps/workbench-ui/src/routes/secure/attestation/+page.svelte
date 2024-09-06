@@ -4,6 +4,7 @@
 	import type { IAttestationInformation } from '@gtsc/attestation-models';
 	import { Converter, Is, Validation, type IValidationFailure } from '@gtsc/core';
 	import { Blake2b } from '@gtsc/crypto';
+	import type { Graph } from 'schema-dts';
 	import { onMount } from 'svelte';
 	import LabelledValue from '$components/labelledValue.svelte';
 	import ValidatedForm from '$components/validatedForm.svelte';
@@ -56,7 +57,17 @@
 			const file = files[0];
 			const buffer = await file.arrayBuffer();
 			const bytes = new Uint8Array(buffer);
-			const resultBlob = await blobStorageUpload(file.name, file.type, bytes);
+			const metadata: Graph = {
+				'@context': 'https://schema.org',
+				'@graph': [
+					{
+						'@type': 'Thing',
+						'@id': 'filename',
+						name: file.name
+					}
+				]
+			};
+			const resultBlob = await blobStorageUpload(file.name, metadata, bytes);
 			if (Is.stringValue(resultBlob?.error)) {
 				return resultBlob?.error;
 			}

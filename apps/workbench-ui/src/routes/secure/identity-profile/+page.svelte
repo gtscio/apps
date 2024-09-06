@@ -1,21 +1,25 @@
 <script lang="ts">
 	// Copyright 2024 IOTA Stiftung.
 	// SPDX-License-Identifier: Apache-2.0.
-	import { Is, Urn, Validation, type IValidationFailure } from '@gtsc/core';
-	import { PropertyHelper } from '@gtsc/schema';
+	import { Is, ObjectHelper, Urn, Validation, type IValidationFailure } from '@gtsc/core';
 	import { CloudArrowUpOutline } from 'flowbite-svelte-icons';
 	import LabelledValue from '$components/labelledValue.svelte';
 	import ValidatedForm from '$components/validatedForm.svelte';
 	import ValidationError from '$components/validationError.svelte';
 	import { createPublicUrl } from '$stores/app';
 	import { i18n } from '$stores/i18n';
-	import { profileIdentity, profileProperties, profileUpdate } from '$stores/identityProfile';
+	import {
+		privateProfile,
+		profileIdentity,
+		profileUpdate,
+		publicProfile
+	} from '$stores/identityProfile';
 	import { createExplorerIdentityUrl } from '$stores/iota';
 	import { Button, Helper, Input, Label, QR } from '$ui/components';
 
-	let firstName = PropertyHelper.getText($profileProperties, 'firstName') ?? '';
-	let lastName = PropertyHelper.getText($profileProperties, 'lastName') ?? '';
-	let displayName = PropertyHelper.getText($profileProperties, 'displayName') ?? '';
+	let firstName = ObjectHelper.propertyGet<string>($privateProfile, 'givenName') ?? '';
+	let lastName = ObjectHelper.propertyGet<string>($privateProfile, 'familyName') ?? '';
+	let displayName = ObjectHelper.propertyGet<string>($publicProfile, 'name') ?? '';
 	let validationErrors: {
 		[field in 'firstName' | 'lastName' | 'displayName']?: IValidationFailure[] | undefined;
 	} = {};
@@ -50,7 +54,7 @@
 	}
 
 	async function action(): Promise<string | undefined> {
-		return profileUpdate({ firstName, lastName, displayName });
+		return profileUpdate({ givenName: firstName, familyName: lastName }, { name: displayName });
 	}
 
 	function openExplorer(): void {

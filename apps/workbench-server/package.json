@@ -50,6 +50,8 @@
 		"@gtsc/cli-core": "next",
 		"@gtsc/core": "next",
 		"@gtsc/crypto": "next",
+		"@gtsc/data-core": "next",
+		"@gtsc/data-schema-org": "next",
 		"@gtsc/entity-storage-connector-dynamodb": "next",
 		"@gtsc/entity-storage-connector-file": "next",
 		"@gtsc/entity-storage-connector-memory": "next",
@@ -71,7 +73,6 @@
 		"@gtsc/nft-connector-entity-storage": "next",
 		"@gtsc/nft-connector-iota": "next",
 		"@gtsc/nft-service": "next",
-		"@gtsc/schema": "next",
 		"@gtsc/telemetry-models": "next",
 		"@gtsc/telemetry-connector-entity-storage": "next",
 		"@gtsc/telemetry-service": "next",
@@ -80,7 +81,8 @@
 		"@gtsc/wallet-models": "next",
 		"@gtsc/wallet-connector-entity-storage": "next",
 		"@gtsc/wallet-connector-iota": "next",
-		"dotenv": "16.4.5"
+		"dotenv": "16.4.5",
+		"schema-dts": "1.1.2"
 	},
 	"devDependencies": {
 		"@gtsc/merge-locales": "next",
