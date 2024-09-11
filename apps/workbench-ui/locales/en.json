@@ -45,6 +45,7 @@
 			"title": "Identity Public Profile",
 			"qr": "Public Profile View",
 			"identity": "Identity",
+			"schema": "Schema",
 			"displayName": "Name",
 			"explore": "Explore",
 			"didDocument": "DID Document"

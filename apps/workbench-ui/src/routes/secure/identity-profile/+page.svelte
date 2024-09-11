@@ -54,7 +54,7 @@
 	}
 
 	async function action(): Promise<string | undefined> {
-		return profileUpdate({ givenName: firstName, familyName: lastName }, { name: displayName });
+		return profileUpdate({ name: displayName }, { givenName: firstName, familyName: lastName });
 	}
 
 	function openExplorer(): void {

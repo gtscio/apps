@@ -21,6 +21,7 @@
 	let isBusy = true;
 	let exploreUrl: string | undefined;
 	let displayName: string | undefined;
+	let schema: string | undefined;
 
 	const urn = Urn.fromValidString(identity);
 	if (urn.namespaceMethod() === 'iota') {
@@ -34,6 +35,9 @@
 		if (Is.stringValue(resultProfile?.error)) {
 			error = resultProfile.error;
 		} else {
+			const context = ObjectHelper.propertyGet<string>(resultProfile?.profile, '@context');
+			const type = ObjectHelper.propertyGet<string>(resultProfile?.profile, '@type');
+			schema = `${context}/${type}`;
 			displayName = ObjectHelper.propertyGet<string>(resultProfile?.profile, 'name');
 		}
 
@@ -66,6 +70,12 @@
 					{$i18n('pages.identityPublic.identity')}
 					<LabelledValue>{identity}</LabelledValue>
 				</Label>
+				{#if Is.stringValue(schema)}
+					<Label>
+						{$i18n('pages.identityPublic.schema')}
+						<LabelledValue>{schema}</LabelledValue>
+					</Label>
+				{/if}
 				{#if Is.stringValue(displayName)}
 					<Label>
 						{$i18n('pages.identityPublic.displayName')}

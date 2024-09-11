@@ -62,24 +62,24 @@ async function profileGet(): Promise<void> {
 /**
  * Update the profile.
  * @param updatedPublicProfile The updated public profile.
- * @param updatedPublicProfile.givenName The updated given name.
- * @param updatedPublicProfile.familyName The updated family name.
+ * @param updatedPublicProfile.name The updated name.
  * @param updatedPrivateProfile The updated private profile.
- * @param updatedPrivateProfile.name The updated name.
+ * @param updatedPrivateProfile.givenName The updated given name.
+ * @param updatedPrivateProfile.familyName The updated family name.
  * @returns The error if one occurred.
  */
 export async function profileUpdate(
-	updatedPublicProfile: { givenName: string; familyName: string },
-	updatedPrivateProfile: { name: string }
+	updatedPublicProfile: { name: string },
+	updatedPrivateProfile: { givenName: string; familyName: string }
 ): Promise<string | undefined> {
 	if (Is.object(identityProfileClient)) {
 		try {
 			const publicProf = get(publicProfile);
-			ObjectHelper.propertySet(publicProf, "givenName", updatedPublicProfile.givenName);
-			ObjectHelper.propertySet(publicProf, "familyName", updatedPublicProfile.familyName);
+			ObjectHelper.propertySet(publicProf, "name", updatedPublicProfile.name);
 
 			const privateProf = get(privateProfile);
-			ObjectHelper.propertySet(privateProf, "name", updatedPrivateProfile.name);
+			ObjectHelper.propertySet(privateProf, "givenName", updatedPrivateProfile.givenName);
+			ObjectHelper.propertySet(privateProf, "familyName", updatedPrivateProfile.familyName);
 
 			await identityProfileClient.update(publicProf, privateProf);
 		} catch (err) {

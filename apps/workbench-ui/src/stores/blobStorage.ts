@@ -2,7 +2,7 @@
 // SPDX-License-Identifier: Apache-2.0.
 import { BlobStorageClient } from "@gtsc/blob-storage-rest-client";
 import { Converter, ErrorHelper, Is } from "@gtsc/core";
-import type { Graph } from "schema-dts";
+import type { IJsonLdNodeObject } from "@gtsc/data-json-ld";
 
 let blobStorageClient: BlobStorageClient | undefined;
 
@@ -19,13 +19,13 @@ export async function init(apiUrl: string): Promise<void> {
 /**
  * Upload a new file to blob storage.
  * @param mimeType The mime type of the file.
- * @param metadata Metadata stored as a graph.
+ * @param metadata Metadata stored as a json ld document.
  * @param bytes The bytes to store.
  * @returns The id of the uploaded document or an error if one occurred.
  */
 export async function blobStorageUpload(
 	mimeType: string,
-	metadata: Graph,
+	metadata: IJsonLdNodeObject,
 	bytes: Uint8Array
 ): Promise<
 	| {
@@ -67,7 +67,7 @@ export async function blobStorageGet(
 			error?: string;
 			mimeType?: string;
 			extension?: string;
-			metadata?: Graph;
+			metadata?: IJsonLdNodeObject;
 			blob?: Uint8Array;
 	  }
 	| undefined
@@ -78,7 +78,7 @@ export async function blobStorageGet(
 			return {
 				mimeType: result.mimeType,
 				extension: result.extension,
-				metadata: result.metadata as Graph,
+				metadata: result.metadata,
 				blob: Is.stringBase64(result.blob) ? Converter.base64ToBytes(result.blob) : undefined
 			};
 		} catch (err) {

@@ -40,5 +40,8 @@
 			]
 		}
 	],
-	"authMethods": ["jwtBearer"]
+	"authMethods": ["jwtBearer"],
+	"externalReferences": {
+		"IJsonLd(.*)": "https://schema.gtsc.io/json-ld/JsonLd$1"
+	}
 }

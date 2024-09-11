@@ -45,6 +45,7 @@
       "title": "Identity Public Profile",
       "qr": "Public Profile View",
       "identity": "Identity",
+      "schema": "Schema",
       "displayName": "Name",
       "explore": "Explore",
       "didDocument": "DID Document"
@@ -459,7 +460,7 @@
       "getFailed": "Getting the identity profile failed",
       "getPublicFailed": "Getting the public identity profile failed",
       "updateFailed": "Updating the identity profile failed \"{identity}\"",
-      "notFound": "The identity profile failed \"{notFoundId}\"",
+      "notFound": "The identity profile could not be found \"{notFoundId}\"",
       "removeFailed": "Removing the identity profile failed \"{identity}\"",
       "listFailed": "Failed listing identities"
     },
@@ -531,7 +532,8 @@
     "notSupportedError": "Not Supported",
     "alreadyExistsError": "Already Exists",
     "notImplementedError": "Not Implemented",
-    "validationError": "Validation"
+    "validationError": "Validation",
+    "unprocessableError": "Unprocessable"
   },
   "validation": {
     "defaultFieldName": "The field"
@@ -554,6 +556,10 @@
     "http://schema.gtsc.io/URN": "Urn",
     "http://schema.gtsc.io/TimestampMilliseconds": "Milliseconds since 1970",
     "http://schema.gtsc.io/TimestampSeconds": "Seconds since 1970"
+  },
+  "jsonLdHelper": {
+    "compact": "The JSON-LD compaction failed",
+    "expand": "The JSON-LD expansion failed"
   },
   "identityRole": {
     "organization": "Organization",
