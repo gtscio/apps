@@ -1,7 +1,7 @@
 {
-	"verbose": true,
-	"watch": ["dist/", ".env", ".env.dev"],
-	"ext": "*.js,*.mjs,*.json",
+	"verbose": false,
+	"watch": ["dist/", ".env", ".env.dev", "../../node_modules/@gtsc"],
+	"ext": "js,cjs,mjs,json",
 	"ignoreRoot": [".git"],
 	"ignore": ["**/rest/**"]
 }
