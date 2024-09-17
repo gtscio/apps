@@ -17,6 +17,7 @@ import { WalletConnectorFactory } from "@gtsc/wallet-models";
 import type { Person, WithContext } from "schema-dts";
 import { ATTESTATION_ASSERTION_METHOD_ID } from "./components/attestation.js";
 import { AIG_ASSERTION_METHOD_ID, AIG_ENCRYPTION_KEY } from "./components/auditable-item-graph.js";
+import { AIS_ASSERTION_METHOD_ID, AIS_ENCRYPTION_KEY } from "./components/auditable-item-stream.js";
 import { BLOB_ENCRYPTION_KEY } from "./components/blobStorage.js";
 import { nodeLogInfo } from "./components/logging.js";
 import { AUTH_SIGNING_NAME_VAULT_KEY } from "./components/processors.js";
@@ -57,8 +58,10 @@ export async function bootstrap(context: IWorkbenchContext): Promise<void> {
 		await bootstrapAuth(context);
 		await bootstrapBlobEncryption(context);
 		await bootstrapAuditableItemGraphEncryption(context);
+		await bootstrapAuditableItemStreamEncryption(context);
 		await bootstrapAttestationMethod(context);
 		await bootstrapAuditableItemGraphMethod(context);
+		await bootstrapAuditableItemStreamMethod(context);
 	} finally {
 		if (context.configUpdated) {
 			await writeConfig(context.storageFileRoot, context.workbenchConfigFilename, context.config);
@@ -278,7 +281,7 @@ export async function bootstrapAuditableItemGraphMethod(context: IWorkbenchConte
 			context.envVars.WORKBENCH_IDENTITY_CONNECTOR
 		);
 
-		// Add aig verification method to DID, the correct node context is now in place
+		// Add AIG verification method to DID, the correct node context is now in place
 		// so the keys for the verification method will be stored correctly
 		nodeLogInfo(I18n.formatMessage("workbench.addingAuditableItemGraph"));
 		await identityConnector.addVerificationMethod(
@@ -289,6 +292,38 @@ export async function bootstrapAuditableItemGraphMethod(context: IWorkbenchConte
 		);
 
 		context.config.bootstrappedComponents.push("AuditableItemGraphMethod");
+		context.configUpdated = true;
+	}
+}
+
+/**
+ * Bootstrap the auditable item stream verification methods.
+ * @param context The context for the node.
+ */
+export async function bootstrapAuditableItemStreamMethod(
+	context: IWorkbenchContext
+): Promise<void> {
+	if (
+		Is.stringValue(context.config.nodeIdentity) &&
+		!context.config.bootstrappedComponents.includes("AuditableItemStreamMethod")
+	) {
+		displayBootstrapStarted(context);
+
+		const identityConnector = IdentityConnectorFactory.get(
+			context.envVars.WORKBENCH_IDENTITY_CONNECTOR
+		);
+
+		// Add AIS verification method to DID, the correct node context is now in place
+		// so the keys for the verification method will be stored correctly
+		nodeLogInfo(I18n.formatMessage("workbench.addingAuditableItemStream"));
+		await identityConnector.addVerificationMethod(
+			context.config.nodeIdentity,
+			context.config.nodeIdentity,
+			"assertionMethod",
+			AIS_ASSERTION_METHOD_ID
+		);
+
+		context.config.bootstrappedComponents.push("AuditableItemStreamMethod");
 		context.configUpdated = true;
 	}
 }
@@ -321,7 +356,7 @@ export async function bootstrapBlobEncryption(context: IWorkbenchContext): Promi
 }
 
 /**
- * Bootstrap the keys for aig encryption.
+ * Bootstrap the keys for AIG encryption.
  * @param context The context for the node.
  */
 export async function bootstrapAuditableItemGraphEncryption(
@@ -342,6 +377,32 @@ export async function bootstrapAuditableItemGraphEncryption(
 		);
 
 		context.config.bootstrappedComponents.push("AuditableItemGraphEncryption");
+		context.configUpdated = true;
+	}
+}
+
+/**
+ * Bootstrap the keys for AIS encryption.
+ * @param context The context for the node.
+ */
+export async function bootstrapAuditableItemStreamEncryption(
+	context: IWorkbenchContext
+): Promise<void> {
+	if (
+		Is.stringValue(context.config.nodeIdentity) &&
+		!context.config.bootstrappedComponents.includes("AuditableItemStreamEncryption")
+	) {
+		displayBootstrapStarted(context);
+
+		// Create a new key for encrypting auditable item stream data
+		const vaultConnector = VaultConnectorFactory.get(context.envVars.WORKBENCH_VAULT_CONNECTOR);
+
+		await vaultConnector.createKey(
+			`${context.config.nodeIdentity}/${AIS_ENCRYPTION_KEY}`,
+			VaultKeyType.Ed25519
+		);
+
+		context.config.bootstrappedComponents.push("AuditableItemStreamEncryption");
 		context.configUpdated = true;
 	}
 }

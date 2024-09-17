@@ -40,11 +40,11 @@ export function initialiseAuditableItemGraphService(context: IWorkbenchContext):
 	const service = new AuditableItemGraphService({
 		vaultConnectorType: context.envVars.WORKBENCH_VAULT_CONNECTOR,
 		identityConnectorType: context.envVars.WORKBENCH_IDENTITY_CONNECTOR,
-		integrityImmutableStorageType: context.envVars.WORKBENCH_IMMUTABLE_STORAGE_CONNECTOR,
+		immutableStorageType: context.envVars.WORKBENCH_IMMUTABLE_STORAGE_CONNECTOR,
 		config: {
 			vaultKeyId: AIG_ENCRYPTION_KEY,
 			assertionMethodId: AIG_ASSERTION_METHOD_ID,
-			enableIntegrityCheck: Coerce.boolean(context.envVars.WORKBENCH_AIG_ENABLE_INTEGRITY_CHECK)
+			enableImmutableDiffs: Coerce.boolean(context.envVars.WORKBENCH_AIG_ENABLE_DIFF_SETS)
 		}
 	});
 	context.componentInstances.push({ instanceName: AIG_SERVICE_NAME, component: service });

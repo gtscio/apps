@@ -10,9 +10,7 @@ export const profileIdentity = writable<string>("");
 export const publicProfile = writable<WithContext<Person> | undefined>();
 export const privateProfile = writable<WithContext<Person> | undefined>();
 
-let identityProfileClient:
-	| IdentityProfileClient<WithContext<Person>, WithContext<Person>>
-	| undefined;
+let identityProfileClient: IdentityProfileClient | undefined;
 
 /**
  * Initialize the identity profile.

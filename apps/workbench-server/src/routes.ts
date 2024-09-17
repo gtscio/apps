@@ -5,6 +5,7 @@ import type { IRestRoute } from "@gtsc/api-models";
 import { generateRestRoutesInformation } from "@gtsc/api-service";
 import { generateRestRoutesAttestation } from "@gtsc/attestation-service";
 import { generateRestRoutesAuditableItemGraph } from "@gtsc/auditable-item-graph-service";
+import { generateRestRoutesAuditableItemStream } from "@gtsc/auditable-item-stream-service";
 import { generateRestRoutesBlobStorage } from "@gtsc/blob-storage-service";
 import {
 	generateRestRoutesIdentity,
@@ -15,6 +16,7 @@ import { generateRestRoutesNft } from "@gtsc/nft-service";
 import { generateRestRoutesTelemetry } from "@gtsc/telemetry-service";
 import { ATTESTATION_SERVICE_NAME } from "./components/attestation.js";
 import { AIG_SERVICE_NAME } from "./components/auditable-item-graph.js";
+import { AIS_SERVICE_NAME } from "./components/auditable-item-stream.js";
 import { BLOB_STORAGE_SERVICE_NAME } from "./components/blobStorage.js";
 import { IDENTITY_PROFILE_SERVICE_NAME, IDENTITY_SERVICE_NAME } from "./components/identity.js";
 import { INFORMATION_SERVICE_NAME } from "./components/information.js";
@@ -38,6 +40,7 @@ export function buildRoutes(): IRestRoute[] {
 		...generateRestRoutesIdentityProfile("identity/profile", IDENTITY_PROFILE_SERVICE_NAME),
 		...generateRestRoutesNft("nft", NFT_SERVICE_NAME),
 		...generateRestRoutesAttestation("attestation", ATTESTATION_SERVICE_NAME),
-		...generateRestRoutesAuditableItemGraph("aig", AIG_SERVICE_NAME)
+		...generateRestRoutesAuditableItemGraph("aig", AIG_SERVICE_NAME),
+		...generateRestRoutesAuditableItemStream("ais", AIS_SERVICE_NAME)
 	];
 }

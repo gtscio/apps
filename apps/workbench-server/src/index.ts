@@ -9,6 +9,7 @@ import {
 	initialiseAttestationService
 } from "./components/attestation.js";
 import { initialiseAuditableItemGraphService } from "./components/auditable-item-graph.js";
+import { initialiseAuditableItemStreamService } from "./components/auditable-item-stream.js";
 import {
 	initialiseBlobStorageConnectorFactory,
 	initialiseBlobStorageService
@@ -94,6 +95,7 @@ try {
 	initialiseAttestationService(context);
 
 	initialiseAuditableItemGraphService(context);
+	initialiseAuditableItemStreamService(context);
 
 	const processors = buildProcessors(context);
 

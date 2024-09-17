@@ -3,8 +3,8 @@
 	// SPDX-License-Identifier: Apache-2.0.
 	import { page } from '$app/stores';
 	import { Converter, Is, ObjectHelper } from '@gtsc/core';
+	import type { IJsonLdNodeObject } from '@gtsc/data-json-ld';
 	import { ArrowUpRightFromSquareOutline, DownloadOutline } from 'flowbite-svelte-icons';
-	import type { Graph } from 'schema-dts';
 	import { onMount } from 'svelte';
 	import Error from '$components/error.svelte';
 	import LabelledValue from '$components/labelledValue.svelte';
@@ -16,7 +16,7 @@
 	const id = $page.params.id;
 	let mimeType: string | undefined;
 	let extension: string | undefined;
-	let metadata: Graph | undefined;
+	let metadata: IJsonLdNodeObject | undefined;
 	let filename: string | undefined;
 	let blobInlineUrl: string;
 	let blobDownloadUrl: string;
@@ -35,10 +35,10 @@
 			metadata = result?.metadata;
 			blobDownloadUrl = createDownloadLink(id, true);
 
-			const filenameThing = metadata?.['@graph']?.find(
-				g => ObjectHelper.propertyGet(g, '@id') === 'filename'
-			);
-			filename = ObjectHelper.propertyGet(filenameThing, 'name');
+			const graph = ObjectHelper.propertyGet(metadata, '@graph');
+			if (Is.array(graph) && graph.length > 0) {
+				filename = ObjectHelper.propertyGet(graph[0], 'name');
+			}
 
 			if (Is.stringValue(mimeType) && (mimeType.includes('text') || mimeType.includes('xml'))) {
 				const resultWithContent = await blobStorageGet(id, true);

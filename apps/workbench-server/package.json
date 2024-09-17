@@ -36,6 +36,8 @@
 		"@gtsc/attestation-service": "next",
 		"@gtsc/auditable-item-graph-models": "next",
 		"@gtsc/auditable-item-graph-service": "next",
+		"@gtsc/auditable-item-stream-models": "next",
+		"@gtsc/auditable-item-stream-service": "next",
 		"@gtsc/api-auth-entity-storage-service": "next",
 		"@gtsc/api-core": "next",
 		"@gtsc/api-models": "next",
