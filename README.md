@@ -1,6 +1,6 @@
-# GTSC Workbench
+# TWIN Workbench
 
-This mono-repository contains the Workbench app which demonstrates some of the GTSC framework packages.
+This mono-repository contains the Workbench app which demonstrates some of the TWIN framework packages.
 
 ## Packages
 

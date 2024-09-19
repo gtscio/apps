@@ -2,8 +2,8 @@
 	// Copyright 2024 IOTA Stiftung.
 	// SPDX-License-Identifier: Apache-2.0.
 	import { page } from '$app/stores';
-	import { Is, ObjectHelper, Urn } from '@gtsc/core';
-	import type { IDidDocument } from '@gtsc/standards-w3c-did';
+	import { Is, ObjectHelper, Urn } from '@twin.org/core';
+	import type { IDidDocument } from '@twin.org/standards-w3c-did';
 	import { CloudArrowUpOutline } from 'flowbite-svelte-icons';
 	import { onMount } from 'svelte';
 	import Error from '$components/error.svelte';

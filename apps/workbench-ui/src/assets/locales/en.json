@@ -16,7 +16,7 @@
     "notConnected": "Not connected"
   },
   "footer": {
-    "copyrightOrg": "GTSC",
+    "copyrightOrg": "TWIN",
     "language": "Language",
     "colorTheme": "Color theme",
     "selectLanguage": "Select language"
@@ -137,18 +137,18 @@
       "beEmail": "{fieldName} must be a correctly formatted e-mail address",
       "failed": "Validation failed",
       "failedObject": "Validation of \"{objectName}\" failed",
+      "properties": {
+        "keyAlreadyExists": "The key already exists"
+      },
+      "schema": {
+        "failedValidation": "The JSON schema failed validation, {message}"
+      },
       "geo": {
         "coordinatesNotObject": "The geo coordinates must be an object",
         "coordinatesLatitudeNumber": "The latitude value must be a number",
         "coordinatesLatitudeRange": "The latitude value must be between -90 and 90",
         "coordinatesLongitudeNumber": "The longitude value must be a number",
         "coordinatesLongitudeRange": "The longitude value must be between -180 and 180"
-      },
-      "properties": {
-        "keyAlreadyExists": "The key already exists"
-      },
-      "schema": {
-        "failedValidation": "The JSON schema failed validation, {message}"
       }
     },
     "guard": {
@@ -541,22 +541,6 @@
   "errorMessages": {
     "fetch": "Fetch"
   },
-  "data-type-names": {
-    "http://schema.org/Text": "Text",
-    "http://schema.org/URL": "Url",
-    "http://schema.org/Integer": "Integer",
-    "http://schema.org/Float": "Float",
-    "http://schema.org/Boolean": "Boolean",
-    "http://schema.org/Date": "ISO Date",
-    "http://schema.org/DateTime": "ISO Date Time",
-    "http://schema.org/Time": "ISO Time",
-    "http://schema.org/image": "Image",
-    "http://schema.org/GeoCoordinates": "Geo Coordinates",
-    "http://schema.org/StructuredValue": "Structured Value",
-    "http://schema.gtsc.io/URN": "Urn",
-    "http://schema.gtsc.io/TimestampMilliseconds": "Milliseconds since 1970",
-    "http://schema.gtsc.io/TimestampSeconds": "Seconds since 1970"
-  },
   "jsonLdHelper": {
     "compact": "The JSON-LD compaction failed",
     "expand": "The JSON-LD expansion failed"
@@ -613,5 +597,18 @@
       "metricRemoved": "The metric was removed \"{id}\"",
       "metricValueCreated": "The metric value was created for \"{id}\" with value \"{value}\""
     }
+  },
+  "data-type-names": {
+    "http://schema.org/Text": "Text",
+    "http://schema.org/URL": "Url",
+    "http://schema.org/Integer": "Integer",
+    "http://schema.org/Float": "Float",
+    "http://schema.org/Boolean": "Boolean",
+    "http://schema.org/Date": "ISO Date",
+    "http://schema.org/DateTime": "ISO Date Time",
+    "http://schema.org/Time": "ISO Time",
+    "http://schema.org/image": "Image",
+    "http://schema.org/GeoCoordinates": "Geo Coordinates",
+    "http://schema.org/StructuredValue": "Structured Value"
   }
 }

@@ -5,11 +5,11 @@ import {
 	EntityStorageAuthenticationService,
 	initSchema as initSchemaAuthEntityStorage,
 	type AuthenticationUser
-} from "@gtsc/api-auth-entity-storage-service";
-import type { IHttpRestRouteProcessor } from "@gtsc/api-models";
-import { LoggingProcessor, NodeIdentityProcessor, RouteProcessor } from "@gtsc/api-processors";
-import { ComponentFactory, GeneralError } from "@gtsc/core";
-import { nameof } from "@gtsc/nameof";
+} from "@twin.org/api-auth-entity-storage-service";
+import type { IHttpRestRouteProcessor } from "@twin.org/api-models";
+import { LoggingProcessor, NodeIdentityProcessor, RouteProcessor } from "@twin.org/api-processors";
+import { ComponentFactory, GeneralError } from "@twin.org/core";
+import { nameof } from "@twin.org/nameof";
 import { initialiseEntityStorageConnector } from "./entityStorage.js";
 import type { IWorkbenchContext } from "../models/IWorkbenchContext.js";
 

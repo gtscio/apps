@@ -1,10 +1,10 @@
 <script lang="ts">
 	// Copyright 2024 IOTA Stiftung.
 	// SPDX-License-Identifier: Apache-2.0.
-	import type { IAttestationInformation } from '@gtsc/attestation-models';
-	import { Converter, Is, Validation, type IValidationFailure } from '@gtsc/core';
-	import { Blake2b } from '@gtsc/crypto';
-	import type { IJsonLdNodeObject } from '@gtsc/data-json-ld';
+	import type { IAttestationInformation } from '@twin.org/attestation-models';
+	import { Converter, Is, Validation, type IValidationFailure } from '@twin.org/core';
+	import { Blake2b } from '@twin.org/crypto';
+	import type { IJsonLdNodeObject } from '@twin.org/data-json-ld';
 	import { onMount } from 'svelte';
 	import LabelledValue from '$components/labelledValue.svelte';
 	import ValidatedForm from '$components/validatedForm.svelte';

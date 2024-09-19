@@ -1,6 +1,6 @@
 // Copyright 2024 IOTA Stiftung.
 // SPDX-License-Identifier: Apache-2.0.
-import { StringHelper } from "@gtsc/core";
+import { StringHelper } from "@twin.org/core";
 import { init as initAttestation } from "./attestation";
 import { init as initAuthentication } from "./authentication";
 import { init as initBlobStorage } from "./blobStorage";

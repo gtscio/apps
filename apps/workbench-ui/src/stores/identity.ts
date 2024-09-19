@@ -1,8 +1,8 @@
 // Copyright 2024 IOTA Stiftung.
 // SPDX-License-Identifier: Apache-2.0.
-import { ErrorHelper, Is } from "@gtsc/core";
-import { IdentityClient } from "@gtsc/identity-rest-client";
-import type { IDidDocument } from "@gtsc/standards-w3c-did";
+import { ErrorHelper, Is } from "@twin.org/core";
+import { IdentityClient } from "@twin.org/identity-rest-client";
+import type { IDidDocument } from "@twin.org/standards-w3c-did";
 
 let identityClient: IdentityClient | undefined;
 

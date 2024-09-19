@@ -1,15 +1,15 @@
 // Copyright 2024 IOTA Stiftung.
 // SPDX-License-Identifier: Apache-2.0.
 import path from "node:path";
-import { GeneralError, I18n, Is, StringHelper } from "@gtsc/core";
-import { DynamoDbEntityStorageConnector } from "@gtsc/entity-storage-connector-dynamodb";
-import { FileEntityStorageConnector } from "@gtsc/entity-storage-connector-file";
-import { MemoryEntityStorageConnector } from "@gtsc/entity-storage-connector-memory";
-import { ScyllaDBTableConnector } from "@gtsc/entity-storage-connector-scylladb";
+import { GeneralError, I18n, Is, StringHelper } from "@twin.org/core";
+import { DynamoDbEntityStorageConnector } from "@twin.org/entity-storage-connector-dynamodb";
+import { FileEntityStorageConnector } from "@twin.org/entity-storage-connector-file";
+import { MemoryEntityStorageConnector } from "@twin.org/entity-storage-connector-memory";
+import { ScyllaDBTableConnector } from "@twin.org/entity-storage-connector-scylladb";
 import {
 	EntityStorageConnectorFactory,
 	type IEntityStorageConnector
-} from "@gtsc/entity-storage-models";
+} from "@twin.org/entity-storage-models";
 import { nodeLogInfo } from "./logging.js";
 import type { IWorkbenchContext } from "../models/IWorkbenchContext.js";
 

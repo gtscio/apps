@@ -1,4 +1,4 @@
-# GTSC Workbench UI
+# TWIN Workbench UI
 
 This web front-end demonstrates using the Workbench API, it is written using svelte.
 
@@ -23,4 +23,4 @@ npm run build
 
 You can preview the production build with `npm run preview`.
 
-> To deploy your app, you may need to install an [adapter](https://kit.svelte.dev/adapters) for your target environment.
+> To deploy your app, you may need to install an [adapter](https://kit.svelte.dev/docs/adapters) for your target environment.

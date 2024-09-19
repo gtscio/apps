@@ -1,17 +1,20 @@
 // Copyright 2024 IOTA Stiftung.
 // SPDX-License-Identifier: Apache-2.0.
 import path from "node:path";
-import { FileBlobStorageConnector } from "@gtsc/blob-storage-connector-file";
-import { IpfsBlobStorageConnector } from "@gtsc/blob-storage-connector-ipfs";
-import { MemoryBlobStorageConnector } from "@gtsc/blob-storage-connector-memory";
-import { BlobStorageConnectorFactory, type IBlobStorageConnector } from "@gtsc/blob-storage-models";
+import { FileBlobStorageConnector } from "@twin.org/blob-storage-connector-file";
+import { IpfsBlobStorageConnector } from "@twin.org/blob-storage-connector-ipfs";
+import { MemoryBlobStorageConnector } from "@twin.org/blob-storage-connector-memory";
+import {
+	BlobStorageConnectorFactory,
+	type IBlobStorageConnector
+} from "@twin.org/blob-storage-models";
 import {
 	type BlobMetadata,
 	BlobStorageService,
 	initSchema as initSchemaBlobStorage
-} from "@gtsc/blob-storage-service";
-import { Coerce, ComponentFactory, GeneralError, I18n } from "@gtsc/core";
-import { nameof } from "@gtsc/nameof";
+} from "@twin.org/blob-storage-service";
+import { Coerce, ComponentFactory, GeneralError, I18n } from "@twin.org/core";
+import { nameof } from "@twin.org/nameof";
 import { initialiseEntityStorageConnector } from "./entityStorage.js";
 import { nodeLogInfo } from "./logging.js";
 import type { IWorkbenchContext } from "../models/IWorkbenchContext.js";

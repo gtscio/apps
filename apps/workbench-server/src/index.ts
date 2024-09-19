@@ -1,8 +1,8 @@
 // Copyright 2024 IOTA Stiftung.
 // SPDX-License-Identifier: Apache-2.0.
-import type { IServerInfo } from "@gtsc/api-models";
-import { CLIDisplay } from "@gtsc/cli-core";
-import { BaseError, I18n, Is } from "@gtsc/core";
+import type { IServerInfo } from "@twin.org/api-models";
+import { CLIDisplay } from "@twin.org/cli-core";
+import { BaseError, I18n, Is } from "@twin.org/core";
 import { bootstrap } from "./bootstrap.js";
 import {
 	initialiseAttestationConnectorFactory,

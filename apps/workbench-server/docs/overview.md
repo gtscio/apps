@@ -22,12 +22,12 @@ npm run dev
 
 ## Configuration
 
-There are various options you can set through configuration, these can be found in [configuration.md](configuration.md)
+There are various options you can set through configuration, these can be found in [docs/configuration.md](docs/configuration.md)
 
 ## Deployment
 
-Examples of how to deploy the app can be found in [deployment.md](deployment.md)
+Examples of how to deploy the app can be found in [docs/deployment.md](docs/deployment.md)
 
 ## Changelog
 
-The changes between each version can be found in [changelog.md](changelog.md)
+The changes between each version can be found in [docs/changelog.md](docs/changelog.md)

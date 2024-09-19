@@ -1,7 +1,7 @@
 <script lang="ts">
 	// Copyright 2024 IOTA Stiftung.
 	// SPDX-License-Identifier: Apache-2.0.
-	import { Is, ObjectHelper } from '@gtsc/core';
+	import { Is, ObjectHelper } from '@twin.org/core';
 	import { isAuthenticated } from '$stores/authentication';
 	import { i18n } from '$stores/i18n';
 	import { privateProfile } from '$stores/identityProfile';

@@ -5,9 +5,9 @@ import {
 	AuditableItemGraphService,
 	type AuditableItemGraphVertex,
 	initSchema
-} from "@gtsc/auditable-item-graph-service";
-import { Coerce, ComponentFactory, I18n } from "@gtsc/core";
-import { nameof } from "@gtsc/nameof";
+} from "@twin.org/auditable-item-graph-service";
+import { Coerce, ComponentFactory, I18n } from "@twin.org/core";
+import { nameof } from "@twin.org/nameof";
 import { initialiseEntityStorageConnector } from "./entityStorage.js";
 import { nodeLogInfo } from "./logging.js";
 import type { IWorkbenchContext } from "../models/IWorkbenchContext.js";

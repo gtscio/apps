@@ -1,7 +1,7 @@
 // Copyright 2024 IOTA Stiftung.
 // SPDX-License-Identifier: Apache-2.0.
-import { BaseError, ErrorHelper, Is, NotFoundError, ObjectHelper } from "@gtsc/core";
-import { IdentityProfileClient } from "@gtsc/identity-rest-client";
+import { BaseError, ErrorHelper, Is, NotFoundError, ObjectHelper } from "@twin.org/core";
+import { IdentityProfileClient } from "@twin.org/identity-rest-client";
 import type { Person, WithContext } from "schema-dts";
 import { get, writable } from "svelte/store";
 import { isAuthenticated } from "./authentication";

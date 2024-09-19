@@ -1,22 +1,22 @@
 // Copyright 2024 IOTA Stiftung.
 // SPDX-License-Identifier: Apache-2.0.
-import { Coerce, ComponentFactory, GeneralError, I18n } from "@gtsc/core";
+import { Coerce, ComponentFactory, GeneralError, I18n } from "@twin.org/core";
 import {
 	EntityStorageIdentityConnector,
 	EntityStorageIdentityProfileConnector,
 	initSchema as initSchemaIdentityStorage,
 	type IdentityDocument,
 	type IdentityProfile
-} from "@gtsc/identity-connector-entity-storage";
-import { IotaIdentityConnector } from "@gtsc/identity-connector-iota";
+} from "@twin.org/identity-connector-entity-storage";
+import { IotaIdentityConnector } from "@twin.org/identity-connector-iota";
 import {
 	IdentityConnectorFactory,
 	IdentityProfileConnectorFactory,
 	type IIdentityConnector,
 	type IIdentityProfileConnector
-} from "@gtsc/identity-models";
-import { IdentityProfileService, IdentityService } from "@gtsc/identity-service";
-import { nameof } from "@gtsc/nameof";
+} from "@twin.org/identity-models";
+import { IdentityProfileService, IdentityService } from "@twin.org/identity-service";
+import { nameof } from "@twin.org/nameof";
 import { initialiseEntityStorageConnector } from "./entityStorage.js";
 import { nodeLogInfo } from "./logging.js";
 import type { IWorkbenchContext } from "../models/IWorkbenchContext.js";

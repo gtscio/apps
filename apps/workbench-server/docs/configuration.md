@@ -1,4 +1,4 @@
-# @gtsc/workbench-server - Configuration
+# @twin.org/workbench-server - Configuration
 
 ## Environment Variables
 

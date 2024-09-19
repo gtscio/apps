@@ -1,8 +1,8 @@
 <script lang="ts">
 	// Copyright 2024 IOTA Stiftung.
 	// SPDX-License-Identifier: Apache-2.0.
-	import { Converter } from '@gtsc/core';
-	import { PngRenderer, QR } from '@gtsc/qr';
+	import { Converter } from '@twin.org/core';
+	import { PngRenderer, QR } from '@twin.org/qr';
 	import { onMount } from 'svelte';
 	import { i18n } from '$stores/i18n';
 	import { Link } from '$ui/components';

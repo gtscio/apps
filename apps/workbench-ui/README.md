@@ -1,4 +1,4 @@
-# GTSC Workbench UI
+# TWIN Workbench UI
 
 This web front-end demonstrates using the Workbench API, it is written using svelte.
 

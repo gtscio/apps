@@ -1,20 +1,20 @@
 // Copyright 2024 IOTA Stiftung.
 // SPDX-License-Identifier: Apache-2.0.
-import { CLIDisplay } from "@gtsc/cli-core";
-import { ComponentFactory, ErrorHelper, GeneralError, I18n, Is, type IError } from "@gtsc/core";
-import { ConsoleLoggingConnector } from "@gtsc/logging-connector-console";
+import { CLIDisplay } from "@twin.org/cli-core";
+import { ComponentFactory, ErrorHelper, GeneralError, I18n, Is, type IError } from "@twin.org/core";
+import { ConsoleLoggingConnector } from "@twin.org/logging-connector-console";
 import {
 	EntityStorageLoggingConnector,
 	initSchema as initSchemaLogging,
 	type LogEntry
-} from "@gtsc/logging-connector-entity-storage";
+} from "@twin.org/logging-connector-entity-storage";
 import {
 	LoggingConnectorFactory,
 	MultiLoggingConnector,
 	type ILoggingConnector
-} from "@gtsc/logging-models";
-import { LoggingService } from "@gtsc/logging-service";
-import { nameof } from "@gtsc/nameof";
+} from "@twin.org/logging-models";
+import { LoggingService } from "@twin.org/logging-service";
+import { nameof } from "@twin.org/nameof";
 import { initialiseEntityStorageConnector } from "./entityStorage.js";
 import type { IWorkbenchContext } from "../models/IWorkbenchContext.js";
 
