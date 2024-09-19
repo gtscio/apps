@@ -24,6 +24,7 @@
 		"identityExplorer": "Identity explorer \"{url}\"",
 		"addingAttestation": "Adding attestation verification method",
 		"addingAuditableItemGraph": "Adding auditable item graph verification method",
+		"addingAuditableItemStream": "Adding auditable item stream verification method",
 		"nodeIdentity": "Node identity \"{identity}\"",
 		"nodeAdminUserEmail": "Node Admin User Email \"{email}\"",
 		"nodeAdminUserPassword": "Node Admin User Password \"{password}\""
