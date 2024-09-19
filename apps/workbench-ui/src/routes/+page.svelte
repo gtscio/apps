@@ -3,7 +3,7 @@
 	// SPDX-License-Identifier: Apache-2.0.
 	import { goto } from '$app/navigation';
 	import { page } from '$app/stores';
-	import { Is, Validation, type IValidationFailure } from '@gtsc/core';
+	import { Is, Validation, type IValidationFailure } from '@twin.org/core';
 	import ValidatedForm from '$components/validatedForm.svelte';
 	import ValidationError from '$components/validationError.svelte';
 	import { isAuthenticated, login } from '$stores/authentication';

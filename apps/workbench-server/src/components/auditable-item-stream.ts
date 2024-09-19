@@ -5,9 +5,9 @@ import {
 	type AuditableItemStreamEntry,
 	AuditableItemStreamService,
 	initSchema
-} from "@gtsc/auditable-item-stream-service";
-import { ComponentFactory, I18n } from "@gtsc/core";
-import { nameof } from "@gtsc/nameof";
+} from "@twin.org/auditable-item-stream-service";
+import { ComponentFactory, I18n } from "@twin.org/core";
+import { nameof } from "@twin.org/nameof";
 import { initialiseEntityStorageConnector } from "./entityStorage.js";
 import { nodeLogInfo } from "./logging.js";
 import type { IWorkbenchContext } from "../models/IWorkbenchContext.js";

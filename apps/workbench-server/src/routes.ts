@@ -1,19 +1,19 @@
 // Copyright 2024 IOTA Stiftung.
 // SPDX-License-Identifier: Apache-2.0.
-import { generateRestRoutesAuthentication } from "@gtsc/api-auth-entity-storage-service";
-import type { IRestRoute } from "@gtsc/api-models";
-import { generateRestRoutesInformation } from "@gtsc/api-service";
-import { generateRestRoutesAttestation } from "@gtsc/attestation-service";
-import { generateRestRoutesAuditableItemGraph } from "@gtsc/auditable-item-graph-service";
-import { generateRestRoutesAuditableItemStream } from "@gtsc/auditable-item-stream-service";
-import { generateRestRoutesBlobStorage } from "@gtsc/blob-storage-service";
+import { generateRestRoutesAuthentication } from "@twin.org/api-auth-entity-storage-service";
+import type { IRestRoute } from "@twin.org/api-models";
+import { generateRestRoutesInformation } from "@twin.org/api-service";
+import { generateRestRoutesAttestation } from "@twin.org/attestation-service";
+import { generateRestRoutesAuditableItemGraph } from "@twin.org/auditable-item-graph-service";
+import { generateRestRoutesAuditableItemStream } from "@twin.org/auditable-item-stream-service";
+import { generateRestRoutesBlobStorage } from "@twin.org/blob-storage-service";
 import {
 	generateRestRoutesIdentity,
 	generateRestRoutesIdentityProfile
-} from "@gtsc/identity-service";
-import { generateRestRoutesLogging } from "@gtsc/logging-service";
-import { generateRestRoutesNft } from "@gtsc/nft-service";
-import { generateRestRoutesTelemetry } from "@gtsc/telemetry-service";
+} from "@twin.org/identity-service";
+import { generateRestRoutesLogging } from "@twin.org/logging-service";
+import { generateRestRoutesNft } from "@twin.org/nft-service";
+import { generateRestRoutesTelemetry } from "@twin.org/telemetry-service";
 import { ATTESTATION_SERVICE_NAME } from "./components/attestation.js";
 import { AIG_SERVICE_NAME } from "./components/auditable-item-graph.js";
 import { AIS_SERVICE_NAME } from "./components/auditable-item-stream.js";

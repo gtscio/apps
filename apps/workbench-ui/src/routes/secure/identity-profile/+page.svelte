@@ -1,7 +1,7 @@
 <script lang="ts">
 	// Copyright 2024 IOTA Stiftung.
 	// SPDX-License-Identifier: Apache-2.0.
-	import { Is, ObjectHelper, Urn, Validation, type IValidationFailure } from '@gtsc/core';
+	import { Is, ObjectHelper, Urn, Validation, type IValidationFailure } from '@twin.org/core';
 	import { CloudArrowUpOutline } from 'flowbite-svelte-icons';
 	import LabelledValue from '$components/labelledValue.svelte';
 	import ValidatedForm from '$components/validatedForm.svelte';

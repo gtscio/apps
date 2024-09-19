@@ -1,8 +1,8 @@
 // Copyright 2024 IOTA Stiftung.
 // SPDX-License-Identifier: Apache-2.0.
-import { EntityStorageAuthenticationClient } from "@gtsc/api-auth-entity-storage-rest-client";
-import { ErrorHelper, Is } from "@gtsc/core";
 import { redirect } from "@sveltejs/kit";
+import { EntityStorageAuthenticationClient } from "@twin.org/api-auth-entity-storage-rest-client";
+import { ErrorHelper, Is } from "@twin.org/core";
 import { get, writable } from "svelte/store";
 import { persistent } from "../utils/persistent";
 

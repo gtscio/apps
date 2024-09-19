@@ -1,7 +1,7 @@
 // Copyright 2024 IOTA Stiftung.
 // SPDX-License-Identifier: Apache-2.0.
 import { env } from "$env/dynamic/public";
-import { Coerce, ErrorHelper, Guards } from "@gtsc/core";
+import { Coerce, ErrorHelper, Guards } from "@twin.org/core";
 import { init as initApp } from "../stores/app";
 
 /**

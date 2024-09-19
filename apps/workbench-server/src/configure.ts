@@ -2,10 +2,10 @@
 // SPDX-License-Identifier: Apache-2.0.
 import path from "node:path";
 import { fileURLToPath } from "node:url";
-import type { IWebServerOptions } from "@gtsc/api-models";
-import { CLIUtils } from "@gtsc/cli-core";
-import { Coerce, GeneralError, Is } from "@gtsc/core";
-import type { HttpMethod } from "@gtsc/web";
+import type { IWebServerOptions } from "@twin.org/api-models";
+import { CLIUtils } from "@twin.org/cli-core";
+import { Coerce, GeneralError, Is } from "@twin.org/core";
+import type { HttpMethod } from "@twin.org/web";
 import * as dotenv from "dotenv";
 import type { IWorkbenchConfig } from "./models/IWorkbenchConfig";
 import type { IWorkbenchContext } from "./models/IWorkbenchContext";

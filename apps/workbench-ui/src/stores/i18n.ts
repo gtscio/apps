@@ -1,6 +1,6 @@
 // Copyright 2024 IOTA Stiftung.
 // SPDX-License-Identifier: Apache-2.0.
-import { I18n, type ILocale } from "@gtsc/core";
+import { I18n, type ILocale } from "@twin.org/core";
 import { derived, get, writable, type Writable } from "svelte/store";
 import localIndex from "../assets/locales.json";
 import { persistent } from "../utils/persistent";

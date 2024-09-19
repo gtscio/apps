@@ -1,19 +1,30 @@
 // Copyright 2024 IOTA Stiftung.
 // SPDX-License-Identifier: Apache-2.0.
-import { PasswordHelper, type AuthenticationUser } from "@gtsc/api-auth-entity-storage-service";
-import { CLIDisplay } from "@gtsc/cli-core";
-import { Coerce, Converter, GeneralError, I18n, Is, RandomHelper, StringHelper } from "@gtsc/core";
-import { Bip39, PasswordGenerator } from "@gtsc/crypto";
+import { PasswordHelper, type AuthenticationUser } from "@twin.org/api-auth-entity-storage-service";
+import { CLIDisplay } from "@twin.org/cli-core";
+import {
+	Coerce,
+	Converter,
+	GeneralError,
+	I18n,
+	Is,
+	RandomHelper,
+	StringHelper
+} from "@twin.org/core";
+import { Bip39, PasswordGenerator } from "@twin.org/crypto";
 import {
 	EntityStorageConnectorFactory,
 	type IEntityStorageConnector
-} from "@gtsc/entity-storage-models";
-import { IotaIdentityUtils } from "@gtsc/identity-connector-iota";
-import { IdentityConnectorFactory, IdentityProfileConnectorFactory } from "@gtsc/identity-models";
-import { nameof } from "@gtsc/nameof";
-import { VaultConnectorFactory, VaultKeyType } from "@gtsc/vault-models";
-import type { WalletAddress } from "@gtsc/wallet-connector-entity-storage";
-import { WalletConnectorFactory } from "@gtsc/wallet-models";
+} from "@twin.org/entity-storage-models";
+import { IotaIdentityUtils } from "@twin.org/identity-connector-iota";
+import {
+	IdentityConnectorFactory,
+	IdentityProfileConnectorFactory
+} from "@twin.org/identity-models";
+import { nameof } from "@twin.org/nameof";
+import { VaultConnectorFactory, VaultKeyType } from "@twin.org/vault-models";
+import type { WalletAddress } from "@twin.org/wallet-connector-entity-storage";
+import { WalletConnectorFactory } from "@twin.org/wallet-models";
 import type { Person, WithContext } from "schema-dts";
 import { ATTESTATION_ASSERTION_METHOD_ID } from "./components/attestation.js";
 import { AIG_ASSERTION_METHOD_ID, AIG_ENCRYPTION_KEY } from "./components/auditable-item-graph.js";

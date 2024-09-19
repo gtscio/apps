@@ -1,15 +1,15 @@
 // Copyright 2024 IOTA Stiftung.
 // SPDX-License-Identifier: Apache-2.0.
-import { ComponentFactory, GeneralError, I18n } from "@gtsc/core";
-import { nameof } from "@gtsc/nameof";
+import { ComponentFactory, GeneralError, I18n } from "@twin.org/core";
+import { nameof } from "@twin.org/nameof";
 import {
 	EntityStorageTelemetryConnector,
 	initSchema as initSchemaTelemetry,
 	type TelemetryMetric,
 	type TelemetryMetricValue
-} from "@gtsc/telemetry-connector-entity-storage";
-import { TelemetryConnectorFactory, type ITelemetryConnector } from "@gtsc/telemetry-models";
-import { TelemetryService } from "@gtsc/telemetry-service";
+} from "@twin.org/telemetry-connector-entity-storage";
+import { TelemetryConnectorFactory, type ITelemetryConnector } from "@twin.org/telemetry-models";
+import { TelemetryService } from "@twin.org/telemetry-service";
 import { initialiseEntityStorageConnector } from "./entityStorage.js";
 import { nodeLogInfo } from "./logging.js";
 import type { IWorkbenchContext } from "../models/IWorkbenchContext.js";

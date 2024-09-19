@@ -1,37 +1,37 @@
 {
-	"title": "GTSC Workbench Server",
+	"title": "TWIN Workbench Server",
 	"version": "1.0.0",
-	"description": "REST API for Global Trade and Supply Chain - API Server.",
+	"description": "REST API for TWIN - API Server.",
 	"licenseName": "Apache 2.0 License",
 	"licenseUrl": "https://opensource.org/licenses/Apache-2.0",
-	"servers": ["https://workbench-api.gtsc.io"],
+	"servers": ["https://workbench-api.twindev.org"],
 	"restRoutes": [
 		{
-			"package": "@gtsc/api-service"
+			"package": "@twin.org/api-service"
 		},
 		{
-			"package": "@gtsc/api-auth-entity-storage-service"
+			"package": "@twin.org/api-auth-entity-storage-service"
 		},
 		{
-			"package": "@gtsc/identity-service"
+			"package": "@twin.org/identity-service"
 		},
 		{
-			"package": "@gtsc/blob-storage-service"
+			"package": "@twin.org/blob-storage-service"
 		},
 		{
-			"package": "@gtsc/telemetry-service"
+			"package": "@twin.org/telemetry-service"
 		},
 		{
-			"package": "@gtsc/logging-service"
+			"package": "@twin.org/logging-service"
 		},
 		{
-			"package": "@gtsc/nft-service"
+			"package": "@twin.org/nft-service"
 		},
 		{
-			"package": "@gtsc/attestation-service"
+			"package": "@twin.org/attestation-service"
 		},
 		{
-			"package": "@gtsc/auditable-item-graph-service",
+			"package": "@twin.org/auditable-item-graph-service",
 			"entryPoints": [
 				{
 					"name": "auditable-item-graph",
@@ -40,7 +40,7 @@
 			]
 		},
 		{
-			"package": "@gtsc/auditable-item-stream-service",
+			"package": "@twin.org/auditable-item-stream-service",
 			"entryPoints": [
 				{
 					"name": "auditable-item-stream",
@@ -51,8 +51,8 @@
 	],
 	"authMethods": ["jwtBearer"],
 	"externalReferences": {
-		"IJsonLd(.*?)": "https://schema.gtsc.io/json-ld/JsonLd$1",
-		"I?AuditableItemGraph(.*?)(?<!Request|Response)": "https://schema.gtsc.io/aig/AuditableItemGraph$1",
-		"I?AuditableItemStream(.*?)(?<!Request|Response)": "https://schema.gtsc.io/ais/AuditableItemStream$1"
+		"IJsonLd(.*?)": "https://schema.twindev.org/json-ld/JsonLd$1",
+		"I?AuditableItemGraph(.*?)(?<!Request|Response)": "https://schema.twindev.org/aig/AuditableItemGraph$1",
+		"I?AuditableItemStream(.*?)(?<!Request|Response)": "https://schema.twindev.org/ais/AuditableItemStream$1"
 	}
 }

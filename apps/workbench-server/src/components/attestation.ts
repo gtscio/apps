@@ -1,10 +1,13 @@
 // Copyright 2024 IOTA Stiftung.
 // SPDX-License-Identifier: Apache-2.0.
-import { EntityStorageAttestationConnector } from "@gtsc/attestation-connector-entity-storage";
-import { IotaAttestationConnector } from "@gtsc/attestation-connector-iota";
-import { AttestationConnectorFactory, type IAttestationConnector } from "@gtsc/attestation-models";
-import { AttestationService } from "@gtsc/attestation-service";
-import { ComponentFactory, GeneralError, I18n } from "@gtsc/core";
+import { EntityStorageAttestationConnector } from "@twin.org/attestation-connector-entity-storage";
+import { IotaAttestationConnector } from "@twin.org/attestation-connector-iota";
+import {
+	AttestationConnectorFactory,
+	type IAttestationConnector
+} from "@twin.org/attestation-models";
+import { AttestationService } from "@twin.org/attestation-service";
+import { ComponentFactory, GeneralError, I18n } from "@twin.org/core";
 import { nodeLogInfo } from "./logging.js";
 import type { IWorkbenchContext } from "../models/IWorkbenchContext.js";
 

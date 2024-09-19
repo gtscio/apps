@@ -1,15 +1,15 @@
 // Copyright 2024 IOTA Stiftung.
 // SPDX-License-Identifier: Apache-2.0.
-import { Coerce, ComponentFactory, GeneralError, I18n } from "@gtsc/core";
-import { nameof } from "@gtsc/nameof";
+import { Coerce, ComponentFactory, GeneralError, I18n } from "@twin.org/core";
+import { nameof } from "@twin.org/nameof";
 import {
 	EntityStorageNftConnector,
 	initSchema as initSchemaNft,
 	type Nft
-} from "@gtsc/nft-connector-entity-storage";
-import { IotaNftConnector } from "@gtsc/nft-connector-iota";
-import { NftConnectorFactory, type INftConnector } from "@gtsc/nft-models";
-import { NftService } from "@gtsc/nft-service";
+} from "@twin.org/nft-connector-entity-storage";
+import { IotaNftConnector } from "@twin.org/nft-connector-iota";
+import { NftConnectorFactory, type INftConnector } from "@twin.org/nft-models";
+import { NftService } from "@twin.org/nft-service";
 import { initialiseEntityStorageConnector } from "./entityStorage.js";
 import { nodeLogInfo } from "./logging.js";
 import type { IWorkbenchContext } from "../models/IWorkbenchContext.js";

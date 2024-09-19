@@ -1,8 +1,8 @@
 // Copyright 2024 IOTA Stiftung.
 // SPDX-License-Identifier: Apache-2.0.
-import { BlobStorageClient } from "@gtsc/blob-storage-rest-client";
-import { Converter, ErrorHelper, Is } from "@gtsc/core";
-import type { IJsonLdNodeObject } from "@gtsc/data-json-ld";
+import { BlobStorageClient } from "@twin.org/blob-storage-rest-client";
+import { Converter, ErrorHelper, Is } from "@twin.org/core";
+import type { IJsonLdNodeObject } from "@twin.org/data-json-ld";
 
 let blobStorageClient: BlobStorageClient | undefined;
 

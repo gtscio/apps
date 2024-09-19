@@ -1,8 +1,8 @@
 // Copyright 2024 IOTA Stiftung.
 // SPDX-License-Identifier: Apache-2.0.
-import type { IAttestationInformation } from "@gtsc/attestation-models";
-import { AttestationClient } from "@gtsc/attestation-rest-client";
-import { ErrorHelper, Is } from "@gtsc/core";
+import type { IAttestationInformation } from "@twin.org/attestation-models";
+import { AttestationClient } from "@twin.org/attestation-rest-client";
+import { ErrorHelper, Is } from "@twin.org/core";
 import type { IDocumentAttestation } from "$models/IDocumentAttestation";
 
 let attestationClient: AttestationClient | undefined;

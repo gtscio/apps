@@ -1,4 +1,4 @@
-# @gtsc/workbench-server - Deployment Amazon AWS EC2
+# @twin.org/workbench-server - Deployment Amazon AWS EC2
 
 ## Amazon AWS EC2 Instance
 
@@ -97,7 +97,7 @@ Once configured you can restart nginx with `sudo systemctl restart nginx`
 We clone the repo, build it and then make a copy of the relevant .env file.
 
 ```shell
-git clone https://github.com/gtscio/workbench.git
+git clone https://github.com/twinfoundation/workbench.git
 cd apps
 npm install
 cd apps/workbench-server
