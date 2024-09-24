@@ -541,9 +541,10 @@
   "errorMessages": {
     "fetch": "Fetch"
   },
-  "jsonLdHelper": {
+  "jsonLdProcessor": {
     "compact": "The JSON-LD compaction failed",
-    "expand": "The JSON-LD expansion failed"
+    "expand": "The JSON-LD expansion failed",
+    "invalidUrl": "The JSON-LD processing failed to retrieve from the following url \"{url}\""
   },
   "identityRole": {
     "organization": "Organization",
