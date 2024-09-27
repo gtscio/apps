@@ -1,12 +1,12 @@
 ### Creates an attestation
 
 POST http://localhost:3000/attestation
-cookie: access_token=eyJhbGciOiJFZERTQSIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJkaWQ6aW90YTp0c3Q6MHgwNzI1Zjk1N2QwMGQ1OTdkMTI5NTE2ZmYxYmRlOTc4Nzg5ZWNhZDg3MGYxYThkNTc1NzMxZGExZmMyMGU1ZDNkIiwiZXhwIjoxNzI1MzYzNDA3fQ.9J7uKhRfvm_JGnN6bGFJqZA9MY4zMzr-sWNIejCQjU0R5Gs4s2D849SOc9UXF0R3ur3kPps3GqB9VcySYQbIAA
+cookie: access_token=eyJhbGciOiJFZERTQSIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJkaWQ6ZW50aXR5LXN0b3JhZ2U6MHgyNzViYTQ5NWI2ZmM2MzU5NDhmMjU2OGY1MmFmYjc5NzIwMDc4N2U5ZjcxZTBiNDFlZGI2MmNlN2UzYzg0NjRjIiwiZXhwIjoxNzI3MTczMTk2fQ.NqMRqJpjFb8z930coyCGPnFJVNlnDCExk8c07LzXuhSEvM3KaX5ViMJ2VXucDwVocKc2j7hGFHpjsRn6q8TUDA
 content-type: application/json
 
 {
 	"address": "tst1qzcs7xqax2rajn6kn5y52w2x9x7q3qvfphf0nte7yjpswufvgasrstt4eny",
-  	"verificationMethodId": "did:iota:tst:0xeb669c32b08e73e00b2f3afc0bb94913329a7f70d3ca78a7c29f42178aa3bc63#attestation",
+  	"verificationMethodId": "did:entity-storage:0x275ba495b6fc635948f2568f52afb797200787e9f71e0b41edb62ce7e3c8464c#attestation",
   	"data": {
     	"docName": "bill-of-lading",
     	"mimeType": "application/pdf",

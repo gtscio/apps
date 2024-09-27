@@ -544,7 +544,8 @@
   "jsonLdProcessor": {
     "compact": "The JSON-LD compaction failed",
     "expand": "The JSON-LD expansion failed",
-    "invalidUrl": "The JSON-LD processing failed to retrieve from the following url \"{url}\""
+    "invalidUrl": "The JSON-LD processing failed to retrieve from the following url \"{url}\"",
+    "jsonldError": "The JSON-LD processing failed due to the following error: \"{code}\""
   },
   "identityRole": {
     "organization": "Organization",

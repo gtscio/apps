@@ -16,7 +16,7 @@
 		"declarationDir": "dist/types",
 		"types": ["node"],
 		"plugins": [{ "transform": "@twin.org/nameof-transformer" }],
-		"incremental": true
+		"skipLibCheck": true
 	},
 	"include": ["src/**/*.ts"]
 }
