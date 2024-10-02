@@ -1,104 +1,4 @@
 {
-  "app": {
-    "name": "Workbench"
-  },
-  "navigation": {
-    "login": "Login",
-    "logout": "Logout",
-    "dashboard": "Dashboard",
-    "telemetry": "Telemetry",
-    "logging": "Logging",
-    "attestation": "Attestation",
-    "nft": "NFT"
-  },
-  "serverStatus": {
-    "api": "API",
-    "notConnected": "Not connected"
-  },
-  "footer": {
-    "copyrightOrg": "TWIN",
-    "language": "Language",
-    "colorTheme": "Color theme",
-    "selectLanguage": "Select language"
-  },
-  "pages": {
-    "login": {
-      "title": "Login",
-      "email": "E-mail",
-      "password": "Password",
-      "signIn": "Sign in",
-      "signingIn": "Signing in",
-      "noAccount": "Don't have an account yet?",
-      "signUp": "Sign up"
-    },
-    "identityProfile": {
-      "title": "Profile",
-      "qr": "Public Profile View",
-      "identity": "Identity",
-      "explore": "Explore",
-      "firstName": "First Name",
-      "lastName": "Last Name",
-      "displayName": "Display Name",
-      "displayNameDescription": "This will be the name that is displayed publicly when viewing your identity"
-    },
-    "identityPublic": {
-      "title": "Identity Public Profile",
-      "qr": "Public Profile View",
-      "identity": "Identity",
-      "schema": "Schema",
-      "displayName": "Name",
-      "explore": "Explore",
-      "didDocument": "DID Document"
-    },
-    "attestation": {
-      "title": "Attestation",
-      "filename": "Filename",
-      "assertionMethod": "Assertion Method",
-      "selectAssertionMethod": "Select assertion method",
-      "blobQr": "Blob Storage QR Code",
-      "blobId": "Blob Id",
-      "attestationId": "Attestation Id",
-      "attestationQr": "Attestation QR Code",
-      "signature": "Signature",
-      "attest": "Attest",
-      "attesting": "Attesting...",
-      "attestSuccess": "Attestation was successful",
-      "progressUploading": "Uploading document to storage",
-      "progressAttesting": "Attesting the document",
-      "resultTitle": "Attestation Result"
-    },
-    "attestationPublic": {
-      "title": "Attestation",
-      "id": "Id",
-      "exploreNft": "Explore NFT",
-      "attestationQr": "Attestation QR Code",
-      "verified": "Verified",
-      "created": "Created",
-      "ownerIdentity": "Owner Identity",
-      "transferred": "Transferred",
-      "holderIdentity": "Holder Identity",
-      "attestationObject": "Attestation Object",
-      "proof": "Proof"
-    },
-    "blob": {
-      "title": "Blob Storage",
-      "id": "Id",
-      "filename": "Filename",
-      "extension": "Extension",
-      "mimeType": "MIME Type",
-      "document": "Document",
-      "download": "Download"
-    },
-    "error": {
-      "title": "Error",
-      "notFound": "The requested page could not be found"
-    }
-  },
-  "actions": {
-    "save": "Save",
-    "saving": "Saving...",
-    "saveSuccess": "Saved successfully"
-  },
   "error": {
     "validation": {
       "beEmpty": "{fieldName} must be empty",
@@ -612,5 +512,105 @@
     "http://schema.org/image": "Image",
     "http://schema.org/GeoCoordinates": "Geo Coordinates",
     "http://schema.org/StructuredValue": "Structured Value"
+  },
+  "app": {
+    "name": "Workbench"
+  },
+  "navigation": {
+    "login": "Login",
+    "logout": "Logout",
+    "dashboard": "Dashboard",
+    "telemetry": "Telemetry",
+    "logging": "Logging",
+    "attestation": "Attestation",
+    "nft": "NFT"
+  },
+  "serverStatus": {
+    "api": "API",
+    "notConnected": "Not connected"
+  },
+  "footer": {
+    "copyrightOrg": "TWIN",
+    "language": "Language",
+    "colorTheme": "Color theme",
+    "selectLanguage": "Select language"
+  },
+  "pages": {
+    "login": {
+      "title": "Login",
+      "email": "E-mail",
+      "password": "Password",
+      "signIn": "Sign in",
+      "signingIn": "Signing in",
+      "noAccount": "Don't have an account yet?",
+      "signUp": "Sign up"
+    },
+    "identityProfile": {
+      "title": "Profile",
+      "qr": "Public Profile View",
+      "identity": "Identity",
+      "explore": "Explore",
+      "firstName": "First Name",
+      "lastName": "Last Name",
+      "displayName": "Display Name",
+      "displayNameDescription": "This will be the name that is displayed publicly when viewing your identity"
+    },
+    "identityPublic": {
+      "title": "Identity Public Profile",
+      "qr": "Public Profile View",
+      "identity": "Identity",
+      "schema": "Schema",
+      "displayName": "Name",
+      "explore": "Explore",
+      "didDocument": "DID Document"
+    },
+    "attestation": {
+      "title": "Attestation",
+      "filename": "Filename",
+      "assertionMethod": "Assertion Method",
+      "selectAssertionMethod": "Select assertion method",
+      "blobQr": "Blob Storage QR Code",
+      "blobId": "Blob Id",
+      "attestationId": "Attestation Id",
+      "attestationQr": "Attestation QR Code",
+      "signature": "Signature",
+      "attest": "Attest",
+      "attesting": "Attesting...",
+      "attestSuccess": "Attestation was successful",
+      "progressUploading": "Uploading document to storage",
+      "progressAttesting": "Attesting the document",
+      "resultTitle": "Attestation Result"
+    },
+    "attestationPublic": {
+      "title": "Attestation",
+      "id": "Id",
+      "exploreNft": "Explore NFT",
+      "attestationQr": "Attestation QR Code",
+      "verified": "Verified",
+      "created": "Created",
+      "ownerIdentity": "Owner Identity",
+      "transferred": "Transferred",
+      "holderIdentity": "Holder Identity",
+      "attestationObject": "Attestation Object",
+      "proof": "Proof"
+    },
+    "blob": {
+      "title": "Blob Storage",
+      "id": "Id",
+      "filename": "Filename",
+      "extension": "Extension",
+      "mimeType": "MIME Type",
+      "document": "Document",
+      "download": "Download"
+    },
+    "error": {
+      "title": "Error",
+      "notFound": "The requested page could not be found"
+    }
+  },
+  "actions": {
+    "save": "Save",
+    "saving": "Saving...",
+    "saveSuccess": "Saved successfully"
   }
 }
