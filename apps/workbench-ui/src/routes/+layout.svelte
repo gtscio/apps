@@ -89,7 +89,7 @@
 	<AppHeader
 		isAuthenticated={showAuthBadge}
 		initials={finalInitials}
-		navRoute="/secure/identity-profile"
+		profileNavRoute="/secure/identity-profile"
 	/>
 	<div class="mt-16 flex h-full w-full overflow-hidden sm:mt-20">
 		<div
