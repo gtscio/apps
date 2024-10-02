@@ -1,35 +1,42 @@
 <script lang="ts">
 	// Copyright 2024 IOTA Stiftung.
 	// SPDX-License-Identifier: Apache-2.0.
-	import type { IAttestationInformation } from '@twin.org/attestation-models';
 	import { Converter, Is, Validation, type IValidationFailure } from '@twin.org/core';
 	import { Blake2b } from '@twin.org/crypto';
 	import type { IJsonLdNodeObject } from '@twin.org/data-json-ld';
+	import {
+		Card,
+		Fileupload,
+		Heading,
+		i18n,
+		Label,
+		LabelledValue,
+		P,
+		QR,
+		Select,
+		ValidatedForm,
+		ValidationError
+	} from '@twin.org/ui-components-svelte';
 	import { onMount } from 'svelte';
-	import LabelledValue from '$components/labelledValue.svelte';
-	import ValidatedForm from '$components/validatedForm.svelte';
-	import ValidationError from '$components/validationError.svelte';
 	import type { IDocumentAttestation } from '$models/IDocumentAttestation';
 	import { createPrivateUrl, createPublicUrl } from '$stores/app';
-	import { attestationAttest } from '$stores/attestation';
+	import { attestationCreate } from '$stores/attestation';
 	import { blobStorageUpload } from '$stores/blobStorage';
-	import { i18n } from '$stores/i18n';
 	import { identityGetPublic } from '$stores/identity';
 	import { profileIdentity } from '$stores/identityProfile';
-	import { Card, Fileupload, Heading, Label, P, QR, Select } from '$ui/components';
 
 	let filename = '';
 	let files: FileList | undefined;
 	let validationErrors: {
 		[field in 'filename' | 'assertionMethod']?: IValidationFailure[] | undefined;
 	} = {};
-	let isBusy = true;
+	let isBusy = false;
 	let blobId: string | undefined;
 	let signature: string | undefined;
 	let progress: string | undefined;
 	let assertionMethods: { value: string; name: string }[] = [];
 	let assertionMethod: string = '';
-	let attestationInfo: IAttestationInformation<IDocumentAttestation> | undefined;
+	let attestationId: string | undefined;
 
 	async function validate(validationFailures: IValidationFailure[]): Promise<void> {
 		Validation.notEmpty(
@@ -50,14 +57,14 @@
 	async function action(): Promise<string | undefined> {
 		blobId = undefined;
 		signature = undefined;
-		attestationInfo = undefined;
+		attestationId = undefined;
 		if (!Is.empty(files) && files.length > 0) {
 			progress = $i18n('pages.attestation.progressUploading');
 
 			const file = files[0];
 			const buffer = await file.arrayBuffer();
 			const bytes = new Uint8Array(buffer);
-			const metadata: IJsonLdNodeObject = {
+			const attestationObject: IJsonLdNodeObject = {
 				'@context': 'https://schema.org',
 				'@graph': [
 					{
@@ -66,7 +73,7 @@
 					}
 				]
 			};
-			const resultBlob = await blobStorageUpload(file.name, metadata, bytes);
+			const resultBlob = await blobStorageUpload(file.name, attestationObject, bytes);
 			if (Is.stringValue(resultBlob?.error)) {
 				return resultBlob?.error;
 			}
@@ -75,17 +82,19 @@
 			signature = `b2b256:${Converter.bytesToBase64(Blake2b.sum256(bytes))}`;
 
 			const data: IDocumentAttestation = {
+				'@context': 'https://schema.twindev.org/workbench/',
+				type: 'DocumentAttestation',
 				blobId,
 				signature
 			};
 
 			progress = $i18n('pages.attestation.progressAttesting');
 
-			const resultAttestation = await attestationAttest(assertionMethod, data);
+			const resultAttestation = await attestationCreate(assertionMethod, data);
 			if (Is.stringValue(resultAttestation?.error)) {
 				return resultAttestation?.error;
 			}
-			attestationInfo = resultAttestation?.info;
+			attestationId = resultAttestation?.attestationId;
 
 			progress = undefined;
 		}
@@ -94,6 +103,7 @@
 	}
 
 	onMount(async () => {
+		isBusy = true;
 		const identity = await identityGetPublic($profileIdentity);
 
 		assertionMethods =
@@ -128,7 +138,7 @@
 		bind:isBusy
 	>
 		<svelte:fragment slot="fields">
-			<Label class="flex flex-col gap-2">
+			<Label>
 				{$i18n('pages.attestation.filename')}
 				<Fileupload
 					type="text"
@@ -140,7 +150,7 @@
 				/>
 				<ValidationError validationErrors={validationErrors.filename} />
 			</Label>
-			<Label class="flex flex-col gap-2">
+			<Label>
 				{$i18n('pages.attestation.assertionMethod')}
 				<Select
 					name="assertionMethod"
@@ -159,7 +169,7 @@
 			{/if}
 		</svelte:fragment>
 	</ValidatedForm>
-	{#if Is.stringValue(attestationInfo?.id)}
+	{#if Is.stringValue(attestationId)}
 		<Card class="flex flex-col gap-5">
 			<Heading tag="h5">{$i18n('pages.attestation.resultTitle')}</Heading>
 			{#if Is.stringValue(blobId)}
@@ -183,16 +193,16 @@
 					<LabelledValue>{signature}</LabelledValue>
 				</Label>
 			{/if}
-			{#if Is.stringValue(attestationInfo?.id)}
+			{#if Is.stringValue(attestationId)}
 				<Label>
 					{$i18n('pages.attestation.attestationId')}
-					<LabelledValue>{attestationInfo?.id}</LabelledValue>
+					<LabelledValue>{attestationId}</LabelledValue>
 				</Label>
 				<Label>
 					{$i18n('pages.attestation.attestationQr')}
 					<QR
 						class="mt-2"
-						qrData={createPublicUrl(`attestation/${attestationInfo?.id}`)}
+						qrData={createPublicUrl(`attestation/${attestationId}`)}
 						labelResource="pages.attestation.attestationQr"
 						dimensions={128}
 					/>

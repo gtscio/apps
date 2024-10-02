@@ -3,8 +3,8 @@
 import { redirect } from "@sveltejs/kit";
 import { EntityStorageAuthenticationClient } from "@twin.org/api-auth-entity-storage-rest-client";
 import { ErrorHelper, Is } from "@twin.org/core";
+import { persistent } from "@twin.org/ui-components-svelte";
 import { get, writable } from "svelte/store";
-import { persistent } from "../utils/persistent";
 
 export const isAuthenticated = writable<boolean | undefined>();
 const authenticationExpiry = persistent<number>("auth-expiry", 0);

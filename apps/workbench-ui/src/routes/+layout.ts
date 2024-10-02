@@ -6,8 +6,10 @@ import { init as initApp } from "../stores/app";
 
 /**
  * Perform a load and initialize the application.
+ * @param params The load params.
+ * @param params.url The URL.
  */
-export async function load(): Promise<void> {
+export async function load(params: { url: URL }): Promise<void> {
 	try {
 		Guards.stringValue("init", "PUBLIC_WORKBENCH_API_URL", env.PUBLIC_WORKBENCH_API_URL);
 		Guards.stringValue(
@@ -27,6 +29,13 @@ export async function load(): Promise<void> {
 		);
 
 		await initApp({
+			rootUrl: params.url,
+			localesIndex: [
+				{
+					label: "English",
+					code: "en"
+				}
+			],
 			apiUrl: env.PUBLIC_WORKBENCH_API_URL,
 			envPublicBaseUrl: env.PUBLIC_WORKBENCH_PUBLIC_BASE_URL,
 			envPrivateBaseUrl: env.PUBLIC_WORKBENCH_PRIVATE_BASE_URL,

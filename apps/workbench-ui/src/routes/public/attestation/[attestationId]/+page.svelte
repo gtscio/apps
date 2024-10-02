@@ -4,34 +4,36 @@
 	import { page } from '$app/stores';
 	import type { IAttestationInformation } from '@twin.org/attestation-models';
 	import { Is, Urn } from '@twin.org/core';
+	import {
+		Button,
+		Card,
+		Error,
+		Heading,
+		Label,
+		LabelledValue,
+		QR,
+		Spinner,
+		i18n
+	} from '@twin.org/ui-components-svelte';
 	import { CloudArrowUpOutline } from 'flowbite-svelte-icons';
 	import { onMount } from 'svelte';
-	import Error from '$components/error.svelte';
-	import LabelledValue from '$components/labelledValue.svelte';
-	import type { IDocumentAttestation } from '$models/IDocumentAttestation';
 	import { createPublicUrl } from '$stores/app';
-	import { attestationVerify } from '$stores/attestation';
-	import { i18n } from '$stores/i18n';
+	import { attestationGet } from '$stores/attestation';
 	import { attestationIdToNftId, createExplorerNftUrl } from '$stores/iota';
-	import { Button, Card, Heading, Label, QR, Spinner } from '$ui/components';
 
 	const attestationId = $page.params.attestationId;
 	let error: string;
 	let isBusy = true;
-	let attestationInfo: Partial<IAttestationInformation<IDocumentAttestation>> | undefined;
-	let isVerified: boolean | undefined;
-	let verifyFailure: string | undefined;
+	let attestationInfo: Partial<IAttestationInformation> | undefined;
 	let exploreUrl: string | undefined;
 
 	onMount(async () => {
 		error = '';
-		const resultVerify = await attestationVerify(attestationId);
+		const resultVerify = await attestationGet(attestationId);
 		if (Is.stringValue(resultVerify?.error)) {
 			error = resultVerify.error;
 		} else {
 			attestationInfo = resultVerify?.information;
-			isVerified = resultVerify?.verified;
-			verifyFailure = resultVerify?.failure;
 			if (Is.stringValue(attestationInfo?.id)) {
 				const nftId = attestationIdToNftId(attestationInfo.id);
 
@@ -76,18 +78,18 @@
 
 				<Label>
 					{$i18n('pages.attestationPublic.verified')}
-					<LabelledValue>{isVerified}</LabelledValue>
+					<LabelledValue>{attestationInfo?.verified}</LabelledValue>
 				</Label>
-				{#if Is.stringValue(verifyFailure)}
+				{#if Is.stringValue(attestationInfo?.verificationFailure)}
 					<Label>
 						{$i18n('pages.attestationPublic.verifyFailure')}
-						<LabelledValue class="red">{verifyFailure}</LabelledValue>
+						<LabelledValue class="red">{attestationInfo.verificationFailure}</LabelledValue>
 					</Label>
 				{/if}
-				{#if Is.stringValue(attestationInfo?.created)}
+				{#if Is.stringValue(attestationInfo?.dateCreated)}
 					<Label>
 						{$i18n('pages.attestationPublic.created')}
-						<LabelledValue>{new Date(attestationInfo.created).toLocaleString()}</LabelledValue>
+						<LabelledValue>{new Date(attestationInfo.dateCreated).toLocaleString()}</LabelledValue>
 					</Label>
 				{/if}
 				{#if Is.stringValue(attestationInfo?.ownerIdentity)}
@@ -96,10 +98,10 @@
 						<LabelledValue>{attestationInfo.ownerIdentity}</LabelledValue>
 					</Label>
 				{/if}
-				{#if Is.stringValue(attestationInfo?.transferred)}
+				{#if Is.stringValue(attestationInfo?.dateTransferred)}
 					<Label>
 						{$i18n('pages.attestationPublic.transferred')}
-						<LabelledValue>{new Date(attestationInfo.transferred)}</LabelledValue>
+						<LabelledValue>{new Date(attestationInfo.dateTransferred)}</LabelledValue>
 					</Label>
 				{/if}
 				{#if Is.stringValue(attestationInfo?.holderIdentity)}
@@ -108,10 +110,12 @@
 						<LabelledValue>{attestationInfo.holderIdentity}</LabelledValue>
 					</Label>
 				{/if}
-				{#if Is.object(attestationInfo?.data)}
+				{#if Is.object(attestationInfo?.attestationObject)}
 					<Label>
-						{$i18n('pages.attestationPublic.data')}
-						<LabelledValue>{JSON.stringify(attestationInfo.data, undefined, 2)}</LabelledValue>
+						{$i18n('pages.attestationPublic.attestationObject')}
+						<LabelledValue
+							>{JSON.stringify(attestationInfo.attestationObject, undefined, 2)}</LabelledValue
+						>
 					</Label>
 				{/if}
 				{#if Is.object(attestationInfo?.proof)}

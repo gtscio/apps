@@ -7,6 +7,16 @@ import type { IJsonLdNodeObject } from "@twin.org/data-json-ld";
  */
 export interface IDocumentAttestation extends IJsonLdNodeObject {
 	/**
+	 * The context of the document attestation.
+	 */
+	"@context": "https://schema.twindev.org/workbench/";
+
+	/**
+	 * The type of the document attestation.
+	 */
+	type: "DocumentAttestation";
+
+	/**
 	 * The id of the item in blob storage.
 	 */
 	blobId: string;

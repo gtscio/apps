@@ -77,7 +77,7 @@
 			"ownerIdentity": "Owner Identity",
 			"transferred": "Transferred",
 			"holderIdentity": "Holder Identity",
-			"data": "Data",
+			"attestationObject": "Attestation Object",
 			"proof": "Proof"
 		},
 		"blob": {

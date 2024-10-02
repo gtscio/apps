@@ -2,8 +2,7 @@
 	// Copyright 2024 IOTA Stiftung.
 	// SPDX-License-Identifier: Apache-2.0.
 	import { page } from '$app/stores';
-	import { i18n } from '$stores/i18n.js';
-	import { Card, Heading, P } from '$ui/components';
+	import { i18n, Card, Heading, P } from '@twin.org/ui-components-svelte';
 </script>
 
 <Card class="h-full w-full max-w-full">

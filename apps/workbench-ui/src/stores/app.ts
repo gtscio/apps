@@ -1,10 +1,10 @@
 // Copyright 2024 IOTA Stiftung.
 // SPDX-License-Identifier: Apache-2.0.
-import { StringHelper } from "@twin.org/core";
+import { StringHelper, type ILocale } from "@twin.org/core";
+import { initLocales } from "@twin.org/ui-components-svelte";
 import { init as initAttestation } from "./attestation";
 import { init as initAuthentication } from "./authentication";
 import { init as initBlobStorage } from "./blobStorage";
-import { init as initLocales } from "./i18n";
 import { init as initIdentity } from "./identity";
 import { init as initIdentityProfile } from "./identityProfile";
 import { init as initInformation } from "./information";
@@ -16,6 +16,8 @@ export let privateBaseUrl = "";
 /**
  * Initialize the app.
  * @param options The options for the application.
+ * @param options.rootUrl The root URL.
+ * @param options.localesIndex The locales index.
  * @param options.apiUrl The API url.
  * @param options.envPublicBaseUrl The base url to use for generating publicly accessible links.
  * @param options.envPrivateBaseUrl The base url to use for generating privately accessible links.
@@ -23,6 +25,8 @@ export let privateBaseUrl = "";
  * @param options.iotaExplorerUrl The url for IOTA explorer.
  */
 export async function init(options: {
+	rootUrl: URL;
+	localesIndex: ILocale[];
 	apiUrl: string;
 	envPublicBaseUrl: string;
 	envPrivateBaseUrl: string;
@@ -32,7 +36,7 @@ export async function init(options: {
 	publicBaseUrl = StringHelper.trimTrailingSlashes(options.envPublicBaseUrl);
 	privateBaseUrl = StringHelper.trimTrailingSlashes(options.envPrivateBaseUrl);
 
-	await initLocales(options.debugLanguages);
+	await initLocales(options.rootUrl, options.localesIndex, options.debugLanguages);
 	await initInformation(options.apiUrl);
 	await initAuthentication(options.apiUrl);
 	await initIdentityProfile(options.apiUrl);

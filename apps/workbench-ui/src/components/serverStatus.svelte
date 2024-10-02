@@ -3,9 +3,8 @@
 	// SPDX-License-Identifier: Apache-2.0.
 	import { HealthStatus } from '@twin.org/api-models';
 	import { Is } from '@twin.org/core';
-	import { i18n } from '$stores/i18n';
+	import { Badge, i18n } from '@twin.org/ui-components-svelte';
 	import { serverHealthStatus, serverName, serverVersion } from '$stores/information';
-	import { Badge } from '$ui/components';
 </script>
 
 {#if !Is.empty($serverHealthStatus)}

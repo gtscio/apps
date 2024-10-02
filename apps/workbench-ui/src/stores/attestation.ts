@@ -20,24 +20,24 @@ export async function init(apiUrl: string): Promise<void> {
 /**
  * Attest some data.
  * @param assertionMethod The assertion method to use.
- * @param data The data to attest.
+ * @param attestationObject The data to attest.
  * @returns The attestation information or an error if one occurred.
  */
-export async function attestationAttest(
+export async function attestationCreate(
 	assertionMethod: string,
-	data: IDocumentAttestation
+	attestationObject: IDocumentAttestation
 ): Promise<
 	| {
 			error?: string;
-			info?: IAttestationInformation<IDocumentAttestation>;
+			attestationId?: string;
 	  }
 	| undefined
 > {
 	if (Is.object(attestationClient)) {
 		try {
-			const info = await attestationClient.attest(assertionMethod, data);
+			const attestationId = await attestationClient.create(assertionMethod, attestationObject);
 			return {
-				info
+				attestationId
 			};
 		} catch (err) {
 			return {
@@ -52,22 +52,18 @@ export async function attestationAttest(
  * @param attestationId The id of the attestation.
  * @returns The id of the attestation or an error if one occurred.
  */
-export async function attestationVerify(attestationId: string): Promise<
+export async function attestationGet(attestationId: string): Promise<
 	| {
 			error?: string;
-			verified?: boolean;
-			failure?: string;
-			information?: Partial<IAttestationInformation<IDocumentAttestation>>;
+			information?: IAttestationInformation;
 	  }
 	| undefined
 > {
 	if (Is.object(attestationClient)) {
 		try {
-			const info = await attestationClient.verify<IDocumentAttestation>(attestationId);
+			const information = await attestationClient.get(attestationId);
 			return {
-				verified: info.verified,
-				failure: info.failure,
-				information: info.information
+				information
 			};
 		} catch (err) {
 			return {

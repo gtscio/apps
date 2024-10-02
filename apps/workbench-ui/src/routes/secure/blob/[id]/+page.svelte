@@ -4,14 +4,21 @@
 	import { page } from '$app/stores';
 	import { Converter, Is, ObjectHelper } from '@twin.org/core';
 	import type { IJsonLdNodeObject } from '@twin.org/data-json-ld';
+	import {
+		Button,
+		Card,
+		Error,
+		Heading,
+		i18n,
+		Label,
+		LabelledValue,
+		QR,
+		Spinner
+	} from '@twin.org/ui-components-svelte';
 	import { ArrowUpRightFromSquareOutline, DownloadOutline } from 'flowbite-svelte-icons';
 	import { onMount } from 'svelte';
-	import Error from '$components/error.svelte';
-	import LabelledValue from '$components/labelledValue.svelte';
 	import { createPrivateUrl } from '$stores/app';
 	import { blobStorageGet, createDownloadLink } from '$stores/blobStorage';
-	import { i18n } from '$stores/i18n';
-	import { Button, Card, Heading, Label, QR, Spinner } from '$ui/components';
 
 	const id = $page.params.id;
 	let mimeType: string | undefined;

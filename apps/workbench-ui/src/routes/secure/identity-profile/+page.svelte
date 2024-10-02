@@ -2,12 +2,19 @@
 	// Copyright 2024 IOTA Stiftung.
 	// SPDX-License-Identifier: Apache-2.0.
 	import { Is, ObjectHelper, Urn, Validation, type IValidationFailure } from '@twin.org/core';
+	import {
+		Button,
+		Helper,
+		i18n,
+		Input,
+		Label,
+		LabelledValue,
+		QR,
+		ValidatedForm,
+		ValidationError
+	} from '@twin.org/ui-components-svelte';
 	import { CloudArrowUpOutline } from 'flowbite-svelte-icons';
-	import LabelledValue from '$components/labelledValue.svelte';
-	import ValidatedForm from '$components/validatedForm.svelte';
-	import ValidationError from '$components/validationError.svelte';
 	import { createPublicUrl } from '$stores/app';
-	import { i18n } from '$stores/i18n';
 	import {
 		privateProfile,
 		profileIdentity,
@@ -15,7 +22,6 @@
 		publicProfile
 	} from '$stores/identityProfile';
 	import { createExplorerIdentityUrl } from '$stores/iota';
-	import { Button, Helper, Input, Label, QR } from '$ui/components';
 
 	let firstName = ObjectHelper.propertyGet<string>($privateProfile, 'givenName') ?? '';
 	let lastName = ObjectHelper.propertyGet<string>($privateProfile, 'familyName') ?? '';

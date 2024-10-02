@@ -4,16 +4,24 @@
 	import { page } from '$app/stores';
 	import { Is, ObjectHelper, Urn } from '@twin.org/core';
 	import type { IDidDocument } from '@twin.org/standards-w3c-did';
+	import {
+		Button,
+		Card,
+		Code,
+		Error,
+		Heading,
+		Label,
+		LabelledValue,
+		QR,
+		Spinner,
+		i18n
+	} from '@twin.org/ui-components-svelte';
 	import { CloudArrowUpOutline } from 'flowbite-svelte-icons';
 	import { onMount } from 'svelte';
-	import Error from '$components/error.svelte';
-	import LabelledValue from '$components/labelledValue.svelte';
 	import { createPublicUrl } from '$stores/app';
-	import { i18n } from '$stores/i18n';
 	import { identityGetPublic } from '$stores/identity';
 	import { profileGetPublic } from '$stores/identityProfile';
 	import { createExplorerIdentityUrl } from '$stores/iota';
-	import { Button, Card, Code, Heading, Label, QR, Spinner } from '$ui/components';
 
 	const identity = $page.params.identity;
 	let error: string;

@@ -1,5 +1,5 @@
 {
-	"outputDirectory": "src/assets/locales",
+	"outputDirectory": "static/locales",
 	"includePackages": [
 		"@twin.org/attestation-models",
 		"@twin.org/attestation-connector-entity-storage",
