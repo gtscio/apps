@@ -15,7 +15,7 @@ WORKDIR /app
 COPY package.json .
 
 # Install only the production dependencies
-RUN npm install --omit=dev
+RUN npm install --omit=dev --ignore-scripts
 
 # Copy the rest of the files to the image
 COPY . .
