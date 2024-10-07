@@ -21,6 +21,7 @@ import {
 	initialiseIdentityProfileService,
 	initialiseIdentityService
 } from "./components/identity.js";
+import { initialiseImmutableProofService } from "./components/immutableProof.js";
 import { initialiseImmutableStorageConnectorFactory } from "./components/immutableStorage.js";
 import { initialiseInformationService } from "./components/information.js";
 import {
@@ -90,6 +91,8 @@ try {
 
 	initialiseNftConnectorFactory(context);
 	initialiseNftService(context);
+
+	initialiseImmutableProofService(context);
 
 	initialiseAttestationConnectorFactory(context);
 	initialiseAttestationService(context);

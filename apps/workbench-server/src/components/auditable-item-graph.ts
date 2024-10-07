@@ -6,15 +6,13 @@ import {
 	type AuditableItemGraphVertex,
 	initSchema
 } from "@twin.org/auditable-item-graph-service";
-import { Coerce, ComponentFactory, I18n } from "@twin.org/core";
+import { ComponentFactory, I18n } from "@twin.org/core";
 import { nameof } from "@twin.org/nameof";
 import { initialiseEntityStorageConnector } from "./entityStorage.js";
 import { nodeLogInfo } from "./logging.js";
 import type { IWorkbenchContext } from "../models/IWorkbenchContext.js";
 
 export const AIG_SERVICE_NAME = "auditable-item-graph";
-export const AIG_ENCRYPTION_KEY = "auditable-item-graph";
-export const AIG_ASSERTION_METHOD_ID = "auditable-item-graph";
 
 /**
  * Initialise the auditable item graph service.
@@ -37,16 +35,7 @@ export function initialiseAuditableItemGraphService(context: IWorkbenchContext):
 		nameof<AuditableItemGraphChangeset>()
 	);
 
-	const service = new AuditableItemGraphService({
-		vaultConnectorType: context.envVars.WORKBENCH_VAULT_CONNECTOR,
-		identityConnectorType: context.envVars.WORKBENCH_IDENTITY_CONNECTOR,
-		immutableStorageType: context.envVars.WORKBENCH_IMMUTABLE_STORAGE_CONNECTOR,
-		config: {
-			vaultKeyId: AIG_ENCRYPTION_KEY,
-			assertionMethodId: AIG_ASSERTION_METHOD_ID,
-			enableImmutableDiffs: Coerce.boolean(context.envVars.WORKBENCH_AIG_ENABLE_DIFF_SETS)
-		}
-	});
+	const service = new AuditableItemGraphService();
 	context.componentInstances.push({ instanceName: AIG_SERVICE_NAME, component: service });
 	ComponentFactory.register(AIG_SERVICE_NAME, () => service);
 }

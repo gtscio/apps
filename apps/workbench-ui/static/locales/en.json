@@ -8,6 +8,10 @@
       "beTextMinMax": "{fieldName} must be longer than {minLength} and shorter than {maxLength} characters",
       "beTextMin": "{fieldName} must be longer than {minLength} characters",
       "beTextMax": "{fieldName} must be shorter than {maxLength} characters",
+      "beTextBase58": "{fieldName} must be text formatted using Base58 characters",
+      "beTextBase64": "{fieldName} must be text formatted using Base64 characters",
+      "beTextHex": "{fieldName} must be text formatted using Hex characters",
+      "beTextRegExp": "{fieldName} must be text formatted using the matching pattern {format}",
       "beNumber": "{fieldName} must be a number",
       "beNumberMinMax": "{fieldName} must be >= {minValue} and <= {maxValue}",
       "beNumberMin": "{fieldName} must be >= {minValue}",
@@ -57,6 +61,7 @@
       "stringEmpty": "Property \"{property}\" must have a value, it is empty",
       "stringBase64": "Property \"{property}\" must be a base64 encoded string, it is \"{value}\"",
       "stringBase64Url": "Property \"{property}\" must be a base64 url encoded string, it is \"{value}\"",
+      "stringBase58": "Property \"{property}\" must be a base58 encoded string, it is \"{value}\"",
       "stringHex": "Property \"{property}\" must be a hex string, it is \"{value}\"",
       "stringHexLength": "Property \"{property}\" must be a hex string of length \"{options}\", it is \"{value}\"",
       "number": "Property \"{property}\" must be a number, it is \"{value}\"",
@@ -96,6 +101,15 @@
     "bitString": {
       "outOfRange": "The index should be >= 0 and less than the length of the bit string"
     },
+    "base32": {
+      "invalidCharacter": "Data contains a character \"{invalidCharacter}\" which is not in the charset"
+    },
+    "base64": {
+      "length4Multiple": "Invalid length should be a multiple of 4, it is \"{value}\""
+    },
+    "base58": {
+      "invalidCharacter": "Data contains a character \"{invalidCharacter}\" which is not in the charset"
+    },
     "fetchHelper": {
       "decodingJSON": "Decoding JSON failed for route \"{route}\"",
       "failureStatusText": "The request to the API failed: \"{statusText}\"",
@@ -132,17 +146,14 @@
     "sha256": {
       "bitSize": "Only 224 or 256 bits are supported, it is \"{bitSize}\""
     },
+    "sha3": {
+      "bitSize": "Only 224, 256, 384 or 512 bits are supported, it is \"{bitSize}\""
+    },
     "hmacSha256": {
       "bitSize": "Only 224 or 256 bits are supported, it is \"{bitSize}\""
     },
     "hmacSha512": {
       "bitSize": "Only 224, 256, 384 or 512 bits are supported, it is \"{bitSize}\""
-    },
-    "base32": {
-      "invalidCharacter": "Data contains a character \"{invalidCharacter}\" which is not in the charset"
-    },
-    "base64": {
-      "length4Multiple": "Invalid length should be a multiple of 4, it is \"{value}\""
     },
     "bech32": {
       "decodeFailed": "The address contains decoding failed for address \"{bech32}\"",
@@ -344,7 +355,9 @@
       "unrevokeVerifiableCredentialsFailed": "Unrevoking verifiable credentials failed",
       "inclusionFailed": "The transaction generated for the identity was not included in a reasonable amount of time",
       "insufficientFunds": "There were insufficient funds to complete the operation",
-      "walletConnectorMissing": "The wallet connector must be available to perform this operation"
+      "walletConnectorMissing": "The wallet connector must be available to perform this operation",
+      "proofType": "The proof type must be DataIntegrityProof, it is currently {proofType}",
+      "cryptosuite": "The proof cryptosuite must be eddsa-jcs-2022, it is currently {cryptosuite}"
     },
     "identityService": {
       "noConnectors": "There are no connectors registered with the identity factory",

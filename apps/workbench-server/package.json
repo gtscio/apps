@@ -62,6 +62,8 @@
 		"@twin.org/identity-connector-entity-storage": "next",
 		"@twin.org/identity-connector-iota": "next",
 		"@twin.org/identity-service": "next",
+		"@twin.org/immutable-proof-models": "next",
+		"@twin.org/immutable-proof-service": "next",
 		"@twin.org/immutable-storage-connector-entity-storage": "next",
 		"@twin.org/immutable-storage-connector-iota": "next",
 		"@twin.org/immutable-storage-models": "next",
