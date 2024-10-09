@@ -269,7 +269,9 @@
     "ipfsBlobStorageConnector": {
       "namespaceMismatch": "The namespace in the urn \"{id}\" does not match the namespace of the blob storage \"{namespace}\"",
       "fetchFail": "Failure during IPFS fetch \"{message}\"",
-      "setBlobFailed": "Failed to store blob in IPFS"
+      "setBlobFailed": "Failed to store blob in IPFS",
+      "getBlobFailed": "Failed to get blob from IPFS",
+      "removeBlobFailed": "Failed to remove blob from IPFS"
     },
     "fileBlobStorageConnector": {
       "directoryCreateFailed": "Creating directory \"{directory}\" failed",

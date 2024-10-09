@@ -24,7 +24,7 @@ export async function init(apiUrl: string): Promise<void> {
  * @returns The id of the uploaded document or an error if one occurred.
  */
 export async function blobStorageUpload(
-	mimeType: string,
+	mimeType: string | undefined,
 	metadata: IJsonLdNodeObject,
 	bytes: Uint8Array
 ): Promise<

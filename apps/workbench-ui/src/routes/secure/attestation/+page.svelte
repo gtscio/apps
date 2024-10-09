@@ -73,7 +73,7 @@
 					}
 				]
 			};
-			const resultBlob = await blobStorageUpload(file.name, attestationObject, bytes);
+			const resultBlob = await blobStorageUpload(file.type, attestationObject, bytes);
 			if (Is.stringValue(resultBlob?.error)) {
 				return resultBlob?.error;
 			}
