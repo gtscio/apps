@@ -7,6 +7,7 @@ import { generateRestRoutesAttestation } from "@twin.org/attestation-service";
 import { generateRestRoutesAuditableItemGraph } from "@twin.org/auditable-item-graph-service";
 import { generateRestRoutesAuditableItemStream } from "@twin.org/auditable-item-stream-service";
 import { generateRestRoutesBlobStorage } from "@twin.org/blob-storage-service";
+import { generateRestRoutesEntityStorage } from "@twin.org/entity-storage-service";
 import {
 	generateRestRoutesIdentity,
 	generateRestRoutesIdentityProfile
@@ -15,8 +16,8 @@ import { generateRestRoutesLogging } from "@twin.org/logging-service";
 import { generateRestRoutesNft } from "@twin.org/nft-service";
 import { generateRestRoutesTelemetry } from "@twin.org/telemetry-service";
 import { ATTESTATION_SERVICE_NAME } from "./components/attestation.js";
-import { AIG_SERVICE_NAME } from "./components/auditable-item-graph.js";
-import { AIS_SERVICE_NAME } from "./components/auditable-item-stream.js";
+import { AIG_SERVICE_NAME } from "./components/auditableItemGraph.js";
+import { AIS_SERVICE_NAME } from "./components/auditableItemStream.js";
 import { BLOB_STORAGE_SERVICE_NAME } from "./components/blobStorage.js";
 import { IDENTITY_PROFILE_SERVICE_NAME, IDENTITY_SERVICE_NAME } from "./components/identity.js";
 import { INFORMATION_SERVICE_NAME } from "./components/information.js";
@@ -24,6 +25,7 @@ import { LOGGING_SERVICE_NAME } from "./components/logging.js";
 import { NFT_SERVICE_NAME } from "./components/nft.js";
 import { AUTH_SERVICE_NAME } from "./components/processors.js";
 import { TELEMETRY_SERVICE_NAME } from "./components/telemetry.js";
+import { APP_USER_ATTESTATION_ENTRY_STORAGE_SERVICE } from "./components/userEntityStorage.js";
 
 /**
  * The routes for the application.
@@ -41,6 +43,10 @@ export function buildRoutes(): IRestRoute[] {
 		...generateRestRoutesNft("nft", NFT_SERVICE_NAME),
 		...generateRestRoutesAttestation("attestation", ATTESTATION_SERVICE_NAME),
 		...generateRestRoutesAuditableItemGraph("aig", AIG_SERVICE_NAME),
-		...generateRestRoutesAuditableItemStream("ais", AIS_SERVICE_NAME)
+		...generateRestRoutesAuditableItemStream("ais", AIS_SERVICE_NAME),
+		...generateRestRoutesEntityStorage(
+			"user-attestation",
+			APP_USER_ATTESTATION_ENTRY_STORAGE_SERVICE
+		)
 	];
 }

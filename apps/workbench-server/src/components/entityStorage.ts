@@ -22,10 +22,13 @@ import type { IWorkbenchContext } from "../models/IWorkbenchContext.js";
  */
 export function initialiseEntityStorageConnector(
 	context: IWorkbenchContext,
-	type: string,
+	type: string | undefined,
 	schema: string
 ): void {
 	const storageName = StringHelper.kebabCase(schema);
+	if (!Is.stringValue(type)) {
+		type = context.envVars.WORKBENCH_DEFAULT_STORAGE_TYPE;
+	}
 	nodeLogInfo(
 		I18n.formatMessage("workbench.configuringEntityStorage", {
 			element: "Entity Storage",

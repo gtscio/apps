@@ -2,22 +2,17 @@
 	// Copyright 2024 IOTA Stiftung.
 	// SPDX-License-Identifier: Apache-2.0.
 	import { Is, ObjectHelper } from '@twin.org/core';
-	import {
-		AppFooter,
-		AppHeader,
-		AppSidebar,
-		type ISideBarGroup
-	} from '@twin.org/ui-components-svelte';
+	import { AppLayout, type ISideBarGroup } from '@twin.org/ui-components-svelte';
 	import {
 		LockOpenSolid,
 		LockSolid,
 		ShieldCheckSolid,
 		SwatchbookSolid
 	} from 'flowbite-svelte-icons';
-	import ServerStatus from '$components/serverStatus.svelte';
 	import { isAuthenticated } from '$stores/authentication';
 	import { privateProfile } from '$stores/identityProfile';
 	import '../app.css';
+	import { serverHealthStatus, serverName, serverVersion } from '$stores/information';
 
 	let sidebarGroups: ISideBarGroup[] = [];
 	let showAuthBadge = false;
@@ -35,9 +30,9 @@
 						route: '/secure/dashboard'
 					},
 					{
-						label: 'navigation.attestation',
+						label: 'navigation.attestations',
 						icon: ShieldCheckSolid,
-						route: '/secure/attestation'
+						route: '/secure/attestations'
 					},
 					{
 						label: 'navigation.logout',
@@ -85,23 +80,14 @@
 	}
 </script>
 
-<div class="flex h-screen flex-col overflow-hidden">
-	<AppHeader
-		isAuthenticated={showAuthBadge}
-		initials={finalInitials}
-		profileNavRoute="/secure/identity-profile"
-	/>
-	<div class="mt-16 flex h-full w-full overflow-hidden sm:mt-20">
-		<div
-			class="dark:bg-cosmic-indigo flex h-full w-16 flex-col place-content-between overflow-y-auto bg-neutral-50 md:w-64"
-		>
-			<AppSidebar groups={sidebarGroups} />
-		</div>
-		<div class="dark:bg-cosmic-indigo flex h-full flex-1 flex-col overflow-auto bg-white p-6">
-			<slot></slot>
-		</div>
-	</div>
-	<AppFooter>
-		<ServerStatus slot="start" />
-	</AppFooter>
-</div>
+<AppLayout
+	{sidebarGroups}
+	isAuthenticated={showAuthBadge}
+	initials={finalInitials}
+	profileNavRoute="/secure/identity-profile"
+	serverHealthStatus={$serverHealthStatus}
+	serverName={$serverName}
+	serverVersion={$serverVersion}
+>
+	<slot></slot>
+</AppLayout>

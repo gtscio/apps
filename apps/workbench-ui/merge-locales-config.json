@@ -46,6 +46,7 @@
 		"@twin.org/wallet-models",
 		"@twin.org/wallet-connector-entity-storage",
 		"@twin.org/wallet-connector-iota",
-		"@twin.org/web"
+		"@twin.org/web",
+		"@twin.org/ui-components-svelte"
 	]
 }

@@ -42,7 +42,6 @@
 		<ValidatedForm
 			titleResource="pages.login.title"
 			actionButtonResource="pages.login.signIn"
-			actionButtonBusyResource="pages.login.signingIn"
 			validationMethod={validate}
 			actionMethod={action}
 			actionSuccessResource=""

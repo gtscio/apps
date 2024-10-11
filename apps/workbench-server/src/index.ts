@@ -8,8 +8,8 @@ import {
 	initialiseAttestationConnectorFactory,
 	initialiseAttestationService
 } from "./components/attestation.js";
-import { initialiseAuditableItemGraphService } from "./components/auditable-item-graph.js";
-import { initialiseAuditableItemStreamService } from "./components/auditable-item-stream.js";
+import { initialiseAuditableItemGraphService } from "./components/auditableItemGraph.js";
+import { initialiseAuditableItemStreamService } from "./components/auditableItemStream.js";
 import {
 	initialiseBlobStorageConnectorFactory,
 	initialiseBlobStorageService
@@ -37,6 +37,7 @@ import {
 	initialiseTelemetryConnectorFactory,
 	initialiseTelemetryService
 } from "./components/telemetry.js";
+import { initialiseUserEntityStorage } from "./components/userEntityStorage.js";
 import { initialiseVaultConnectorFactory } from "./components/vault.js";
 import { initialiseWalletConnectorFactory, initialiseWalletStorage } from "./components/wallet.js";
 import { configure, findRootPackageFolder } from "./configure.js";
@@ -99,6 +100,8 @@ try {
 
 	initialiseAuditableItemGraphService(context);
 	initialiseAuditableItemStreamService(context);
+
+	initialiseUserEntityStorage(context);
 
 	const processors = buildProcessors(context);
 

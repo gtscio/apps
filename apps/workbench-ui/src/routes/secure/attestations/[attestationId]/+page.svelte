@@ -7,4 +7,4 @@
 	const attestationId = $page.params.attestationId;
 </script>
 
-<AttestationView {attestationId} />
+<AttestationView {attestationId} showBack />

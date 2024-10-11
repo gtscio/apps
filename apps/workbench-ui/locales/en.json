@@ -8,18 +8,23 @@
 		"dashboard": "Dashboard",
 		"telemetry": "Telemetry",
 		"logging": "Logging",
-		"attestation": "Attestation",
+		"attestations": "Attestations",
 		"nft": "NFT"
 	},
-	"serverStatus": {
-		"api": "API",
-		"notConnected": "Not connected"
-	},
-	"footer": {
-		"copyrightOrg": "TWIN",
-		"language": "Language",
-		"colorTheme": "Color theme",
-		"selectLanguage": "Select language"
+	"components": {
+		"attestationView": {
+			"title": "Attestation",
+			"id": "Id",
+			"exploreNft": "Explore NFT",
+			"attestationQr": "Attestation QR Code",
+			"verified": "Verified",
+			"created": "Created",
+			"ownerIdentity": "Owner Identity",
+			"transferred": "Transferred",
+			"holderIdentity": "Holder Identity",
+			"attestationObject": "Attestation Object",
+			"proof": "Proof"
+		}
 	},
 	"pages": {
 		"login": {
@@ -50,8 +55,15 @@
 			"explore": "Explore",
 			"didDocument": "DID Document"
 		},
-		"attestation": {
-			"title": "Attestation",
+		"attestations": {
+			"title": "Attestations",
+			"loading": "Loading attestations...",
+			"noAttestations": "No attestations found",
+			"addAttestation": "Add Attestation"
+		},
+		"attestationAdd": {
+			"title": "Add Attestation",
+			"description": "Description",
 			"filename": "Filename",
 			"assertionMethod": "Assertion Method",
 			"selectAssertionMethod": "Select assertion method",
@@ -61,24 +73,10 @@
 			"attestationQr": "Attestation QR Code",
 			"signature": "Signature",
 			"attest": "Attest",
-			"attesting": "Attesting...",
 			"attestSuccess": "Attestation was successful",
 			"progressUploading": "Uploading document to storage",
 			"progressAttesting": "Attesting the document",
 			"resultTitle": "Attestation Result"
-		},
-		"attestationPublic": {
-			"title": "Attestation",
-			"id": "Id",
-			"exploreNft": "Explore NFT",
-			"attestationQr": "Attestation QR Code",
-			"verified": "Verified",
-			"created": "Created",
-			"ownerIdentity": "Owner Identity",
-			"transferred": "Transferred",
-			"holderIdentity": "Holder Identity",
-			"attestationObject": "Attestation Object",
-			"proof": "Proof"
 		},
 		"blob": {
 			"title": "Blob Storage",
@@ -88,15 +86,9 @@
 			"mimeType": "MIME Type",
 			"document": "Document",
 			"download": "Download"
-		},
-		"error": {
-			"title": "Error",
-			"notFound": "The requested page could not be found"
 		}
 	},
 	"actions": {
-		"save": "Save",
-		"saving": "Saving...",
-		"saveSuccess": "Saved successfully"
+		"back": "Back"
 	}
 }
