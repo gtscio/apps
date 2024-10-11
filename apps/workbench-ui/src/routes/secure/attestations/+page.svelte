@@ -30,7 +30,9 @@
 		status = $i18n('pages.attestations.loading');
 		isBusy = true;
 		isError = false;
-		const result = await attestationsList(cursorStack[cursorStackIndex]);
+		const result = await attestationsList(
+			cursorStack[cursorStackIndex]?.startsWith('@') ? undefined : cursorStack[cursorStackIndex]
+		);
 
 		if (Is.stringValue(result?.error)) {
 			isError = true;

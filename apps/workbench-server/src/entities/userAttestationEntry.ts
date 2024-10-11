@@ -28,12 +28,12 @@ export class UserAttestationEntry {
 	/**
 	 * The node identity it was created with.
 	 */
-	@property({ type: "string" })
+	@property({ type: "string", isSecondary: true })
 	public nodeIdentity?: string;
 
 	/**
 	 * The user identity who created it.
 	 */
-	@property({ type: "string" })
+	@property({ type: "string", isSecondary: true })
 	public userIdentity?: string;
 }
