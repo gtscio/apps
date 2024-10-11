@@ -32,7 +32,7 @@ export async function attestationsList(cursor?: string): Promise<
 > {
 	if (Is.object(attestationsClient)) {
 		try {
-			const result = await attestationsClient.query(undefined, undefined, undefined, cursor, 2);
+			const result = await attestationsClient.query(undefined, undefined, undefined, cursor);
 			return {
 				entities: result.entities as IUserAttestationEntry[],
 				cursor: result.cursor

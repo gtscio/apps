@@ -14,3 +14,4 @@ vitest.config.ts.timestamp*
 **/test-results
 .vercel
 .env
+.vercel
