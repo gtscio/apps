@@ -111,7 +111,7 @@ export function initialiseBlobStorageConnectorFactory(context: IWorkbenchContext
 				accountName: context.envVars.WORKBENCH_AZURE_ACCOUNT_NAME,
 				accountKey: context.envVars.WORKBENCH_AZURE_ACCOUNT_KEY,
 				containerName: `${context.envVars.WORKBENCH_AZURE_CONTAINER_PREFIX}${context.envVars.WORKBENCH_AZURE_CONTAINER}`,
-				endpoint: context.envVars.WORKBENCH_GCP_API_ENDPOINT
+				endpoint: context.envVars.WORKBENCH_AZURE_ENDPOINT
 			}
 		});
 		namespace = AzureBlobStorageConnector.NAMESPACE;
