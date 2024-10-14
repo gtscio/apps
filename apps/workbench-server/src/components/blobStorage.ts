@@ -1,7 +1,10 @@
 // Copyright 2024 IOTA Stiftung.
 // SPDX-License-Identifier: Apache-2.0.
 import path from "node:path";
+import { S3BlobStorageConnector } from "@twin.org/blob-storage-connector-aws-s3";
+import { AzureBlobStorageConnector } from "@twin.org/blob-storage-connector-azure";
 import { FileBlobStorageConnector } from "@twin.org/blob-storage-connector-file";
+import { GcpBlobStorageConnector } from "@twin.org/blob-storage-connector-gcp";
 import { IpfsBlobStorageConnector } from "@twin.org/blob-storage-connector-ipfs";
 import { MemoryBlobStorageConnector } from "@twin.org/blob-storage-connector-memory";
 import {
@@ -81,6 +84,37 @@ export function initialiseBlobStorageConnectorFactory(context: IWorkbenchContext
 	} else if (type === "memory") {
 		connector = new MemoryBlobStorageConnector();
 		namespace = MemoryBlobStorageConnector.NAMESPACE;
+	} else if (type === "aws") {
+		connector = new S3BlobStorageConnector({
+			config: {
+				accessKeyId: context.envVars.WORKBENCH_S3_ACCESS_KEY_ID,
+				secretAccessKey: context.envVars.WORKBENCH_S3_SECRET_ACCESS_KEY,
+				region: context.envVars.WORKBENCH_S3_REGION,
+				bucketName: `${context.envVars.WORKBENCH_S3_BUCKET_PREFIX}${context.envVars.WORKBENCH_S3_BUCKET}`,
+				endpoint: context.envVars.WORKBENCH_S3_ENDPOINT
+			}
+		});
+		namespace = S3BlobStorageConnector.NAMESPACE;
+	} else if (type === "gcp") {
+		connector = new GcpBlobStorageConnector({
+			config: {
+				projectId: context.envVars.WORKBENCH_GCP_PROJECT_ID,
+				credentials: context.envVars.WORKBENCH_GCP_CREDENTIALS,
+				bucketName: `${context.envVars.WORKBENCH_GCP_BUCKET_PREFIX}${context.envVars.WORKBENCH_GCP_BUCKET}`,
+				apiEndpoint: context.envVars.WORKBENCH_GCP_API_ENDPOINT
+			}
+		});
+		namespace = GcpBlobStorageConnector.NAMESPACE;
+	} else if (type === "azure") {
+		connector = new AzureBlobStorageConnector({
+			config: {
+				accountName: context.envVars.WORKBENCH_AZURE_ACCOUNT_NAME,
+				accountKey: context.envVars.WORKBENCH_AZURE_ACCOUNT_KEY,
+				containerName: `${context.envVars.WORKBENCH_AZURE_CONTAINER_PREFIX}${context.envVars.WORKBENCH_AZURE_CONTAINER}`,
+				endpoint: context.envVars.WORKBENCH_GCP_API_ENDPOINT
+			}
+		});
+		namespace = AzureBlobStorageConnector.NAMESPACE;
 	} else {
 		throw new GeneralError("Workbench", "serviceUnknownType", {
 			type,
