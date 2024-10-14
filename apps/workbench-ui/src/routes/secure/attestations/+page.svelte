@@ -3,19 +3,25 @@
 	// SPDX-License-Identifier: Apache-2.0.
 	import { goto } from '$app/navigation';
 	import { Is } from '@twin.org/core';
-	import { Button, Heading, i18n, Spinner, P } from '@twin.org/ui-components-svelte';
 	import {
+		Button,
+		Heading,
+		i18n,
+		Spinner,
+		P,
 		Table,
 		TableBody,
 		TableBodyCell,
 		TableBodyRow,
 		TableHead,
-		TableHeadCell
-	} from 'flowbite-svelte';
-	import { EyeOutline } from 'flowbite-svelte-icons';
+		TableHeadCell,
+		ModalYesNo,
+		Pagination
+	} from '@twin.org/ui-components-svelte';
+	import { EyeSolid, TrashBinSolid } from 'flowbite-svelte-icons';
 	import { onMount } from 'svelte';
 	import type { IUserAttestationEntry } from '$models/IUserAttestationEntry';
-	import { attestationsList } from '$stores/attestations';
+	import { attestationsList, attestationsRemove } from '$stores/attestations';
 
 	let attestations: IUserAttestationEntry[] | undefined;
 	const cursorStack: string[] = ['@start'];
@@ -25,6 +31,7 @@
 	let isError = false;
 	let canGoBackwards = true;
 	let canGoForwards = true;
+	let confirmationId: string = '';
 
 	async function loadData(): Promise<void> {
 		status = $i18n('pages.attestations.loading');
@@ -66,6 +73,22 @@
 		await loadData();
 	}
 
+	async function removePrompt(id: string): Promise<void> {
+		confirmationId = id;
+	}
+
+	async function removeCancel(): Promise<void> {
+		confirmationId = '';
+	}
+
+	async function remove(): Promise<void> {
+		if (Is.stringValue(confirmationId)) {
+			await attestationsRemove(confirmationId);
+			await loadData();
+			confirmationId = '';
+		}
+	}
+
 	onMount(async () => {
 		await loadData();
 	});
@@ -88,46 +111,39 @@
 	</div>
 
 	{#if Is.arrayValue(attestations)}
-		<div class="w-full min-w-96 overflow-x-auto rounded-md border">
-			<Table>
-				<TableHead>
-					<TableHeadCell>Description</TableHeadCell>
-					<TableHeadCell>Date Created</TableHeadCell>
-					<TableHeadCell>Actions</TableHeadCell>
-				</TableHead>
-				<TableBody>
-					{#each attestations as attestation}
-						<TableBodyRow>
-							<TableBodyCell class="whitespace-normal break-all"
-								>{attestation.description}</TableBodyCell
-							>
-							<TableBodyCell>{new Date(attestation.dateCreated).toLocaleString()}</TableBodyCell>
-							<TableBodyCell
-								><Button
-									size="xs"
-									outline
-									on:click={() => goto(`/secure/attestations/${attestation.id}`)}
-									><EyeOutline /></Button
-								></TableBodyCell
-							>
-						</TableBodyRow>
-					{/each}
-				</TableBody>
-			</Table>
-		</div>
-		<div class="flex flex-row gap-2">
-			<Button
-				outline
-				size="xs"
-				disabled={!canGoBackwards || isBusy}
-				on:click={async () => loadPrevious()}>Previous</Button
-			>
-			<Button
-				outline
-				size="xs"
-				disabled={!canGoForwards || isBusy}
-				on:click={async () => loadNext()}>Next</Button
-			>
-		</div>
+		<Table>
+			<TableHead>
+				<TableHeadCell>Description</TableHeadCell>
+				<TableHeadCell>Date Created</TableHeadCell>
+				<TableHeadCell>Actions</TableHeadCell>
+			</TableHead>
+			<TableBody>
+				{#each attestations as attestation}
+					<TableBodyRow>
+						<TableBodyCell class="whitespace-normal break-all"
+							>{attestation.description}</TableBodyCell
+						>
+						<TableBodyCell>{new Date(attestation.dateCreated).toLocaleString()}</TableBodyCell>
+						<TableBodyCell class="flex flex-row gap-2"
+							><Button
+								size="xs"
+								outline
+								on:click={() => goto(`/secure/attestations/${attestation.id}`)}><EyeSolid /></Button
+							><Button size="xs" outline on:click={async () => removePrompt(attestation.id)}
+								><TrashBinSolid /></Button
+							></TableBodyCell
+						>
+					</TableBodyRow>
+				{/each}
+			</TableBody>
+		</Table>
+		<Pagination {loadNext} {loadPrevious} {canGoBackwards} {canGoForwards} disabled={isBusy} />
+		<ModalYesNo
+			title={$i18n('pages.attestations.deleteTitle')}
+			open={Is.stringValue(confirmationId)}
+			message={$i18n('pages.attestations.deleteMessage')}
+			yesAction={async () => remove()}
+			noAction={async () => removeCancel()}
+		/>
 	{/if}
 </section>

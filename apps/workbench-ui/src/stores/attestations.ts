@@ -67,3 +67,26 @@ export async function attestationsAdd(entry: IUserAttestationEntry): Promise<
 		}
 	}
 }
+
+/**
+ * Remove an entry to the list of the attestations.
+ * @param entryId The id of entry to remove.
+ * @returns The nothing unless there was an error.
+ */
+export async function attestationsRemove(entryId: string): Promise<
+	| {
+			error?: string;
+	  }
+	| undefined
+> {
+	if (Is.object(attestationsClient)) {
+		try {
+			await attestationsClient.remove(entryId);
+			return {};
+		} catch (err) {
+			return {
+				error: ErrorHelper.formatErrors(err).join("\n")
+			};
+		}
+	}
+}
