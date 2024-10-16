@@ -1,6 +1,7 @@
 <script lang="ts">
 	// Copyright 2024 IOTA Stiftung.
 	// SPDX-License-Identifier: Apache-2.0.
+	import { goto } from '$app/navigation';
 	import { page } from '$app/stores';
 	import { Converter, Is, ObjectHelper } from '@twin.org/core';
 	import type { IJsonLdNodeObject } from '@twin.org/data-json-ld';
@@ -21,8 +22,8 @@
 	import { blobStorageGet, createDownloadLink } from '$stores/blobStorage';
 
 	const id = $page.params.id;
-	let mimeType: string | undefined;
-	let extension: string | undefined;
+	let encodingFormat: string | undefined;
+	let fileExtension: string | undefined;
 	let metadata: IJsonLdNodeObject | undefined;
 	let filename: string | undefined;
 	let blobInlineUrl: string;
@@ -37,20 +38,22 @@
 		if (Is.stringValue(result?.error)) {
 			error = result.error;
 		} else {
-			mimeType = result?.mimeType;
-			extension = result?.extension;
-			metadata = result?.metadata;
+			encodingFormat = result?.data?.encodingFormat;
+			fileExtension = result?.data?.fileExtension;
+			metadata = result?.data?.metadata;
 			blobDownloadUrl = createDownloadLink(id, true);
 
-			const graph = ObjectHelper.propertyGet(metadata, '@graph');
-			if (Is.array(graph) && graph.length > 0) {
-				filename = ObjectHelper.propertyGet(graph[0], 'name');
-			}
+			filename = ObjectHelper.propertyGet(metadata, 'name');
 
-			if (Is.stringValue(mimeType) && (mimeType.includes('text') || mimeType.includes('xml'))) {
+			if (
+				Is.stringValue(encodingFormat) &&
+				(encodingFormat.includes('text') || encodingFormat.includes('xml'))
+			) {
 				const resultWithContent = await blobStorageGet(id, true);
-				if (Is.uint8Array(resultWithContent?.blob)) {
-					includeText = Converter.bytesToUtf8(resultWithContent?.blob);
+				if (Is.stringValue(resultWithContent?.data?.blob)) {
+					includeText = Converter.bytesToUtf8(
+						Converter.base64ToBytes(resultWithContent?.data?.blob)
+					);
 				}
 			} else {
 				blobInlineUrl = createDownloadLink(id, false);
@@ -62,7 +65,7 @@
 	function downloadDocument(): void {
 		const a = document.createElement('a');
 		a.href = blobDownloadUrl;
-		a.download = filename ?? `document.${extension ?? 'bin'}`;
+		a.download = filename ?? `document.${fileExtension ?? 'bin'}`;
 		a.click();
 	}
 	function openDocument(): void {
@@ -94,21 +97,21 @@
 						<LabelledValue>{filename}</LabelledValue>
 					</Label>
 				{/if}
-				{#if Is.stringValue(extension)}
+				{#if Is.stringValue(fileExtension)}
 					<Label>
 						{$i18n('pages.blob.extension')}
-						<LabelledValue>{extension}</LabelledValue>
+						<LabelledValue>{fileExtension}</LabelledValue>
 					</Label>
 				{/if}
-				{#if Is.stringValue(mimeType)}
+				{#if Is.stringValue(encodingFormat)}
 					<Label>
 						{$i18n('pages.blob.mimeType')}
-						<LabelledValue>{mimeType}</LabelledValue>
+						<LabelledValue>{encodingFormat}</LabelledValue>
 					</Label>
 				{/if}
 			</div>
 			<QR
-				qrData={createPrivateUrl(`blob/${id}`)}
+				qrData={createPrivateUrl(`blobs/${id}`)}
 				labelResource="pages.identityProfile.qr"
 				dimensions={128}
 			/>
@@ -140,4 +143,7 @@
 			</div>
 		{/if}
 	{/if}
+	<div class="flex flex-row gap-2">
+		<Button on:click={() => goto('/secure/blobs')}>{$i18n('actions.back')}</Button>
+	</div>
 </Card>

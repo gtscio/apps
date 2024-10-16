@@ -4,6 +4,7 @@
 	import { Is, ObjectHelper } from '@twin.org/core';
 	import { AppLayout, type ISideBarGroup } from '@twin.org/ui-components-svelte';
 	import {
+		FileSolid,
 		LockOpenSolid,
 		LockSolid,
 		ShieldCheckSolid,
@@ -28,6 +29,11 @@
 						label: 'navigation.dashboard',
 						icon: SwatchbookSolid,
 						route: '/secure/dashboard'
+					},
+					{
+						label: 'navigation.blobs',
+						icon: FileSolid,
+						route: '/secure/blobs'
 					},
 					{
 						label: 'navigation.attestations',

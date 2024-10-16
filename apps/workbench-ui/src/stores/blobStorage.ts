@@ -1,5 +1,6 @@
 // Copyright 2024 IOTA Stiftung.
 // SPDX-License-Identifier: Apache-2.0.
+import type { IBlobStorageEntry } from "@twin.org/blob-storage-models";
 import { BlobStorageClient } from "@twin.org/blob-storage-rest-client";
 import { Converter, ErrorHelper, Is } from "@twin.org/core";
 import type { IJsonLdNodeObject } from "@twin.org/data-json-ld";
@@ -65,10 +66,7 @@ export async function blobStorageGet(
 ): Promise<
 	| {
 			error?: string;
-			mimeType?: string;
-			extension?: string;
-			metadata?: IJsonLdNodeObject;
-			blob?: Uint8Array;
+			data?: IBlobStorageEntry;
 	  }
 	| undefined
 > {
@@ -76,11 +74,56 @@ export async function blobStorageGet(
 		try {
 			const result = await blobStorageClient.get(id, includeContent);
 			return {
-				mimeType: result.mimeType,
-				extension: result.extension,
-				metadata: result.metadata,
-				blob: Is.stringBase64(result.blob) ? Converter.base64ToBytes(result.blob) : undefined
+				data: result
 			};
+		} catch (err) {
+			return {
+				error: ErrorHelper.formatErrors(err).join("\n")
+			};
+		}
+	}
+}
+
+/**
+ * Get a list of the blob storage items.
+ * @param cursor The cursor to use for pagination.
+ * @returns The list of blob storage items.
+ */
+export async function blobStorageList(cursor?: string): Promise<
+	| {
+			error?: string;
+			entries?: IBlobStorageEntry[];
+			cursor?: string;
+	  }
+	| undefined
+> {
+	if (Is.object(blobStorageClient)) {
+		try {
+			const result = await blobStorageClient.query(undefined, undefined, cursor);
+			return result;
+		} catch (err) {
+			return {
+				error: ErrorHelper.formatErrors(err).join("\n")
+			};
+		}
+	}
+}
+
+/**
+ * Remove an entry to the list of the blob storage entries.
+ * @param entryId The id of entry to remove.
+ * @returns The nothing unless there was an error.
+ */
+export async function blobStorageRemove(entryId: string): Promise<
+	| {
+			error?: string;
+	  }
+	| undefined
+> {
+	if (Is.object(blobStorageClient)) {
+		try {
+			await blobStorageClient.remove(entryId);
+			return {};
 		} catch (err) {
 			return {
 				error: ErrorHelper.formatErrors(err).join("\n")

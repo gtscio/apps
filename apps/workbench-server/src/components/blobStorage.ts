@@ -12,7 +12,7 @@ import {
 	type IBlobStorageConnector
 } from "@twin.org/blob-storage-models";
 import {
-	type BlobMetadata,
+	type BlobStorageEntry,
 	BlobStorageService,
 	initSchema as initSchemaBlobStorage
 } from "@twin.org/blob-storage-service";
@@ -36,7 +36,7 @@ export function initialiseBlobStorageService(context: IWorkbenchContext): void {
 	initialiseEntityStorageConnector(
 		context,
 		context.envVars.WORKBENCH_BLOB_STORAGE_METADATA_ENTITY_STORAGE_TYPE,
-		nameof<BlobMetadata>()
+		nameof<BlobStorageEntry>()
 	);
 
 	const enableBlobEncryption =

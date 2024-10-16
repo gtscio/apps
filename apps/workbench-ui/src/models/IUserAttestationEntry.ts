@@ -6,12 +6,12 @@
  */
 export interface IUserAttestationEntry {
 	/**
-	 * The id for the attestation.
+	 * The id for the entry.
 	 */
 	id: string;
 
 	/**
-	 * The description for the attestation.
+	 * The description for the entry.
 	 */
 	description: string;
 

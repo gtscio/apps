@@ -4,14 +4,14 @@ import { ErrorHelper, Is } from "@twin.org/core";
 import { EntityStorageClient } from "@twin.org/entity-storage-rest-client";
 import type { IUserAttestationEntry } from "$models/IUserAttestationEntry";
 
-let attestationsClient: EntityStorageClient<IUserAttestationEntry> | undefined;
+let userAttestationEntryClient: EntityStorageClient<IUserAttestationEntry> | undefined;
 
 /**
  * Initialize the attestations.
  * @param apiUrl The API url.
  */
 export async function init(apiUrl: string): Promise<void> {
-	attestationsClient = new EntityStorageClient<IUserAttestationEntry>({
+	userAttestationEntryClient = new EntityStorageClient<IUserAttestationEntry>({
 		endpoint: apiUrl,
 		pathPrefix: "user-attestation"
 	});
@@ -22,7 +22,7 @@ export async function init(apiUrl: string): Promise<void> {
  * @param cursor The cursor to use for pagination.
  * @returns The list of attestations.
  */
-export async function attestationsList(cursor?: string): Promise<
+export async function attestationEntryList(cursor?: string): Promise<
 	| {
 			error?: string;
 			entities?: IUserAttestationEntry[];
@@ -30,9 +30,14 @@ export async function attestationsList(cursor?: string): Promise<
 	  }
 	| undefined
 > {
-	if (Is.object(attestationsClient)) {
+	if (Is.object(userAttestationEntryClient)) {
 		try {
-			const result = await attestationsClient.query(undefined, undefined, undefined, cursor);
+			const result = await userAttestationEntryClient.query(
+				undefined,
+				undefined,
+				undefined,
+				cursor
+			);
 			return {
 				entities: result.entities as IUserAttestationEntry[],
 				cursor: result.cursor
@@ -50,15 +55,15 @@ export async function attestationsList(cursor?: string): Promise<
  * @param entry The entry to add.
  * @returns The nothing unless there was an error.
  */
-export async function attestationsAdd(entry: IUserAttestationEntry): Promise<
+export async function attestationsEntryAdd(entry: IUserAttestationEntry): Promise<
 	| {
 			error?: string;
 	  }
 	| undefined
 > {
-	if (Is.object(attestationsClient)) {
+	if (Is.object(userAttestationEntryClient)) {
 		try {
-			await attestationsClient.set(entry);
+			await userAttestationEntryClient.set(entry);
 			return {};
 		} catch (err) {
 			return {
@@ -73,15 +78,15 @@ export async function attestationsAdd(entry: IUserAttestationEntry): Promise<
  * @param entryId The id of entry to remove.
  * @returns The nothing unless there was an error.
  */
-export async function attestationsRemove(entryId: string): Promise<
+export async function attestationsEntryRemove(entryId: string): Promise<
 	| {
 			error?: string;
 	  }
 	| undefined
 > {
-	if (Is.object(attestationsClient)) {
+	if (Is.object(userAttestationEntryClient)) {
 		try {
-			await attestationsClient.remove(entryId);
+			await userAttestationEntryClient.remove(entryId);
 			return {};
 		} catch (err) {
 			return {
