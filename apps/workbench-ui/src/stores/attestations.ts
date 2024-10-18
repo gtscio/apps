@@ -25,7 +25,7 @@ export async function init(apiUrl: string): Promise<void> {
 export async function attestationEntryList(cursor?: string): Promise<
 	| {
 			error?: string;
-			entities?: IUserAttestationEntry[];
+			items?: IUserAttestationEntry[];
 			cursor?: string;
 	  }
 	| undefined
@@ -36,10 +36,11 @@ export async function attestationEntryList(cursor?: string): Promise<
 				undefined,
 				undefined,
 				undefined,
+				undefined,
 				cursor
 			);
 			return {
-				entities: result.entities as IUserAttestationEntry[],
+				items: result.entities as IUserAttestationEntry[],
 				cursor: result.cursor
 			};
 		} catch (err) {
@@ -55,7 +56,7 @@ export async function attestationEntryList(cursor?: string): Promise<
  * @param entry The entry to add.
  * @returns The nothing unless there was an error.
  */
-export async function attestationsEntryAdd(entry: IUserAttestationEntry): Promise<
+export async function attestationsEntryCreate(entry: IUserAttestationEntry): Promise<
 	| {
 			error?: string;
 	  }

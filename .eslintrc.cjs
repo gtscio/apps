@@ -740,6 +740,8 @@ module.exports = {
 				parser: '@typescript-eslint/parser'
 			},
 			rules: {
+				'no-undef-init': ['off'],
+				'unicorn/no-useless-undefined': ['off'],
 				'no-unused-vars': ['off'],
 				'max-len': ['off'],
 				'no-inner-declarations': ['off'],

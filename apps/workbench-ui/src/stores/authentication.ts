@@ -6,7 +6,9 @@ import { ErrorHelper, Is } from "@twin.org/core";
 import { persistent } from "@twin.org/ui-components-svelte";
 import { get, writable } from "svelte/store";
 
-export const isAuthenticated = writable<boolean | undefined>();
+export const authenticationState = writable<"initializing" | "not-authenticated" | "authenticated">(
+	"initializing"
+);
 const authenticationExpiry = persistent<number>("auth-expiry", 0);
 
 let authenticationClient: EntityStorageAuthenticationClient | undefined;
@@ -17,6 +19,7 @@ let intervalId: NodeJS.Timeout | undefined;
  * @param apiUrl The API url.
  */
 export async function init(apiUrl: string): Promise<void> {
+	authenticationState.set("initializing");
 	authenticationClient = new EntityStorageAuthenticationClient({
 		endpoint: apiUrl
 	});
@@ -34,8 +37,8 @@ export async function init(apiUrl: string): Promise<void> {
 		setAsLoggedOut();
 	}
 
-	isAuthenticated.subscribe(async value => {
-		if (value) {
+	authenticationState.subscribe(async value => {
+		if (value === "authenticated") {
 			// We are authenticated, start the token refresh.
 			await startTokenRefresh();
 		} else {
@@ -50,8 +53,7 @@ export async function init(apiUrl: string): Promise<void> {
  * @param url The url to redirect to on successful authentication.
  */
 export function checkAuth(url: URL): void {
-	const authenticated = get(isAuthenticated);
-	if (!authenticated) {
+	if (get(authenticationState) === "not-authenticated") {
 		redirect(307, `/?returnUrl=${url.pathname}`);
 	}
 }
@@ -69,7 +71,7 @@ export async function login(emailAddress: string, password: string): Promise<str
 			// from the login method, just capture the expiry time
 			const result = await authenticationClient.login(emailAddress, password);
 			authenticationExpiry.set(result.expiry);
-			isAuthenticated.set(true);
+			authenticationState.set("authenticated");
 		} catch (err) {
 			setAsLoggedOut();
 			return ErrorHelper.formatErrors(err).join("\n");
@@ -102,7 +104,7 @@ export async function refresh(): Promise<void> {
 			// intermittently refresh the token to keep the session alive
 			const result = await authenticationClient.refresh();
 			authenticationExpiry.set(result.expiry);
-			isAuthenticated.set(true);
+			authenticationState.set("authenticated");
 		} catch {
 			setAsLoggedOut();
 		}
@@ -113,7 +115,7 @@ export async function refresh(): Promise<void> {
  * Set the user as logged out.
  */
 function setAsLoggedOut(): void {
-	isAuthenticated.set(false);
+	authenticationState.set("not-authenticated");
 	authenticationExpiry.set(0);
 }
 

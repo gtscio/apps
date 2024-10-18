@@ -92,15 +92,18 @@ export async function blobStorageGet(
 export async function blobStorageList(cursor?: string): Promise<
 	| {
 			error?: string;
-			entries?: IBlobStorageEntry[];
+			items?: IBlobStorageEntry[];
 			cursor?: string;
 	  }
 	| undefined
 > {
 	if (Is.object(blobStorageClient)) {
 		try {
-			const result = await blobStorageClient.query(undefined, undefined, cursor);
-			return result;
+			const result = await blobStorageClient.query(undefined, undefined, undefined, cursor);
+			return {
+				items: result.entries,
+				cursor: result.cursor
+			};
 		} catch (err) {
 			return {
 				error: ErrorHelper.formatErrors(err).join("\n")

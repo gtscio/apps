@@ -4,7 +4,7 @@ import { BaseError, ErrorHelper, Is, NotFoundError, ObjectHelper } from "@twin.o
 import { IdentityProfileClient } from "@twin.org/identity-rest-client";
 import type { Person, WithContext } from "schema-dts";
 import { get, writable } from "svelte/store";
-import { isAuthenticated } from "./authentication";
+import { authenticationState } from "./authentication";
 
 export const profileIdentity = writable<string>("");
 export const publicProfile = writable<WithContext<Person> | undefined>();
@@ -21,8 +21,8 @@ export async function init(apiUrl: string): Promise<void> {
 		endpoint: apiUrl
 	});
 
-	isAuthenticated.subscribe(async value => {
-		if (value) {
+	authenticationState.subscribe(async value => {
+		if (value === "authenticated") {
 			await profileGet();
 		} else {
 			profileIdentity.set("");

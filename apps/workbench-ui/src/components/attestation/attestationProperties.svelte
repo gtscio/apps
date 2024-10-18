@@ -21,48 +21,51 @@
 	import type { IDocumentAttestation } from '$models/IDocumentAttestation';
 	import { createPublicUrl } from '$stores/app';
 	import { attestationCreate } from '$stores/attestation';
-	import { attestationsEntryAdd } from '$stores/attestations';
+	import { attestationsEntryCreate } from '$stores/attestations';
 	import { blobStorageGet, blobStorageList } from '$stores/blobStorage';
 	import { identityGetPublic } from '$stores/identity';
 	import { profileIdentity } from '$stores/identityProfile';
 
+	export let returnUrl: string;
 	let validationErrors: {
 		[field in 'blobId' | 'assertionMethod']?: IValidationFailure[] | undefined;
 	} = {};
-	let isBusy = false;
+	let busy = false;
 	let signature: string | undefined;
 	let progress: string | undefined;
+	let itemId: string | undefined;
 	let assertionMethods: { value: string; name: string }[] = [];
 	let assertionMethod: string = '';
 	let blobNames: { value: string; name: string }[] = [];
 	let blobId: string | undefined;
-	let attestationId: string | undefined;
 
 	async function validate(validationFailures: IValidationFailure[]): Promise<void> {
 		Validation.notEmpty(
 			'blobId',
 			Is.stringValue(assertionMethod) ? assertionMethod : undefined,
 			validationFailures,
-			$i18n('pages.attestationAdd.blob')
+			$i18n('pages.attestationProperties.blob')
 		);
 
 		Validation.notEmpty(
 			'assertionMethod',
 			Is.stringValue(assertionMethod) ? assertionMethod : undefined,
 			validationFailures,
-			$i18n('pages.attestationAdd.assertionMethod')
+			$i18n('pages.attestationProperties.assertionMethod')
 		);
 	}
 
 	async function close(): Promise<void> {
-		await goto('/secure/attestations');
+		await goto(returnUrl);
 	}
 
 	async function action(): Promise<string | undefined> {
 		signature = undefined;
-		attestationId = undefined;
+		itemId = undefined;
 
 		if (Is.stringValue(blobId)) {
+			progress = $i18n('pages.attestationProperties.progress');
+
 			const resultBlob = await blobStorageGet(blobId, true);
 			if (Is.stringValue(resultBlob?.error)) {
 				return resultBlob?.error;
@@ -80,19 +83,19 @@
 				signature
 			};
 
-			progress = $i18n('pages.attestationAdd.progressAttesting');
-
-			const resultAttestation = await attestationCreate(assertionMethod, data);
-			if (Is.stringValue(resultAttestation?.error)) {
-				return resultAttestation?.error;
+			const result = await attestationCreate(assertionMethod, data);
+			if (Is.stringValue(result?.error)) {
+				return result?.error;
 			}
 
-			attestationId = resultAttestation?.attestationId;
+			itemId = result?.attestationId;
 
-			if (Is.stringValue(attestationId)) {
-				await attestationsEntryAdd({
-					id: attestationId,
-					description: $i18n('pages.attestationAdd.attestationOf', { blob: blobDescription }),
+			if (Is.stringValue(itemId)) {
+				await attestationsEntryCreate({
+					id: itemId,
+					description: $i18n('pages.attestationProperties.attestationOf', {
+						blob: blobDescription
+					}),
 					dateCreated: new Date().toISOString()
 				});
 			}
@@ -104,7 +107,7 @@
 	}
 
 	onMount(async () => {
-		isBusy = true;
+		busy = true;
 		const identity = await identityGetPublic($profileIdentity);
 
 		assertionMethods =
@@ -126,51 +129,51 @@
 
 		const blobsFirstPage = await blobStorageList();
 		blobNames =
-			blobsFirstPage?.entries?.map(blob => ({
+			blobsFirstPage?.items?.map(blob => ({
 				value: blob.id,
 				name: ObjectHelper.propertyGet(blob, 'metadata.name') ?? blob.id
 			})) ?? [];
 		if (blobNames.length > 0) {
 			blobId = blobNames[0].value;
 		}
-		isBusy = false;
+		busy = false;
 	});
 </script>
 
 <section class="flex flex-col items-start justify-center gap-5 lg:flex-row">
-	{#if !Is.stringValue(attestationId)}
+	{#if !Is.stringValue(itemId)}
 		<ValidatedForm
-			titleResource="pages.attestationAdd.title"
-			actionButtonResource="pages.attestationAdd.attest"
-			actionSuccessResource="pages.attestationAdd.attestSuccess"
+			title={$i18n('pages.attestationProperties.title')}
+			actionButtonLabel={$i18n('pages.attestationProperties.action')}
+			actionSuccessLabel={$i18n('pages.attestationProperties.actionSuccess')}
 			validationMethod={validate}
 			actionMethod={action}
 			closeMethod={close}
 			bind:validationErrors
-			bind:isBusy
+			bind:busy
 		>
 			<svelte:fragment slot="fields">
 				<Label>
-					{$i18n('pages.attestationAdd.blob')}
+					{$i18n('pages.attestationProperties.blob')}
 					<Select
 						name="blob"
-						placeholder={$i18n('pages.attestationAdd.selectBlob')}
+						placeholder={$i18n('pages.attestationProperties.selectBlob')}
 						items={blobNames}
 						color={Is.arrayValue(validationErrors.blobId) ? 'red' : 'base'}
 						bind:value={blobId}
-						disabled={isBusy}
+						disabled={busy}
 					></Select>
 					<ValidationError validationErrors={validationErrors.assertionMethod} />
 				</Label>
 				<Label>
-					{$i18n('pages.attestationAdd.assertionMethod')}
+					{$i18n('pages.attestationProperties.assertionMethod')}
 					<Select
 						name="assertionMethod"
-						placeholder={$i18n('pages.attestationAdd.selectAssertionMethod')}
+						placeholder={$i18n('pages.attestationProperties.selectAssertionMethod')}
 						items={assertionMethods}
 						color={Is.arrayValue(validationErrors.assertionMethod) ? 'red' : 'base'}
 						bind:value={assertionMethod}
-						disabled={isBusy}
+						disabled={busy}
 					></Select>
 					<ValidationError validationErrors={validationErrors.assertionMethod} />
 				</Label>
@@ -181,27 +184,26 @@
 				{/if}
 			</svelte:fragment>
 		</ValidatedForm>
-	{/if}
-	{#if Is.stringValue(attestationId)}
+	{:else}
 		<Card class="flex flex-col gap-5">
-			<Heading tag="h5">{$i18n('pages.attestationAdd.resultTitle')}</Heading>
+			<Heading tag="h5">{$i18n('pages.attestationProperties.resultTitle')}</Heading>
 			{#if Is.stringValue(signature)}
 				<Label>
-					{$i18n('pages.attestationAdd.signature')}
+					{$i18n('pages.attestationProperties.signature')}
 					<LabelledValue>{signature}</LabelledValue>
 				</Label>
 			{/if}
-			{#if Is.stringValue(attestationId)}
+			{#if Is.stringValue(itemId)}
 				<Label>
-					{$i18n('pages.attestationAdd.attestationId')}
-					<LabelledValue>{attestationId}</LabelledValue>
+					{$i18n('pages.attestationProperties.attestationId')}
+					<LabelledValue>{itemId}</LabelledValue>
 				</Label>
 				<Label>
-					{$i18n('pages.attestationAdd.attestationQr')}
+					{$i18n('pages.attestationProperties.attestationQr')}
 					<QR
 						class="mt-2"
-						qrData={createPublicUrl(`attestation/${attestationId}`)}
-						labelResource="pages.attestationAdd.attestationQr"
+						qrData={createPublicUrl(`attestation/${itemId}`)}
+						label={$i18n('pages.attestationProperties.attestationQr')}
 						dimensions={128}
 					/>
 				</Label>

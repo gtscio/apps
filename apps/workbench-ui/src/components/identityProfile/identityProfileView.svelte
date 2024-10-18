@@ -1,7 +1,6 @@
 <script lang="ts">
 	// Copyright 2024 IOTA Stiftung.
 	// SPDX-License-Identifier: Apache-2.0.
-	import { page } from '$app/stores';
 	import { Is, ObjectHelper, Urn } from '@twin.org/core';
 	import type { IDidDocument } from '@twin.org/standards-w3c-did';
 	import {
@@ -23,23 +22,23 @@
 	import { profileGetPublic } from '$stores/identityProfile';
 	import { createExplorerIdentityUrl } from '$stores/iota';
 
-	const identity = $page.params.identity;
+	export let itemId: string;
 	let error: string;
 	let didDocument: IDidDocument | undefined;
-	let isBusy = true;
+	let busy = true;
 	let exploreUrl: string | undefined;
 	let displayName: string | undefined;
 	let schema: string | undefined;
 
-	const urn = Urn.fromValidString(identity);
+	const urn = Urn.fromValidString(itemId);
 	if (urn.namespaceMethod() === 'iota') {
-		exploreUrl = createExplorerIdentityUrl(identity);
+		exploreUrl = createExplorerIdentityUrl(itemId);
 	}
 
 	onMount(async () => {
 		error = '';
 
-		const resultProfile = await profileGetPublic(identity);
+		const resultProfile = await profileGetPublic(itemId);
 		if (Is.stringValue(resultProfile?.error)) {
 			error = resultProfile.error;
 		} else {
@@ -49,13 +48,13 @@
 			displayName = ObjectHelper.propertyGet<string>(resultProfile?.profile, 'name');
 		}
 
-		const resultIdentity = await identityGetPublic(identity);
+		const resultIdentity = await identityGetPublic(itemId);
 		if (Is.stringValue(resultIdentity?.error)) {
 			error += resultIdentity.error;
 		} else {
 			didDocument = resultIdentity?.document;
 		}
-		isBusy = false;
+		busy = false;
 	});
 
 	function openExplorer(): void {
@@ -66,17 +65,17 @@
 <Card class="max-w-full gap-4 pb-4">
 	<div class="flex flex-row justify-between gap-5">
 		<Heading tag="h5">{$i18n('pages.identityPublic.title')}</Heading>
-		{#if isBusy}
+		{#if busy}
 			<Spinner />
 		{/if}
 	</div>
 	<Error {error} />
-	{#if !isBusy}
+	{#if !busy}
 		<div class="flex flex-row justify-between gap-5">
 			<div class="flex flex-col gap-4">
 				<Label>
 					{$i18n('pages.identityPublic.identity')}
-					<LabelledValue>{identity}</LabelledValue>
+					<LabelledValue>{itemId}</LabelledValue>
 				</Label>
 				{#if Is.stringValue(schema)}
 					<Label>
@@ -99,8 +98,8 @@
 				{/if}
 			</div>
 			<QR
-				qrData={createPublicUrl(`identity/${identity}`)}
-				labelResource="pages.identityPublic.qr"
+				qrData={createPublicUrl(`identity/${itemId}`)}
+				label={$i18n('pages.identityPublic.qr')}
 				dimensions={128}
 			/>
 		</div>

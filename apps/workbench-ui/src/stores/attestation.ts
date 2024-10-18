@@ -55,15 +55,15 @@ export async function attestationCreate(
 export async function attestationGet(attestationId: string): Promise<
 	| {
 			error?: string;
-			information?: IAttestationInformation;
+			item?: IAttestationInformation;
 	  }
 	| undefined
 > {
 	if (Is.object(attestationClient)) {
 		try {
-			const information = await attestationClient.get(attestationId);
+			const result = await attestationClient.get(attestationId);
 			return {
-				information
+				item: result
 			};
 		} catch (err) {
 			return {

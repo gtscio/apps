@@ -23,19 +23,20 @@
 	import { onMount } from 'svelte';
 	import { blobStorageList, blobStorageRemove } from '$stores/blobStorage';
 
-	let blobs: IBlobStorageEntry[] | undefined;
+	let items: IBlobStorageEntry[] | undefined;
 	const cursorStack: string[] = ['@start'];
 	let cursorStackIndex: number = 0;
-	let isBusy = false;
+	let busy = false;
 	let status = '';
 	let isError = false;
 	let canGoBackwards = true;
 	let canGoForwards = true;
 	let confirmationId: string = '';
+	let modalIsBusy = false;
 
 	async function loadData(): Promise<void> {
-		status = $i18n('pages.blobs.loading');
-		isBusy = true;
+		status = $i18n('pages.blob.loading');
+		busy = true;
 		isError = false;
 		const result = await blobStorageList(
 			cursorStack[cursorStackIndex]?.startsWith('@') ? undefined : cursorStack[cursorStackIndex]
@@ -45,7 +46,7 @@
 			isError = true;
 			status = result.error;
 		} else {
-			blobs = result?.entries ?? [];
+			items = result?.items ?? [];
 
 			if (cursorStackIndex === cursorStack.length - 1) {
 				cursorStack.push(result?.cursor ?? '@end');
@@ -54,13 +55,13 @@
 			canGoBackwards = cursorStack[cursorStackIndex] !== '@start';
 			canGoForwards = cursorStack[cursorStackIndex + 1] !== '@end';
 
-			if (blobs.length === 0) {
-				status = $i18n('pages.blobs.noItems');
+			if (items.length === 0) {
+				status = $i18n('pages.blob.noItems');
 			} else {
 				status = '';
 			}
 		}
-		isBusy = false;
+		busy = false;
 	}
 
 	async function loadPrevious(): Promise<void> {
@@ -79,13 +80,16 @@
 
 	async function removeCancel(): Promise<void> {
 		confirmationId = '';
+		modalIsBusy = false;
 	}
 
 	async function remove(): Promise<void> {
 		if (Is.stringValue(confirmationId)) {
+			modalIsBusy = true;
 			await blobStorageRemove(confirmationId);
 			await loadData();
 			confirmationId = '';
+			modalIsBusy = false;
 		}
 	}
 
@@ -95,37 +99,37 @@
 </script>
 
 <section class="flex flex-col items-start justify-center gap-5">
-	<Heading tag="h4">{$i18n('pages.blobs.title')}</Heading>
+	<Heading tag="h4">{$i18n('pages.blob.title')}</Heading>
 	<div class="items-left flex flex-col justify-between gap-2 sm:w-full sm:flex-row sm:items-center">
 		<div class="flex flex-row gap-2">
-			{#if isBusy}
+			{#if busy}
 				<Spinner />
 			{/if}
 			{#if Is.stringValue(status)}
 				<P class={isError ? 'text-red-600' : ''}>{status}</P>
 			{/if}
 		</div>
-		<Button on:click={() => goto('/secure/blobs/add')} disabled={isBusy}
-			>{$i18n('pages.blobs.addItem')}</Button
+		<Button on:click={() => goto('/secure/blob/create')} disabled={busy}
+			>{$i18n('pages.blob.createItem')}</Button
 		>
 	</div>
 
-	{#if Is.arrayValue(blobs)}
+	{#if Is.arrayValue(items)}
 		<Table>
 			<TableHead>
-				<TableHeadCell>Description</TableHeadCell>
-				<TableHeadCell>Date Created</TableHeadCell>
-				<TableHeadCell>Actions</TableHeadCell>
+				<TableHeadCell>{$i18n('common.labels.description')}</TableHeadCell>
+				<TableHeadCell>{$i18n('common.labels.dateCreated')}</TableHeadCell>
+				<TableHeadCell>{$i18n('common.labels.actions')}</TableHeadCell>
 			</TableHead>
 			<TableBody>
-				{#each blobs as blob}
+				{#each items as item}
 					<TableBodyRow>
-						<TableBodyCell class="whitespace-normal break-all">{blob.metadata?.name}</TableBodyCell>
-						<TableBodyCell>{new Date(blob.dateCreated).toLocaleString()}</TableBodyCell>
+						<TableBodyCell class="whitespace-normal break-all">{item.metadata?.name}</TableBodyCell>
+						<TableBodyCell>{new Date(item.dateCreated).toLocaleString()}</TableBodyCell>
 						<TableBodyCell class="flex flex-row gap-2"
-							><Button size="xs" outline on:click={() => goto(`/secure/blobs/${blob.id}`)}
+							><Button size="xs" outline on:click={() => goto(`/secure/blob/${item.id}`)}
 								><EyeSolid /></Button
-							><Button size="xs" outline on:click={async () => removePrompt(blob.id)}
+							><Button size="xs" outline on:click={async () => removePrompt(item.id)}
 								><TrashBinSolid /></Button
 							></TableBodyCell
 						>
@@ -133,11 +137,13 @@
 				{/each}
 			</TableBody>
 		</Table>
-		<Pagination {loadNext} {loadPrevious} {canGoBackwards} {canGoForwards} disabled={isBusy} />
+		<Pagination {loadNext} {loadPrevious} {canGoBackwards} {canGoForwards} disabled={busy} />
 		<ModalYesNo
-			title={$i18n('pages.blobs.deleteTitle')}
+			title={$i18n('pages.blob.deleteTitle')}
 			open={Is.stringValue(confirmationId)}
-			message={$i18n('pages.blobs.deleteMessage')}
+			message={$i18n('pages.blob.deleteMessage')}
+			busy={modalIsBusy}
+			yesColor="red"
 			yesAction={async () => remove()}
 			noAction={async () => removeCancel()}
 		/>

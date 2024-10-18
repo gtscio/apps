@@ -2,15 +2,16 @@
 	// Copyright 2024 IOTA Stiftung.
 	// SPDX-License-Identifier: Apache-2.0.
 	import { Is, ObjectHelper } from '@twin.org/core';
-	import { AppLayout, type ISideBarGroup } from '@twin.org/ui-components-svelte';
+	import { AppLayout, type ISideBarGroup, i18n } from '@twin.org/ui-components-svelte';
 	import {
 		FileSolid,
 		LockOpenSolid,
 		LockSolid,
+		RectangleListSolid,
 		ShieldCheckSolid,
 		SwatchbookSolid
 	} from 'flowbite-svelte-icons';
-	import { isAuthenticated } from '$stores/authentication';
+	import { authenticationState } from '$stores/authentication';
 	import { privateProfile } from '$stores/identityProfile';
 	import '../app.css';
 	import { serverHealthStatus, serverName, serverVersion } from '$stores/information';
@@ -22,44 +23,49 @@
 	$: {
 		sidebarGroups = [];
 
-		if ($isAuthenticated) {
+		if ($authenticationState === 'authenticated') {
+			showAuthBadge = true;
 			sidebarGroups.push({
 				items: [
 					{
-						label: 'navigation.dashboard',
+						label: $i18n('navigation.dashboard'),
 						icon: SwatchbookSolid,
 						route: '/secure/dashboard'
 					},
 					{
-						label: 'navigation.blobs',
+						label: $i18n('navigation.blobs'),
 						icon: FileSolid,
-						route: '/secure/blobs'
+						route: '/secure/blob'
 					},
 					{
-						label: 'navigation.attestations',
+						label: $i18n('navigation.attestations'),
 						icon: ShieldCheckSolid,
-						route: '/secure/attestations'
+						route: '/secure/attestation'
 					},
 					{
-						label: 'navigation.logout',
+						label: $i18n('navigation.auditable-item-streams'),
+						icon: RectangleListSolid,
+						route: '/secure/auditable-item-stream'
+					},
+					{
+						label: $i18n('navigation.logout'),
 						icon: LockOpenSolid,
 						route: '/authentication/logout'
 					}
 				]
 			});
-		} else {
+		} else if ($authenticationState === 'not-authenticated') {
+			showAuthBadge = false;
 			sidebarGroups.push({
 				items: [
 					{
-						label: 'navigation.login',
+						label: $i18n('navigation.login'),
 						icon: LockSolid,
 						route: '/'
 					}
 				]
 			});
 		}
-
-		showAuthBadge = $isAuthenticated ?? false;
 	}
 
 	$: {
@@ -87,8 +93,9 @@
 </script>
 
 <AppLayout
+	title={$i18n('app.name')}
 	{sidebarGroups}
-	isAuthenticated={showAuthBadge}
+	authenticated={showAuthBadge}
 	initials={finalInitials}
 	profileNavRoute="/secure/identity-profile"
 	serverHealthStatus={$serverHealthStatus}

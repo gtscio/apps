@@ -21,14 +21,14 @@
 	import { createPrivateUrl } from '$stores/app';
 	import { blobStorageUpload } from '$stores/blobStorage';
 
+	export let returnUrl: string;
 	let description = '';
-	let filename = '';
 	let files: FileList | undefined;
 	let validationErrors: {
 		[field in 'description' | 'filename']?: IValidationFailure[] | undefined;
 	} = {};
-	let isBusy = false;
-	let blobId: string | undefined;
+	let busy = false;
+	let itemId: string | undefined;
 	let progress: string | undefined;
 
 	async function validate(validationFailures: IValidationFailure[]): Promise<void> {
@@ -36,25 +36,25 @@
 			'description',
 			Is.stringValue(description) ? description : undefined,
 			validationFailures,
-			$i18n('pages.blobAdd.description')
+			$i18n('pages.blobProperties.description')
 		);
 
 		Validation.notEmpty(
 			'filename',
-			Is.stringValue(filename) ? filename : undefined,
+			Is.stringValue(files?.[0]?.name) ? files[0].name : undefined,
 			validationFailures,
-			$i18n('pages.blobAdd.filename')
+			$i18n('pages.blobProperties.filename')
 		);
 	}
 
 	async function close(): Promise<void> {
-		await goto('/secure/blobs');
+		await goto(returnUrl);
 	}
 
 	async function action(): Promise<string | undefined> {
-		blobId = undefined;
+		itemId = undefined;
 		if (!Is.empty(files) && files.length > 0) {
-			progress = $i18n('pages.blobAdd.progressUploading');
+			progress = $i18n('pages.blobProperties.progress');
 
 			const file = files[0];
 			const buffer = await file.arrayBuffer();
@@ -62,16 +62,17 @@
 			const blobMetadata: IJsonLdNodeObject = {
 				'@context': 'https://schema.org',
 				type: 'Thing',
-				name: file.name
+				name: description
 			};
-			const resultBlob = await blobStorageUpload(file.type, blobMetadata, bytes);
-			if (Is.stringValue(resultBlob?.error)) {
-				progress = undefined;
-				return resultBlob?.error;
-			}
-			blobId = resultBlob?.id ?? '';
-
+			const result = await blobStorageUpload(file.type, blobMetadata, bytes);
 			progress = undefined;
+			busy = false;
+
+			if (Is.stringValue(result?.error)) {
+				return result?.error;
+			}
+
+			itemId = result?.id ?? '';
 		}
 
 		return undefined;
@@ -79,38 +80,37 @@
 </script>
 
 <section class="flex flex-col items-start justify-center gap-5 lg:flex-row">
-	{#if !Is.stringValue(blobId)}
+	{#if !Is.stringValue(itemId)}
 		<ValidatedForm
-			titleResource="pages.blobAdd.title"
-			actionButtonResource="pages.blobAdd.upload"
-			actionSuccessResource="pages.blobAdd.uploadSuccess"
+			title={$i18n('pages.blobProperties.title')}
+			actionButtonLabel={$i18n('pages.blobProperties.action')}
+			actionSuccessLabel={$i18n('pages.blobProperties.actionSuccess')}
 			validationMethod={validate}
 			actionMethod={action}
 			closeMethod={close}
 			bind:validationErrors
-			bind:isBusy
+			bind:busy
 		>
 			<svelte:fragment slot="fields">
 				<Label>
-					{$i18n('pages.blobAdd.description')}
+					{$i18n('pages.blobProperties.description')}
 					<Input
 						type="text"
 						name="description"
 						color={Is.arrayValue(validationErrors.description) ? 'red' : 'base'}
 						bind:value={description}
-						disabled={isBusy}
+						disabled={busy}
 					/>
 					<ValidationError validationErrors={validationErrors.description} />
 				</Label>
 				<Label>
-					{$i18n('pages.blobAdd.filename')}
+					{$i18n('pages.blobProperties.filename')}
 					<Fileupload
 						type="text"
 						name="filename"
 						color={Is.arrayValue(validationErrors.filename) ? 'red' : 'base'}
-						bind:value={filename}
 						bind:files
-						disabled={isBusy}
+						disabled={busy}
 					/>
 					<ValidationError validationErrors={validationErrors.filename} />
 				</Label>
@@ -121,21 +121,20 @@
 				{/if}
 			</svelte:fragment>
 		</ValidatedForm>
-	{/if}
-	{#if Is.stringValue(blobId)}
+	{:else}
 		<Card class="flex flex-col gap-5">
-			<Heading tag="h5">{$i18n('pages.blobAdd.resultTitle')}</Heading>
-			{#if Is.stringValue(blobId)}
+			<Heading tag="h5">{$i18n('pages.blobProperties.resultTitle')}</Heading>
+			{#if Is.stringValue(itemId)}
 				<Label>
-					{$i18n('pages.blobAdd.blobId')}
-					<LabelledValue>{blobId}</LabelledValue>
+					{$i18n('pages.blobProperties.itemId')}
+					<LabelledValue>{itemId}</LabelledValue>
 				</Label>
 				<Label>
-					{$i18n('pages.blobAdd.blobQr')}
+					{$i18n('pages.blobProperties.itemQr')}
 					<QR
 						class="mt-2"
-						qrData={createPrivateUrl(`blobs/${blobId}`)}
-						labelResource="pages.blobAdd.blobQr"
+						qrData={createPrivateUrl(`blob/${itemId}`)}
+						label={$i18n('pages.blobProperties.itemQr')}
 						dimensions={128}
 					/>
 				</Label>

@@ -10,6 +10,7 @@
 		"logging": "Logging",
 		"blobs": "Blobs",
 		"attestations": "Attestations",
+		"auditable-item-streams": "Auditable Item Streams",
 		"nft": "NFT"
 	},
 	"components": {
@@ -25,6 +26,19 @@
 			"holderIdentity": "Holder Identity",
 			"attestationObject": "Attestation Object",
 			"proof": "Proof"
+		},
+		"auditableItemStreamView": {
+			"title": "Auditable Item Stream",
+			"id": "Id",
+			"auditableItemStreamQr": "Auditable Item Stream QR Code"
+		}
+	},
+	"common": {
+		"labels": {
+			"description": "Description",
+			"dateCreated": "Date Created",
+			"dateModified": "Date Modified",
+			"actions": "Actions"
 		}
 	},
 	"pages": {
@@ -56,16 +70,16 @@
 			"explore": "Explore",
 			"didDocument": "DID Document"
 		},
-		"attestations": {
+		"attestation": {
 			"title": "Attestations",
 			"loading": "Loading attestations...",
 			"noItems": "No attestations found",
-			"addItem": "Add Attestation",
+			"createItem": "Create Attestation",
 			"deleteTitle": "Delete Attestation",
 			"deleteMessage": "Are you sure you want to delete this attestation?"
 		},
-		"attestationAdd": {
-			"title": "Add Attestation",
+		"attestationProperties": {
+			"title": "Create Attestation",
 			"blob": "Blob",
 			"selectBlob": "Select blob",
 			"assertionMethod": "Assertion Method",
@@ -74,38 +88,66 @@
 			"attestationQr": "Attestation QR Code",
 			"attestationOf": "Attestation of {blob}",
 			"signature": "Signature",
-			"attest": "Attest",
-			"attestSuccess": "Attestation was successful",
-			"progressAttesting": "Attesting the document",
+			"action": "Attest",
+			"actionSuccess": "Attestation was successful",
+			"progress": "Attesting the document...",
 			"resultTitle": "Attestation Result"
 		},
-		"blobs": {
+		"blob": {
 			"title": "Blobs",
 			"loading": "Loading blobs...",
 			"noItems": "No blobs found",
-			"addItem": "Add Blob",
+			"createItem": "Create Blob",
 			"deleteTitle": "Delete Blob",
 			"deleteMessage": "Are you sure you want to delete this blob?"
 		},
-		"blob": {
+		"blobView": {
 			"title": "Blob Storage",
 			"id": "Id",
-			"filename": "Filename",
-			"extension": "Extension",
-			"mimeType": "MIME Type",
+			"description": "Description",
+			"fileExtension": "File Extension",
+			"encodingFormat": "Encoding Format",
 			"document": "Document",
 			"download": "Download"
 		},
-		"blobAdd": {
-			"title": "Add Blob",
+		"blobProperties": {
+			"title": "Create Blob",
 			"description": "Description",
 			"filename": "Filename",
-			"upload": "Upload",
-			"uploadSuccess": "Uploading was successful",
-			"progressUploading": "Uploading document to storage",
+			"action": "Upload",
+			"actionSuccess": "Uploading was successful",
+			"progress": "Uploading to storage...",
 			"resultTitle": "Upload Result",
-			"blobQr": "Blob Storage QR Code",
-			"blobId": "Blob Id"
+			"itemQr": "Blob Storage QR Code",
+			"itemId": "Blob Id"
+		},
+		"auditableItemStream": {
+			"title": "Auditable Item Streams",
+			"loading": "Loading auditable item streams...",
+			"noItems": "No auditable item streams found",
+			"createItem": "Create Auditable Item Stream",
+			"deleteTitle": "Delete Auditable Item Stream",
+			"deleteMessage": "Are you sure you want to delete this auditable item stream?"
+		},
+		"auditableItemStreamProperties": {
+			"titleCreate": "Create Auditable Item Stream",
+			"titleModify": "Modify Auditable Item Stream",
+			"description": "Description",
+			"actionCreate": "Create",
+			"actionCreateSuccess": "Creation was successful",
+			"progressCreate": "Creating...",
+			"resultTitleCreate": "Create Result",
+			"actionUpdate": "Update",
+			"actionUpdateSuccess": "Updating was successful",
+			"progressUpdate": "Updating...",
+			"resultTitleUpdate": "Update Result",
+			"itemQr": "Auditable Item Stream QR Code",
+			"itemId": "Auditable Item Stream Id"
 		}
+	},
+	"actions": {
+		"modify": "Modify",
+		"delete": "Delete",
+		"view": "View"
 	}
 }

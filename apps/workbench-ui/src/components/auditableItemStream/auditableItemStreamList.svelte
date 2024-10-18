@@ -2,7 +2,8 @@
 	// Copyright 2024 IOTA Stiftung.
 	// SPDX-License-Identifier: Apache-2.0.
 	import { goto } from '$app/navigation';
-	import { Is } from '@twin.org/core';
+	import type { IAuditableItemStream } from '@twin.org/auditable-item-stream-models';
+	import { Is, ObjectHelper } from '@twin.org/core';
 	import {
 		Button,
 		Heading,
@@ -18,26 +19,26 @@
 		ModalYesNo,
 		Pagination
 	} from '@twin.org/ui-components-svelte';
-	import { EyeSolid, TrashBinSolid } from 'flowbite-svelte-icons';
+	import { EditSolid, EyeSolid, TrashBinSolid } from 'flowbite-svelte-icons';
 	import { onMount } from 'svelte';
-	import type { IUserAttestationEntry } from '$models/IUserAttestationEntry';
-	import { attestationEntryList, attestationsEntryRemove } from '$stores/attestations';
+	import { auditableItemStreamList, auditableItemStreamRemove } from '$stores/auditableItemStreams';
 
-	let attestations: IUserAttestationEntry[] | undefined;
+	let items: IAuditableItemStream[] | undefined;
 	const cursorStack: string[] = ['@start'];
 	let cursorStackIndex: number = 0;
-	let isBusy = false;
+	let busy = false;
 	let status = '';
 	let isError = false;
 	let canGoBackwards = true;
 	let canGoForwards = true;
 	let confirmationId: string = '';
+	let modalIsBusy = false;
 
 	async function loadData(): Promise<void> {
-		status = $i18n('pages.attestations.loading');
-		isBusy = true;
+		status = $i18n('pages.auditableItemStream.loading');
+		busy = true;
 		isError = false;
-		const result = await attestationEntryList(
+		const result = await auditableItemStreamList(
 			cursorStack[cursorStackIndex]?.startsWith('@') ? undefined : cursorStack[cursorStackIndex]
 		);
 
@@ -45,7 +46,7 @@
 			isError = true;
 			status = result.error;
 		} else {
-			attestations = result?.entities ?? [];
+			items = result?.items ?? [];
 
 			if (cursorStackIndex === cursorStack.length - 1) {
 				cursorStack.push(result?.cursor ?? '@end');
@@ -54,13 +55,13 @@
 			canGoBackwards = cursorStack[cursorStackIndex] !== '@start';
 			canGoForwards = cursorStack[cursorStackIndex + 1] !== '@end';
 
-			if (attestations.length === 0) {
-				status = $i18n('pages.attestations.noItems');
+			if (items.length === 0) {
+				status = $i18n('pages.auditableItemStream.noItems');
 			} else {
 				status = '';
 			}
 		}
-		isBusy = false;
+		busy = false;
 	}
 
 	async function loadPrevious(): Promise<void> {
@@ -79,13 +80,16 @@
 
 	async function removeCancel(): Promise<void> {
 		confirmationId = '';
+		modalIsBusy = false;
 	}
 
 	async function remove(): Promise<void> {
 		if (Is.stringValue(confirmationId)) {
-			await attestationsEntryRemove(confirmationId);
+			modalIsBusy = true;
+			await auditableItemStreamRemove(confirmationId);
 			await loadData();
 			confirmationId = '';
+			modalIsBusy = false;
 		}
 	}
 
@@ -95,41 +99,53 @@
 </script>
 
 <section class="flex flex-col items-start justify-center gap-5">
-	<Heading tag="h4">{$i18n('pages.attestations.title')}</Heading>
+	<Heading tag="h4">{$i18n('pages.auditableItemStream.title')}</Heading>
 	<div class="items-left flex flex-col justify-between gap-2 sm:w-full sm:flex-row sm:items-center">
 		<div class="flex flex-row gap-2">
-			{#if isBusy}
+			{#if busy}
 				<Spinner />
 			{/if}
 			{#if Is.stringValue(status)}
 				<P class={isError ? 'text-red-600' : ''}>{status}</P>
 			{/if}
 		</div>
-		<Button on:click={() => goto('/secure/attestations/add')} disabled={isBusy}
-			>{$i18n('pages.attestations.addItem')}</Button
+		<Button on:click={() => goto('/secure/auditable-item-stream/create')} disabled={busy}
+			>{$i18n('pages.auditableItemStream.createItem')}</Button
 		>
 	</div>
 
-	{#if Is.arrayValue(attestations)}
+	{#if Is.arrayValue(items)}
 		<Table>
 			<TableHead>
-				<TableHeadCell>Description</TableHeadCell>
-				<TableHeadCell>Date Created</TableHeadCell>
-				<TableHeadCell>Actions</TableHeadCell>
+				<TableHeadCell>{$i18n('common.labels.description')}</TableHeadCell>
+				<TableHeadCell>{$i18n('common.labels.dateCreated')}</TableHeadCell>
+				<TableHeadCell>{$i18n('common.labels.dateModified')}</TableHeadCell>
+				<TableHeadCell>{$i18n('common.labels.actions')}</TableHeadCell>
 			</TableHead>
 			<TableBody>
-				{#each attestations as attestation}
+				{#each items as item}
 					<TableBodyRow>
 						<TableBodyCell class="whitespace-normal break-all"
-							>{attestation.description}</TableBodyCell
+							>{ObjectHelper.propertyGet(item, 'streamObject.name')}</TableBodyCell
 						>
-						<TableBodyCell>{new Date(attestation.dateCreated).toLocaleString()}</TableBodyCell>
+						<TableBodyCell>{new Date(item.dateCreated).toLocaleString()}</TableBodyCell>
+						<TableBodyCell
+							>{Is.stringValue(item.dateModified)
+								? new Date(item.dateModified).toLocaleString()
+								: ''}</TableBodyCell
+						>
 						<TableBodyCell class="flex flex-row gap-2"
 							><Button
 								size="xs"
 								outline
-								on:click={() => goto(`/secure/attestations/${attestation.id}`)}><EyeSolid /></Button
-							><Button size="xs" outline on:click={async () => removePrompt(attestation.id)}
+								on:click={() => goto(`/secure/auditable-item-stream/${item.id}/modify`)}
+								><EditSolid /></Button
+							><Button
+								size="xs"
+								outline
+								on:click={() => goto(`/secure/auditable-item-stream/${item.id}`)}
+								><EyeSolid /></Button
+							><Button size="xs" outline on:click={async () => removePrompt(item.id)}
 								><TrashBinSolid /></Button
 							></TableBodyCell
 						>
@@ -137,11 +153,13 @@
 				{/each}
 			</TableBody>
 		</Table>
-		<Pagination {loadNext} {loadPrevious} {canGoBackwards} {canGoForwards} disabled={isBusy} />
+		<Pagination {loadNext} {loadPrevious} {canGoBackwards} {canGoForwards} disabled={busy} />
 		<ModalYesNo
-			title={$i18n('pages.attestations.deleteTitle')}
+			title={$i18n('pages.auditableItemStream.deleteTitle')}
 			open={Is.stringValue(confirmationId)}
-			message={$i18n('pages.attestations.deleteMessage')}
+			message={$i18n('pages.auditableItemStream.deleteMessage')}
+			busy={modalIsBusy}
+			yesColor="red"
 			yesAction={async () => remove()}
 			noAction={async () => removeCancel()}
 		/>

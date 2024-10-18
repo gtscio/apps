@@ -4,6 +4,7 @@ import { StringHelper, type ILocale } from "@twin.org/core";
 import { initLocales } from "@twin.org/ui-components-svelte";
 import { init as initAttestation } from "./attestation";
 import { init as initAttestations } from "./attestations";
+import { init as initAuditableItemStreams } from "./auditableItemStreams";
 import { init as initAuthentication } from "./authentication";
 import { init as initBlobStorage } from "./blobStorage";
 import { init as initIdentity } from "./identity";
@@ -46,6 +47,7 @@ export async function init(options: {
 	await initAttestation(options.apiUrl);
 	await initIota(options.iotaExplorerUrl);
 	await initAttestations(options.apiUrl);
+	await initAuditableItemStreams(options.apiUrl);
 }
 
 /**
