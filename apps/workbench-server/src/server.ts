@@ -1,6 +1,7 @@
 // Copyright 2024 IOTA Stiftung.
 // SPDX-License-Identifier: Apache-2.0.
 import type { IHttpRestRouteProcessor, IRestRoute } from "@twin.org/api-models";
+import { JwtMimeTypeProcessor } from "@twin.org/api-processors";
 import { FastifyWebServer } from "@twin.org/api-server-fastify";
 import { Is } from "@twin.org/core";
 import type { IWorkbenchContext } from "./models/IWorkbenchContext";
@@ -19,7 +20,10 @@ export async function startWebServer(
 	stopCallback?: () => Promise<void>
 ): Promise<void> {
 	const webServer = new FastifyWebServer({
-		loggingConnectorType: context.nodeLoggingConnectorName
+		loggingConnectorType: context.nodeLoggingConnectorName,
+		mimeTypeProcessors: [
+			new JwtMimeTypeProcessor()
+		]
 	});
 
 	await webServer.build(restRouteProcessors, routes, context.webServerOptions);
