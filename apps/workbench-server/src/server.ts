@@ -21,9 +21,7 @@ export async function startWebServer(
 ): Promise<void> {
 	const webServer = new FastifyWebServer({
 		loggingConnectorType: context.nodeLoggingConnectorName,
-		mimeTypeProcessors: [
-			new JwtMimeTypeProcessor()
-		]
+		mimeTypeProcessors: [new JwtMimeTypeProcessor()]
 	});
 
 	await webServer.build(restRouteProcessors, routes, context.webServerOptions);
