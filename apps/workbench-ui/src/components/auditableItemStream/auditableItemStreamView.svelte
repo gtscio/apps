@@ -11,8 +11,8 @@
 		Error,
 		Heading,
 		Label,
-		LabelledValue,
 		QR,
+		Span,
 		Spinner,
 		i18n
 	} from '@twin.org/ui-components-svelte';
@@ -52,7 +52,7 @@
 				<div class="flex flex-col gap-4">
 					<Label>
 						{$i18n('components.auditableItemStreamView.id')}
-						<LabelledValue>{itemId}</LabelledValue>
+						<Span>{itemId}</Span>
 					</Label>
 				</div>
 				<QR

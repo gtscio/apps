@@ -599,21 +599,6 @@
     "issued": "Issued",
     "revoked": "Revoked"
   },
-  "app": {
-    "name": "Workbench"
-  },
-  "navigation": {
-    "home": "Home",
-    "login": "Login",
-    "logout": "Logout",
-    "dashboard": "Dashboard",
-    "telemetry": "Telemetry",
-    "logging": "Logging",
-    "blobs": "Blobs",
-    "attestations": "Attestations",
-    "auditable-item-streams": "Auditable Item Streams",
-    "nft": "NFT"
-  },
   "pages": {
     "error": {
       "title": "Error",
@@ -883,6 +868,20 @@
         "description": "If the env file already exists merge the data instead of overwriting."
       }
     }
+  },
+  "app": {
+    "name": "Workbench"
+  },
+  "navigation": {
+    "login": "Login",
+    "logout": "Logout",
+    "dashboard": "Dashboard",
+    "telemetry": "Telemetry",
+    "logging": "Logging",
+    "blobs": "Blobs",
+    "attestations": "Attestations",
+    "auditable-item-streams": "Auditable Item Streams",
+    "nft": "NFT"
   },
   "common": {
     "labels": {

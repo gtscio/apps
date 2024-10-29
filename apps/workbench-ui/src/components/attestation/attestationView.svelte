@@ -10,13 +10,13 @@
 		Code,
 		Error,
 		Heading,
+		Icons,
 		Label,
-		LabelledValue,
 		QR,
+		Span,
 		Spinner,
 		i18n
 	} from '@twin.org/ui-components-svelte';
-	import { CloudArrowUpOutline } from 'flowbite-svelte-icons';
 	import { onMount } from 'svelte';
 	import { createPublicUrl } from '$stores/app';
 	import { attestationGet } from '$stores/attestation';
@@ -67,12 +67,12 @@
 				<div class="flex flex-col gap-4">
 					<Label>
 						{$i18n('components.attestationView.id')}
-						<LabelledValue>{itemId}</LabelledValue>
+						<Span>{itemId}</Span>
 					</Label>
 					{#if Is.stringValue(exploreUrl)}
 						<div>
-							<Button size="xs" on:click={openExplorer} class="gap-2"
-								>{$i18n('components.attestationView.exploreNft')}<CloudArrowUpOutline
+							<Button size="xs" on:click={openExplorer} color="plain" class="gap-2"
+								>{$i18n('components.attestationView.exploreNft')}<Icons.CloudArrowUpOutline
 									size="sm"
 								/></Button
 							>
@@ -87,36 +87,36 @@
 			</div>
 			<Label>
 				{$i18n('components.attestationView.verified')}
-				<LabelledValue>{item?.verified}</LabelledValue>
+				<Span>{item?.verified}</Span>
 			</Label>
 			{#if Is.stringValue(item?.verificationFailure)}
 				<Label>
 					{$i18n('components.attestationView.verifyFailure')}
-					<LabelledValue class="red">{item.verificationFailure}</LabelledValue>
+					<Span class="text-error dark:text-error-dark">{item.verificationFailure}</Span>
 				</Label>
 			{/if}
 			{#if Is.stringValue(item?.dateCreated)}
 				<Label>
 					{$i18n('components.attestationView.created')}
-					<LabelledValue>{new Date(item.dateCreated).toLocaleString()}</LabelledValue>
+					<Span>{new Date(item.dateCreated).toLocaleString()}</Span>
 				</Label>
 			{/if}
 			{#if Is.stringValue(item?.ownerIdentity)}
 				<Label>
 					{$i18n('components.attestationView.ownerIdentity')}
-					<LabelledValue>{item.ownerIdentity}</LabelledValue>
+					<Span>{item.ownerIdentity}</Span>
 				</Label>
 			{/if}
 			{#if Is.stringValue(item?.dateTransferred)}
 				<Label>
 					{$i18n('components.attestationView.transferred')}
-					<LabelledValue>{new Date(item.dateTransferred)}</LabelledValue>
+					<Span>{new Date(item.dateTransferred)}</Span>
 				</Label>
 			{/if}
 			{#if Is.stringValue(item?.holderIdentity)}
 				<Label>
 					{$i18n('components.attestationView.holderIdentity')}
-					<LabelledValue>{item.holderIdentity}</LabelledValue>
+					<Span>{item.holderIdentity}</Span>
 				</Label>
 			{/if}
 			{#if Is.object(item?.attestationObject)}

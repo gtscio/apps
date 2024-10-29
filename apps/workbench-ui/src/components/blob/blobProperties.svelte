@@ -12,9 +12,9 @@
 		i18n,
 		Input,
 		Label,
-		LabelledValue,
 		P,
 		QR,
+		Span,
 		ValidatedForm,
 		ValidationError
 	} from '@twin.org/ui-components-svelte';
@@ -91,13 +91,13 @@
 			bind:validationErrors
 			bind:busy
 		>
-			<svelte:fragment slot="fields">
+			{#snippet fields()}
 				<Label>
 					{$i18n('pages.blobProperties.description')}
 					<Input
 						type="text"
 						name="description"
-						color={Is.arrayValue(validationErrors.description) ? 'red' : 'base'}
+						color={Is.arrayValue(validationErrors.description) ? 'error' : 'default'}
 						bind:value={description}
 						disabled={busy}
 					/>
@@ -106,20 +106,19 @@
 				<Label>
 					{$i18n('pages.blobProperties.filename')}
 					<Fileupload
-						type="text"
 						name="filename"
-						color={Is.arrayValue(validationErrors.filename) ? 'red' : 'base'}
+						color={Is.arrayValue(validationErrors.filename) ? 'error' : 'default'}
 						bind:files
 						disabled={busy}
 					/>
 					<ValidationError validationErrors={validationErrors.filename} />
 				</Label>
-			</svelte:fragment>
-			<svelte:fragment slot="after-action">
+			{/snippet}
+			{#snippet afterAction()}
 				{#if Is.stringValue(progress)}
 					<P>{progress}</P>
 				{/if}
-			</svelte:fragment>
+			{/snippet}
 		</ValidatedForm>
 	{:else}
 		<Card class="flex flex-col gap-5">
@@ -127,7 +126,7 @@
 			{#if Is.stringValue(itemId)}
 				<Label>
 					{$i18n('pages.blobProperties.itemId')}
-					<LabelledValue>{itemId}</LabelledValue>
+					<Span>{itemId}</Span>
 				</Label>
 				<Label>
 					{$i18n('pages.blobProperties.itemQr')}

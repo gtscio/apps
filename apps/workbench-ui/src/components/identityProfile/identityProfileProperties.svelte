@@ -7,14 +7,14 @@
 		Button,
 		Helper,
 		i18n,
+		Icons,
 		Input,
 		Label,
-		LabelledValue,
 		QR,
+		Span,
 		ValidatedForm,
 		ValidationError
 	} from '@twin.org/ui-components-svelte';
-	import { CloudArrowUpOutline } from 'flowbite-svelte-icons';
 	import { createPublicUrl } from '$stores/app';
 	import {
 		privateProfile,
@@ -83,17 +83,17 @@
 		bind:validationErrors
 		bind:busy
 	>
-		<svelte:fragment slot="fields">
+		{#snippet fields()}
 			<div class="flex flex-row gap-5">
 				<div class="flex flex-col gap-5">
 					<Label class="flex flex-col gap-2">
 						{$i18n('pages.identityProfile.identity')}
-						<LabelledValue>{$profileIdentity}</LabelledValue>
+						<Span>{$profileIdentity}</Span>
 					</Label>
 					{#if Is.stringValue(exploreUrl)}
 						<Label>
-							<Button size="xs" on:click={openExplorer} class="gap-2"
-								>{$i18n('pages.identityPublic.explore')}<CloudArrowUpOutline size="sm" /></Button
+							<Button size="xs" color="plain" on:click={openExplorer} class="gap-2"
+								>{$i18n('pages.identityPublic.explore')}<Icons.CloudArrowUpOutline /></Button
 							>
 						</Label>
 					{/if}
@@ -112,7 +112,7 @@
 				<Input
 					type="text"
 					name="firstName"
-					color={Is.arrayValue(validationErrors.firstName) ? 'red' : 'base'}
+					color={Is.arrayValue(validationErrors.firstName) ? 'error' : 'default'}
 					bind:value={firstName}
 					disabled={busy}
 				/>
@@ -123,7 +123,7 @@
 				<Input
 					type="text"
 					name="lastName"
-					color={Is.arrayValue(validationErrors.lastName) ? 'red' : 'base'}
+					color={Is.arrayValue(validationErrors.lastName) ? 'error' : 'default'}
 					bind:value={lastName}
 					disabled={busy}
 				/>
@@ -135,12 +135,12 @@
 				<Input
 					type="text"
 					name="displayName"
-					color={Is.arrayValue(validationErrors.lastName) ? 'red' : 'base'}
+					color={Is.arrayValue(validationErrors.lastName) ? 'error' : 'default'}
 					bind:value={displayName}
 					disabled={busy}
 				/>
 				<ValidationError validationErrors={validationErrors.displayName} />
 			</Label>
-		</svelte:fragment>
+		{/snippet}
 	</ValidatedForm>
 </section>

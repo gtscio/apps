@@ -8,6 +8,7 @@
 		Button,
 		Heading,
 		i18n,
+		Icons,
 		Spinner,
 		P,
 		Table,
@@ -19,7 +20,6 @@
 		ModalYesNo,
 		Pagination
 	} from '@twin.org/ui-components-svelte';
-	import { EditSolid, EyeSolid, TrashBinSolid } from 'flowbite-svelte-icons';
 	import { onMount } from 'svelte';
 	import { auditableItemStreamList, auditableItemStreamRemove } from '$stores/auditableItemStreams';
 
@@ -137,16 +137,16 @@
 						<TableBodyCell class="flex flex-row gap-2"
 							><Button
 								size="xs"
-								outline
+								color="plain"
 								on:click={() => goto(`/secure/auditable-item-stream/${item.id}/modify`)}
-								><EditSolid /></Button
+								><Icons.EditSolid /></Button
 							><Button
 								size="xs"
-								outline
+								color="plain"
 								on:click={() => goto(`/secure/auditable-item-stream/${item.id}`)}
-								><EyeSolid /></Button
-							><Button size="xs" outline on:click={async () => removePrompt(item.id)}
-								><TrashBinSolid /></Button
+								><Icons.EyeSolid /></Button
+							><Button size="xs" color="plain" on:click={async () => removePrompt(item.id)}
+								><Icons.TrashBinSolid /></Button
 							></TableBodyCell
 						>
 					</TableBodyRow>
@@ -159,7 +159,7 @@
 			open={Is.stringValue(confirmationId)}
 			message={$i18n('pages.auditableItemStream.deleteMessage')}
 			busy={modalIsBusy}
-			yesColor="red"
+			yesColor="error"
 			yesAction={async () => remove()}
 			noAction={async () => removeCancel()}
 		/>

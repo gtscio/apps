@@ -10,12 +10,12 @@
 		Error,
 		Heading,
 		i18n,
+		Icons,
 		Label,
-		LabelledValue,
 		QR,
+		Span,
 		Spinner
 	} from '@twin.org/ui-components-svelte';
-	import { ArrowUpRightFromSquareOutline, DownloadOutline } from 'flowbite-svelte-icons';
 	import { onMount } from 'svelte';
 	import { createPrivateUrl } from '$stores/app';
 	import { blobStorageGet, createDownloadLink } from '$stores/blobStorage';
@@ -85,18 +85,17 @@
 		{/if}
 	</div>
 	{#if !busy}
-		<Error {error} />
 		<div class="flex flex-col justify-between gap-5">
 			<div class="flex flex-col justify-between gap-4 md:flex-row">
 				<div class="flex flex-col gap-4">
 					<Label>
 						{$i18n('pages.blobView.id')}
-						<LabelledValue>{itemId}</LabelledValue>
+						<Span>{itemId}</Span>
 					</Label>
 					{#if Is.stringValue(description)}
 						<Label>
 							{$i18n('pages.blobView.description')}
-							<LabelledValue>{description}</LabelledValue>
+							<Span>{description}</Span>
 						</Label>
 					{/if}
 				</div>
@@ -109,13 +108,13 @@
 			{#if Is.stringValue(fileExtension)}
 				<Label>
 					{$i18n('pages.blobView.fileExtension')}
-					<LabelledValue>{fileExtension}</LabelledValue>
+					<Span>{fileExtension}</Span>
 				</Label>
 			{/if}
 			{#if Is.stringValue(encodingFormat)}
 				<Label>
 					{$i18n('pages.blobView.encodingFormat')}
-					<LabelledValue>{encodingFormat}</LabelledValue>
+					<Span>{encodingFormat}</Span>
 				</Label>
 			{/if}
 		</div>
@@ -125,10 +124,10 @@
 					<Label class="mt-1">{$i18n('pages.blobView.document')}</Label>
 					<div class="flex flex-row gap-3">
 						<Button on:click={openDocument} size="xs">
-							<ArrowUpRightFromSquareOutline size="sm" />
+							<Icons.ArrowUpRightFromSquareOutline size="sm" />
 						</Button>
 						<Button on:click={downloadDocument} size="xs">
-							<DownloadOutline size="sm" />
+							<Icons.DownloadOutline size="sm" />
 						</Button>
 					</div>
 				</div>
@@ -145,6 +144,7 @@
 				{/if}
 			</div>
 		{/if}
+		<Error {error} />
 	{/if}
 	<div class="flex flex-row gap-2">
 		<Button on:click={() => goto('/secure/blob')}>{$i18n('actions.back')}</Button>

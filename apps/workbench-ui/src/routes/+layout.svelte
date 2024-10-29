@@ -2,15 +2,7 @@
 	// Copyright 2024 IOTA Stiftung.
 	// SPDX-License-Identifier: Apache-2.0.
 	import { Is, ObjectHelper } from '@twin.org/core';
-	import { AppLayout, type ISideBarGroup, i18n } from '@twin.org/ui-components-svelte';
-	import {
-		FileSolid,
-		LockOpenSolid,
-		LockSolid,
-		RectangleListSolid,
-		ShieldCheckSolid,
-		SwatchbookSolid
-	} from 'flowbite-svelte-icons';
+	import { Icons, AppLayout, type ISideBarGroup, i18n } from '@twin.org/ui-components-svelte';
 	import { authenticationState } from '$stores/authentication';
 	import { privateProfile } from '$stores/identityProfile';
 	import '../app.css';
@@ -20,50 +12,54 @@
 	let showAuthBadge = false;
 	let finalInitials: string = '';
 
+	const loggedInNavigation = [
+		{
+			label: $i18n('navigation.dashboard'),
+			icon: Icons.SwatchbookSolid,
+			route: '/secure/dashboard'
+		},
+		{
+			label: $i18n('navigation.blobs'),
+			icon: Icons.FileSolid,
+			route: '/secure/blob'
+		},
+		{
+			label: $i18n('navigation.attestations'),
+			icon: Icons.ShieldCheckSolid,
+			route: '/secure/attestation'
+		},
+		{
+			label: $i18n('navigation.auditable-item-streams'),
+			icon: Icons.RectangleListSolid,
+			route: '/secure/auditable-item-stream'
+		},
+		{
+			label: $i18n('navigation.logout'),
+			icon: Icons.LockOpenSolid,
+			route: '/authentication/logout'
+		}
+	];
+
+	const loggedOutNavigation = [
+		{
+			label: $i18n('navigation.login'),
+			icon: Icons.LockSolid,
+			route: '/'
+		}
+	];
+
 	$: {
 		sidebarGroups = [];
 
 		if ($authenticationState === 'authenticated') {
 			showAuthBadge = true;
 			sidebarGroups.push({
-				items: [
-					{
-						label: $i18n('navigation.dashboard'),
-						icon: SwatchbookSolid,
-						route: '/secure/dashboard'
-					},
-					{
-						label: $i18n('navigation.blobs'),
-						icon: FileSolid,
-						route: '/secure/blob'
-					},
-					{
-						label: $i18n('navigation.attestations'),
-						icon: ShieldCheckSolid,
-						route: '/secure/attestation'
-					},
-					{
-						label: $i18n('navigation.auditable-item-streams'),
-						icon: RectangleListSolid,
-						route: '/secure/auditable-item-stream'
-					},
-					{
-						label: $i18n('navigation.logout'),
-						icon: LockOpenSolid,
-						route: '/authentication/logout'
-					}
-				]
+				items: loggedInNavigation
 			});
 		} else if ($authenticationState === 'not-authenticated') {
 			showAuthBadge = false;
 			sidebarGroups.push({
-				items: [
-					{
-						label: $i18n('navigation.login'),
-						icon: LockSolid,
-						route: '/'
-					}
-				]
+				items: loggedOutNavigation
 			});
 		}
 	}
@@ -98,7 +94,7 @@
 	authenticated={showAuthBadge}
 	initials={finalInitials}
 	profileNavRoute="/secure/identity-profile"
-	serverHealthStatus={$serverHealthStatus}
+	serverHealthStatus={$serverHealthStatus === 'ok' ? 'success' : $serverHealthStatus}
 	serverName={$serverName}
 	serverVersion={$serverVersion}
 >

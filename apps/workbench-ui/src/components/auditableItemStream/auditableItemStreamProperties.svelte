@@ -13,9 +13,9 @@
 		i18n,
 		Input,
 		Label,
-		LabelledValue,
 		P,
 		QR,
+		Span,
 		ValidatedForm,
 		ValidationError
 	} from '@twin.org/ui-components-svelte';
@@ -37,8 +37,8 @@
 	} = {};
 	let busy = false;
 	let progress: string | undefined;
-	let result: string | undefined;
-	let resultIsError: boolean;
+	let result: string = '';
+	let resultIsError: boolean = false;
 	let saved: boolean = false;
 
 	async function validate(validationFailures: IValidationFailure[]): Promise<void> {
@@ -136,26 +136,26 @@
 			bind:result
 			bind:resultIsError
 		>
-			<svelte:fragment slot="fields">
+			{#snippet fields()}
 				{#if !Is.stringValue(result)}
 					<Label>
 						{$i18n('pages.auditableItemStreamProperties.description')}
 						<Input
 							type="text"
 							name="description"
-							color={Is.arrayValue(validationErrors.description) ? 'red' : 'base'}
+							color={Is.arrayValue(validationErrors.description) ? 'error' : 'default'}
 							bind:value={description}
 							disabled={busy}
 						/>
 						<ValidationError validationErrors={validationErrors.description} />
 					</Label>
 				{/if}
-			</svelte:fragment>
-			<svelte:fragment slot="after-action">
+			{/snippet}
+			{#snippet afterAction()}
 				{#if Is.stringValue(progress)}
 					<P>{progress}</P>
 				{/if}
-			</svelte:fragment>
+			{/snippet}
 		</ValidatedForm>
 	{:else}
 		<Card class="flex flex-col gap-5">
@@ -169,7 +169,7 @@
 			{#if Is.stringValue(itemId)}
 				<Label>
 					{$i18n('pages.auditableItemStreamProperties.itemId')}
-					<LabelledValue>{itemId}</LabelledValue>
+					<Span>{itemId}</Span>
 				</Label>
 				<Label>
 					{$i18n('pages.auditableItemStreamProperties.itemQr')}

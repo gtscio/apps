@@ -38,7 +38,7 @@
 		bind:validationErrors
 		bind:busy
 	>
-		<svelte:fragment slot="fields">
+		{#snippet fields()}
 			<Label class="flex flex-col gap-2">
 				{$i18n('pages.login.email')}
 				<Input
@@ -47,9 +47,9 @@
 					autocomplete="email"
 					placeholder="name@example.com"
 					bind:value={email}
-					color={Is.arrayValue(validationErrors.email) ? 'red' : 'base'}
+					color={Is.arrayValue(validationErrors.email) ? 'error' : 'default'}
 					disabled={busy}
-					spellcheck="false"
+					spellcheck={false}
 				/>
 				<ValidationError validationErrors={validationErrors.email} />
 			</Label>
@@ -60,18 +60,18 @@
 					name="password"
 					placeholder="•••••"
 					bind:value={password}
-					color={Is.arrayValue(validationErrors.password) ? 'red' : 'base'}
+					color={Is.arrayValue(validationErrors.password) ? 'error' : 'default'}
 					disabled={busy}
-					spellcheck="false"
+					spellcheck={false}
 				/>
 				<ValidationError validationErrors={validationErrors.password} />
 			</Label>
-		</svelte:fragment>
-		<svelte:fragment slot="after-action">
+		{/snippet}
+		{#snippet afterAction()}
 			<P class="text-sm text-neutral-900 dark:text-neutral-400">
 				{$i18n('pages.login.noAccount')}
 				<Link href="/authentication/signup" class="ml-2 p-1">{$i18n('pages.login.signUp')}</Link>
 			</P>
-		</svelte:fragment>
+		{/snippet}
 	</ValidatedForm>
 </section>

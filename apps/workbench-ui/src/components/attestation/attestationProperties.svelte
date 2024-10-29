@@ -10,10 +10,10 @@
 		Heading,
 		i18n,
 		Label,
-		LabelledValue,
 		P,
 		QR,
 		Select,
+		Span,
 		ValidatedForm,
 		ValidationError
 	} from '@twin.org/ui-components-svelte';
@@ -152,14 +152,14 @@
 			bind:validationErrors
 			bind:busy
 		>
-			<svelte:fragment slot="fields">
+			{#snippet fields()}
 				<Label>
 					{$i18n('pages.attestationProperties.blob')}
 					<Select
 						name="blob"
 						placeholder={$i18n('pages.attestationProperties.selectBlob')}
 						items={blobNames}
-						color={Is.arrayValue(validationErrors.blobId) ? 'red' : 'base'}
+						color={Is.arrayValue(validationErrors.blobId) ? 'error' : 'default'}
 						bind:value={blobId}
 						disabled={busy}
 					></Select>
@@ -171,32 +171,26 @@
 						name="assertionMethod"
 						placeholder={$i18n('pages.attestationProperties.selectAssertionMethod')}
 						items={assertionMethods}
-						color={Is.arrayValue(validationErrors.assertionMethod) ? 'red' : 'base'}
+						color={Is.arrayValue(validationErrors.assertionMethod) ? 'error' : 'default'}
 						bind:value={assertionMethod}
 						disabled={busy}
 					></Select>
 					<ValidationError validationErrors={validationErrors.assertionMethod} />
 				</Label>
-			</svelte:fragment>
-			<svelte:fragment slot="after-action">
+			{/snippet}
+			{#snippet afterAction()}
 				{#if Is.stringValue(progress)}
 					<P>{progress}</P>
 				{/if}
-			</svelte:fragment>
+			{/snippet}
 		</ValidatedForm>
 	{:else}
 		<Card class="flex flex-col gap-5">
 			<Heading tag="h5">{$i18n('pages.attestationProperties.resultTitle')}</Heading>
-			{#if Is.stringValue(signature)}
-				<Label>
-					{$i18n('pages.attestationProperties.signature')}
-					<LabelledValue>{signature}</LabelledValue>
-				</Label>
-			{/if}
 			{#if Is.stringValue(itemId)}
 				<Label>
 					{$i18n('pages.attestationProperties.attestationId')}
-					<LabelledValue>{itemId}</LabelledValue>
+					<Span>{itemId}</Span>
 				</Label>
 				<Label>
 					{$i18n('pages.attestationProperties.attestationQr')}
@@ -206,6 +200,12 @@
 						label={$i18n('pages.attestationProperties.attestationQr')}
 						dimensions={128}
 					/>
+				</Label>
+			{/if}
+			{#if Is.stringValue(signature)}
+				<Label>
+					{$i18n('pages.attestationProperties.signature')}
+					<Span>{signature}</Span>
 				</Label>
 			{/if}
 			<Button on:click={async () => close()}>{$i18n('actions.close')}</Button>

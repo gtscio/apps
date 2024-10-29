@@ -7,6 +7,7 @@
 		Button,
 		Heading,
 		i18n,
+		Icons,
 		Spinner,
 		P,
 		Table,
@@ -18,7 +19,6 @@
 		ModalYesNo,
 		Pagination
 	} from '@twin.org/ui-components-svelte';
-	import { EyeSolid, TrashBinSolid } from 'flowbite-svelte-icons';
 	import { onMount } from 'svelte';
 	import type { IUserAttestationEntry } from '$models/IUserAttestationEntry';
 	import { attestationEntryList, attestationsEntryRemove } from '$stores/attestations';
@@ -127,10 +127,12 @@
 						<TableBodyCell class="whitespace-normal break-all">{item.description}</TableBodyCell>
 						<TableBodyCell>{new Date(item.dateCreated).toLocaleString()}</TableBodyCell>
 						<TableBodyCell class="flex flex-row gap-2"
-							><Button size="xs" outline on:click={() => goto(`/secure/attestation/${item.id}`)}
-								><EyeSolid /></Button
-							><Button size="xs" outline on:click={async () => removePrompt(item.id)}
-								><TrashBinSolid /></Button
+							><Button
+								size="xs"
+								color="plain"
+								on:click={() => goto(`/secure/attestation/${item.id}`)}><Icons.EyeSolid /></Button
+							><Button size="xs" color="plain" on:click={async () => removePrompt(item.id)}
+								><Icons.TrashBinSolid /></Button
 							></TableBodyCell
 						>
 					</TableBodyRow>
@@ -143,7 +145,7 @@
 			open={Is.stringValue(confirmationId)}
 			message={$i18n('pages.attestation.deleteMessage')}
 			busy={modalIsBusy}
-			yesColor="red"
+			yesColor="error"
 			yesAction={async () => remove()}
 			noAction={async () => removeCancel()}
 		/>

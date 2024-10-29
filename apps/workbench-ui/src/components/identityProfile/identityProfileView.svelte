@@ -9,13 +9,13 @@
 		Code,
 		Error,
 		Heading,
+		Icons,
 		Label,
-		LabelledValue,
 		QR,
+		Span,
 		Spinner,
 		i18n
 	} from '@twin.org/ui-components-svelte';
-	import { CloudArrowUpOutline } from 'flowbite-svelte-icons';
 	import { onMount } from 'svelte';
 	import { createPublicUrl } from '$stores/app';
 	import { identityGetPublic } from '$stores/identity';
@@ -75,24 +75,26 @@
 			<div class="flex flex-col gap-4">
 				<Label>
 					{$i18n('pages.identityPublic.identity')}
-					<LabelledValue>{itemId}</LabelledValue>
+					<Span>{itemId}</Span>
 				</Label>
 				{#if Is.stringValue(schema)}
 					<Label>
 						{$i18n('pages.identityPublic.schema')}
-						<LabelledValue>{schema}</LabelledValue>
+						<Span>{schema}</Span>
 					</Label>
 				{/if}
 				{#if Is.stringValue(displayName)}
 					<Label>
 						{$i18n('pages.identityPublic.displayName')}
-						<LabelledValue>{displayName}</LabelledValue>
+						<Span>{displayName}</Span>
 					</Label>
 				{/if}
 				{#if Is.stringValue(exploreUrl)}
 					<Label>
-						<Button size="xs" on:click={openExplorer} class="gap-2"
-							>{$i18n('pages.identityPublic.explore')}<CloudArrowUpOutline size="sm" /></Button
+						<Button size="xs" on:click={openExplorer} color="plain" class="max-w-32 gap-2"
+							>{$i18n('pages.identityPublic.explore')}<Icons.CloudArrowUpOutline
+								size="sm"
+							/></Button
 						>
 					</Label>
 				{/if}
