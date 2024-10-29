@@ -1,7 +1,7 @@
-name: Publish Production
+name: Publish Next
 
 env:
-  gha-branch: main
+  gha-branch: next
   gha-production: true
   gha-domain: ${{ secrets.DOMAIN_PROD_WORKBENCH }}
 
