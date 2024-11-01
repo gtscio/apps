@@ -110,74 +110,87 @@ export async function bootstrapNodeIdentity(context: IWorkbenchContext): Promise
 		// to store the mnemonic in the vault without an identity. We use a temporary identity
 		// and then replace it with the new identity later in the process.
 		const nodeIdentity = `bootstrap-temp-${Converter.bytesToHex(RandomHelper.generate(16))}`;
-
-		// Create a secure mnemonic and store it in the vault so that wallet operations
-		// can be performed
-		const mnemonic = Bip39.randomMnemonic();
-		nodeLogInfo(I18n.formatMessage("workbench.generatingMnemonic", { mnemonic }));
-
 		const vaultConnector = VaultConnectorFactory.get(context.envVars.WORKBENCH_VAULT_CONNECTOR);
-		await vaultConnector.setSecret(`${nodeIdentity}/mnemonic`, mnemonic);
 
-		// Generate an address from the wallet, this will use the mnemonic from above
-		const walletConnector = WalletConnectorFactory.get(context.envVars.WORKBENCH_WALLET_CONNECTOR);
-		const addresses = await walletConnector.getAddresses(nodeIdentity, 0, 0, 5);
+		let tempSecretName;
+		try {
+			// Create a secure mnemonic and store it in the vault so that wallet operations
+			// can be performed
+			const mnemonic = Bip39.randomMnemonic();
+			nodeLogInfo(I18n.formatMessage("workbench.generatingMnemonic", { mnemonic }));
 
-		let address0 = addresses[0];
+			tempSecretName = `${nodeIdentity}/mnemonic`;
+			await vaultConnector.setSecret(tempSecretName, mnemonic);
 
-		if (context.envVars.WORKBENCH_WALLET_CONNECTOR === "iota") {
-			address0 = `${context.envVars.WORKBENCH_IOTA_EXPLORER_URL}addr/${address0}`;
-		}
+			// Generate an address from the wallet, this will use the mnemonic from above
+			const walletConnector = WalletConnectorFactory.get(
+				context.envVars.WORKBENCH_WALLET_CONNECTOR
+			);
+			const addresses = await walletConnector.getAddresses(nodeIdentity, 0, 0, 5);
 
-		nodeLogInfo(I18n.formatMessage("workbench.fundingWallet", { address: address0 }));
+			let address0 = addresses[0];
 
-		// Add some funds to the wallet from the faucet
-		await walletConnector.ensureBalance(nodeIdentity, addresses[0], 1000000000n);
+			if (context.envVars.WORKBENCH_WALLET_CONNECTOR === "iota") {
+				address0 = `${context.envVars.WORKBENCH_IOTA_EXPLORER_URL}addr/${address0}`;
+			}
 
-		nodeLogInfo(I18n.formatMessage("workbench.generatingNodeIdentity"));
+			nodeLogInfo(I18n.formatMessage("workbench.fundingWallet", { address: address0 }));
 
-		// Now create an identity for the node controlled by the address we just funded
-		const identityConnector = IdentityConnectorFactory.get(
-			context.envVars.WORKBENCH_IDENTITY_CONNECTOR
-		);
-		const identityDocument = await identityConnector.createDocument(nodeIdentity);
+			// Add some funds to the wallet from the faucet
+			await walletConnector.ensureBalance(nodeIdentity, addresses[0], 1000000000n);
 
-		if (context.envVars.WORKBENCH_IDENTITY_CONNECTOR === "iota") {
+			nodeLogInfo(I18n.formatMessage("workbench.generatingNodeIdentity"));
+
+			// Now create an identity for the node controlled by the address we just funded
+			const identityConnector = IdentityConnectorFactory.get(
+				context.envVars.WORKBENCH_IDENTITY_CONNECTOR
+			);
+			const identityDocument = await identityConnector.createDocument(nodeIdentity);
+
+			if (context.envVars.WORKBENCH_IDENTITY_CONNECTOR === "iota") {
+				nodeLogInfo(
+					I18n.formatMessage("workbench.identityExplorer", {
+						url: `${process.env.WORKBENCH_IOTA_EXPLORER_URL}addr/${IotaIdentityUtils.didToAddress(identityDocument.id)}?tab=DID`
+					})
+				);
+			}
+
+			// If we are using entity storage for wallet the identity associated with the
+			// address will be wrong, so fix it
+			if (context.envVars.WORKBENCH_WALLET_CONNECTOR === "entity-storage") {
+				const walletAddress = EntityStorageConnectorFactory.get<
+					IEntityStorageConnector<WalletAddress>
+				>(StringHelper.kebabCase(nameof<WalletAddress>()));
+				const addr = await walletAddress.get(addresses[0]);
+				if (!Is.empty(addr)) {
+					addr.identity = identityDocument.id;
+					await walletAddress.set(addr);
+				}
+			}
+
+			// Now that we have an identity we can remove the temporary one
+			// and store the mnemonic with the new identity
+			await vaultConnector.setSecret(`${identityDocument.id}/mnemonic`, mnemonic);
+			await vaultConnector.removeSecret(tempSecretName);
+			tempSecretName = undefined;
+
+			context.config.nodeIdentity = identityDocument.id;
+			context.config.addresses = addresses;
+			context.configUpdated = true;
+
 			nodeLogInfo(
-				I18n.formatMessage("workbench.identityExplorer", {
-					url: `${process.env.WORKBENCH_IOTA_EXPLORER_URL}addr/${IotaIdentityUtils.didToAddress(identityDocument.id)}?tab=DID`
+				I18n.formatMessage("workbench.nodeIdentity", {
+					identity: context.config.nodeIdentity
 				})
 			);
-		}
-
-		// If we are using entity storage for wallet the identity associated with the
-		// address will be wrong, so fix it
-		if (context.envVars.WORKBENCH_WALLET_CONNECTOR === "entity-storage") {
-			const walletAddress = EntityStorageConnectorFactory.get<
-				IEntityStorageConnector<WalletAddress>
-			>(StringHelper.kebabCase(nameof<WalletAddress>()));
-			const addr = await walletAddress.get(addresses[0]);
-			if (!Is.empty(addr)) {
-				addr.identity = identityDocument.id;
-				await walletAddress.set(addr);
+		} finally {
+			// remove the temp secret name if something went wrong and it still exists
+			if (Is.stringValue(tempSecretName)) {
+				try {
+					await vaultConnector.removeSecret(tempSecretName);
+				} catch {}
 			}
 		}
-
-		context.config.nodeIdentity = identityDocument.id;
-		context.config.addresses = addresses;
-		context.configUpdated = true;
-
-		// Now that we have an identity we can remove the temporary one
-		// and store the mnemonic with the new identity
-		await vaultConnector.removeSecret(`${nodeIdentity}/mnemonic`);
-
-		await vaultConnector.setSecret(`${identityDocument.id}/mnemonic`, mnemonic);
-
-		nodeLogInfo(
-			I18n.formatMessage("workbench.nodeIdentity", {
-				identity: context.config.nodeIdentity
-			})
-		);
 	}
 }
 
