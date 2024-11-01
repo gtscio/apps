@@ -197,6 +197,7 @@
 					<QR
 						class="mt-2"
 						qrData={createPublicUrl(`attestation/${itemId}`)}
+						href={createPublicUrl(`attestation/${itemId}`)}
 						label={$i18n('pages.attestationProperties.attestationQr')}
 						dimensions={128}
 					/>

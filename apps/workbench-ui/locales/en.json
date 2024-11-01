@@ -143,11 +143,19 @@
 			"resultTitleUpdate": "Update Result",
 			"itemQr": "Auditable Item Stream QR Code",
 			"itemId": "Auditable Item Stream Id"
+		},
+		"proofView": {
+			"title": "Proof View",
+			"type": "Type",
+			"header": "Header",
+			"payload": "Payload",
+			"signature": "Signature"
 		}
 	},
 	"actions": {
 		"modify": "Modify",
 		"delete": "Delete",
-		"view": "View"
+		"view": "View",
+		"decode": "Decode"
 	}
 }

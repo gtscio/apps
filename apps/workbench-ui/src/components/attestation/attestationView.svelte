@@ -51,6 +51,22 @@
 	function openExplorer(): void {
 		window.open(exploreUrl, '_blank');
 	}
+
+	function openProof(): void {
+		const a = document.createElement('a');
+		a.href = `/public/proof/${item?.proof?.type}:${item?.proof?.value}`;
+		a.target = '_blank';
+		a.click();
+	}
+
+	function openIdentity(id?: string): void {
+		if (Is.stringValue(id)) {
+			const a = document.createElement('a');
+			a.href = `/public/identity/${id}`;
+			a.target = '_blank';
+			a.click();
+		}
+	}
 </script>
 
 <Card class="max-w-full gap-4 pb-4">
@@ -103,7 +119,18 @@
 			{/if}
 			{#if Is.stringValue(item?.ownerIdentity)}
 				<Label>
-					{$i18n('components.attestationView.ownerIdentity')}
+					<div class="flex flex-row items-center gap-2">
+						{$i18n('components.attestationView.ownerIdentity')}
+						<Button
+							on:click={() => openIdentity(item?.ownerIdentity)}
+							size="xs"
+							color="plain"
+							class="gap-2"
+						>
+							{$i18n('actions.view')}
+							<Icons.ArrowUpRightFromSquareOutline size="sm" />
+						</Button>
+					</div>
 					<Span>{item.ownerIdentity}</Span>
 				</Label>
 			{/if}
@@ -115,7 +142,18 @@
 			{/if}
 			{#if Is.stringValue(item?.holderIdentity)}
 				<Label>
-					{$i18n('components.attestationView.holderIdentity')}
+					<div class="flex flex-row items-center gap-2">
+						{$i18n('components.attestationView.holderIdentity')}
+						<Button
+							on:click={() => openIdentity(item?.holderIdentity)}
+							size="xs"
+							color="plain"
+							class="gap-2"
+						>
+							{$i18n('actions.view')}
+							<Icons.ArrowUpRightFromSquareOutline size="sm" />
+						</Button>
+					</div>
 					<Span>{item.holderIdentity}</Span>
 				</Label>
 			{/if}
@@ -127,7 +165,13 @@
 			{/if}
 			{#if Is.object(item?.proof)}
 				<Label>
-					{$i18n('components.attestationView.proof')}
+					<div class="flex flex-row items-center gap-2">
+						{$i18n('components.attestationView.proof')}
+						<Button on:click={openProof} size="xs" color="plain" class="gap-2">
+							{$i18n('actions.decode')}
+							<Icons.ArrowUpRightFromSquareOutline size="sm" />
+						</Button>
+					</div>
 					<Code>{JSON.stringify(item.proof, undefined, 2)}</Code>
 				</Label>
 			{/if}

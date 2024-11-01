@@ -176,6 +176,7 @@
 					<QR
 						class="mt-2"
 						qrData={createPrivateUrl(`auditable-item-stream/${itemId}`)}
+						href={createPrivateUrl(`auditable-item-stream/${itemId}`)}
 						label={$i18n('pages.auditableItemStreamProperties.itemQr')}
 						dimensions={128}
 					/>

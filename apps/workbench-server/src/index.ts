@@ -48,7 +48,7 @@ import { startWebServer } from "./server.js";
 try {
 	const serverInfo: IServerInfo = {
 		name: "Workbench Server",
-		version: "0.0.1-next.1"
+		version: "0.0.1-next.3"
 	};
 
 	CLIDisplay.header(serverInfo.name, serverInfo.version, "🌩️ ");

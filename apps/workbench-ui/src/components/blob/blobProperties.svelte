@@ -133,6 +133,7 @@
 					<QR
 						class="mt-2"
 						qrData={createPrivateUrl(`blob/${itemId}`)}
+						href={createPrivateUrl(`blob/${itemId}`)}
 						label={$i18n('pages.blobProperties.itemQr')}
 						dimensions={128}
 					/>

@@ -102,6 +102,7 @@
 					{$i18n('pages.identityProfile.qr')}
 					<QR
 						qrData={createPublicUrl(`identity/${$profileIdentity}`)}
+						href={createPublicUrl(`identity/${$profileIdentity}`)}
 						label={$i18n('pages.identityProfile.qr')}
 						dimensions={128}
 					/>
