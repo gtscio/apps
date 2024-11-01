@@ -30,7 +30,7 @@ import { ATTESTATION_ASSERTION_METHOD_ID } from "./components/attestation.js";
 import { BLOB_ENCRYPTION_KEY } from "./components/blobStorage.js";
 import {
 	IMMUTABLE_PROOF_ASSERTION_METHOD_ID,
-	IMMUTABLE_PROOF_ENCRYPTION_KEY
+	IMMUTABLE_PROOF_HASH_KEY
 } from "./components/immutableProof.js";
 import { nodeLogInfo } from "./components/logging.js";
 import { AUTH_SIGNING_NAME_VAULT_KEY } from "./components/processors.js";
@@ -109,7 +109,7 @@ export async function bootstrapNodeIdentity(context: IWorkbenchContext): Promise
 		// But we have a chicken and egg problem in that we can't create the identity
 		// to store the mnemonic in the vault without an identity. We use a temporary identity
 		// and then replace it with the new identity later in the process.
-		const nodeIdentity = `bootstrap-${Converter.bytesToBase64(RandomHelper.generate(32))}`;
+		const nodeIdentity = `bootstrap-temp-${Converter.bytesToHex(RandomHelper.generate(16))}`;
 
 		// Create a secure mnemonic and store it in the vault so that wallet operations
 		// can be performed
@@ -205,7 +205,9 @@ export async function bootstrapNodeUser(context: IWorkbenchContext): Promise<voi
 		const hashedPassword = await PasswordHelper.hashPassword(passwordBytes, saltBytes);
 
 		const nodeAdminUser: AuthenticationUser = {
-			email: DEFAULT_NODE_ADMIN_EMAIL,
+			email: Is.email(context.envVars.WORKBENCH_ADMIN_USERNAME)
+				? context.envVars.WORKBENCH_ADMIN_USERNAME
+				: DEFAULT_NODE_ADMIN_EMAIL,
 			password: hashedPassword,
 			salt: Converter.bytesToBase64(saltBytes),
 			identity: context.config.nodeIdentity
@@ -326,7 +328,7 @@ export async function bootstrapBlobEncryption(context: IWorkbenchContext): Promi
 
 		await vaultConnector.createKey(
 			`${context.config.nodeIdentity}/${BLOB_ENCRYPTION_KEY}`,
-			VaultKeyType.Ed25519
+			VaultKeyType.ChaCha20Poly1305
 		);
 
 		context.config.bootstrappedComponents.push("BlobEncryption");
@@ -349,7 +351,7 @@ export async function bootstrapImmutableProofEncryption(context: IWorkbenchConte
 		const vaultConnector = VaultConnectorFactory.get(context.envVars.WORKBENCH_VAULT_CONNECTOR);
 
 		await vaultConnector.createKey(
-			`${context.config.nodeIdentity}/${IMMUTABLE_PROOF_ENCRYPTION_KEY}`,
+			`${context.config.nodeIdentity}/${IMMUTABLE_PROOF_HASH_KEY}`,
 			VaultKeyType.Ed25519
 		);
 

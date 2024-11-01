@@ -12,8 +12,8 @@ import { nodeLogInfo } from "./logging.js";
 import type { IWorkbenchContext } from "../models/IWorkbenchContext.js";
 
 export const IMMUTABLE_PROOF_SERVICE_NAME = "immutable-proof";
-export const IMMUTABLE_PROOF_ENCRYPTION_KEY = "immutable-proof";
-export const IMMUTABLE_PROOF_ASSERTION_METHOD_ID = "immutable-proof";
+export const IMMUTABLE_PROOF_HASH_KEY = "immutable-proof-hash";
+export const IMMUTABLE_PROOF_ASSERTION_METHOD_ID = "immutable-proof-assertion";
 
 /**
  * Initialise the immutable proof connector service.
@@ -34,7 +34,11 @@ export function initialiseImmutableProofService(context: IWorkbenchContext): voi
 	const service = new ImmutableProofService({
 		vaultConnectorType: context.envVars.WORKBENCH_VAULT_CONNECTOR,
 		immutableStorageType: context.envVars.WORKBENCH_IMMUTABLE_STORAGE_CONNECTOR,
-		identityConnectorType: context.envVars.WORKBENCH_IDENTITY_CONNECTOR
+		identityConnectorType: context.envVars.WORKBENCH_IDENTITY_CONNECTOR,
+		config: {
+			assertionMethodId: IMMUTABLE_PROOF_ASSERTION_METHOD_ID,
+			proofHashKeyId: IMMUTABLE_PROOF_HASH_KEY
+		}
 	});
 	context.componentInstances.push({
 		instanceName: IMMUTABLE_PROOF_SERVICE_NAME,

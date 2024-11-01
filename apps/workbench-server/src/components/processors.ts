@@ -14,7 +14,7 @@ import { initialiseEntityStorageConnector } from "./entityStorage.js";
 import type { IWorkbenchContext } from "../models/IWorkbenchContext.js";
 
 export const AUTH_SERVICE_NAME = "authentication";
-export const AUTH_SIGNING_NAME_VAULT_KEY = "signing";
+export const AUTH_SIGNING_NAME_VAULT_KEY = "auth-signing";
 
 /**
  * Build the processor for the REST routes.

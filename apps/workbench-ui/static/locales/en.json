@@ -407,7 +407,9 @@
       "methodMissing": "The verification method specified does not exist",
       "verifyProofFailed": "Verifying the signature for the data failed",
       "revokeVerifiableCredentialsFailed": "Revoking verifiable credentials failed",
-      "unrevokeVerifiableCredentialsFailed": "Unrevoking verifiable credentials failed"
+      "unrevokeVerifiableCredentialsFailed": "Unrevoking verifiable credentials failed",
+      "proofType": "The proof type must be DataIntegrityProof, it is currently {proofType}",
+      "cryptosuite": "The proof cryptosuite must be eddsa-jcs-2022, it is currently {cryptosuite}"
     },
     "entityStorageIdentityProfileConnector": {
       "alreadyExists": "The identity profile already exists for the identity \"{existingId}\"",
@@ -536,7 +538,40 @@
     "entityStorageVaultConnector": {
       "keyAlreadyExists": "The key \"{existingId}\" already exists in the vault",
       "keyNotFound": "The key \"{notFoundId}\" was not found in the vault",
-      "secretNotFound": "The secret \"{notFoundId}\" was not found in the vault"
+      "secretNotFound": "The secret \"{notFoundId}\" was not found in the vault",
+      "unsupportedKeyType": "The key type \"{keyType}\" is not supported",
+      "keyTypeMismatch": "The key type \"{keyType}\" does not match the requested encryption method \"{encryptionType}\""
+    },
+    "hashicorpVaultConnector": {
+      "setSecretFailed": "Failed to set secret \"{name}\"",
+      "removeSecretFailed": "Failed to remove secret \"{name}\"",
+      "getSecretVersionsFailed": "Failed to get secret versions \"{name}\"",
+      "hashicorpVaultConnectionFailed": "Failed to connect to Hashicorp Vault",
+      "createdKeyFailed": "Failed to create key \"{name, type}\"",
+      "unsupportedKeyType": "Unsupported key type \"{type}\"",
+      "exportPublicKeyFailed": "Failed to export public key \"{name}\"",
+      "publicKeyNotFound": "Public key \"{name}\" not found",
+      "removeKeyFailed": "Failed to remove key \"{name}\"",
+      "updateKeyConfigFailed": "Failed to update key config \"{name}\"",
+      "addKeyFailed": "Failed to add key \"{name, type}\"",
+      "backupKeyNotFound": "Backup key \"{name}\" not found",
+      "backupKeyFailed": "Failed to backup key \"{name}\"",
+      "restoreKeyFailed": "Failed to restore key \"{name}\"",
+      "exportKeyFailed": "Failed to export key \"{name}\" with keyPath \"{keyPath}\"",
+      "exportKeyNotFound": "Export key with name \"{name}\" not found",
+      "getKeyFailed": "Failed to get key \"{name}\"",
+      "signDataFailed": "Failed to sign data \"{name}\"",
+      "invalidSignResponse": "Invalid sign response \"{name}\"",
+      "verifyDataFailed": "Failed to verify data \"{name}\"",
+      "invalidSignature": "Invalid signature \"{name}\"",
+      "encryptDataFailed": "Failed to encrypt data \"{name, encryptionType}\"",
+      "unsupportedEncryptionType": "Unsupported encryption type \"{encryptionType}\"",
+      "decryptDataFailed": "Failed to decrypt data \"{name, encryptionType}\"",
+      "invalidEncryptResponse": "Invalid encrypt response \"{name, encryptionType}\"",
+      "keyAlreadyExists": "Key \"{existingId}\" already exists",
+      "invalidReadKeyResponse": "Invalid read key response \"{name}\"",
+      "renameKeyFailed": "Failed to rename key from \"{name}\" to \"{newName}\"",
+      "keyTypeMismatch": "The key type \"{keyType}\" does not match the requested encryption method \"{encryptionType}\""
     },
     "entityStorageWalletConnector": {
       "insufficientFunds": "There are insufficient funds in the wallet."
@@ -825,6 +860,9 @@
       "metricUpdated": "The metric was updated \"{id}\" with type \"type\" and label \"{label}\"",
       "metricRemoved": "The metric was removed \"{id}\"",
       "metricValueCreated": "The metric value was created for \"{id}\" with value \"{value}\""
+    },
+    "hashicorpVaultConnector": {
+      "hashicorpVaultConnected": "Connected to Hashicorp Vault"
     }
   },
   "cli": {

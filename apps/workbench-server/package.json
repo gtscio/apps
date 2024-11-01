@@ -86,6 +86,7 @@
 		"@twin.org/telemetry-service": "next",
 		"@twin.org/vault-models": "next",
 		"@twin.org/vault-connector-entity-storage": "next",
+		"@twin.org/vault-connector-hashicorp": "next",
 		"@twin.org/wallet-models": "next",
 		"@twin.org/wallet-connector-entity-storage": "next",
 		"@twin.org/wallet-connector-iota": "next",

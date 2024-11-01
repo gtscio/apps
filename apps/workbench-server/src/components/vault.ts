@@ -8,6 +8,7 @@ import {
 	type VaultKey,
 	type VaultSecret
 } from "@twin.org/vault-connector-entity-storage";
+import { HashicorpVaultConnector } from "@twin.org/vault-connector-hashicorp";
 import { VaultConnectorFactory, type IVaultConnector } from "@twin.org/vault-models";
 import { initialiseEntityStorageConnector } from "./entityStorage.js";
 import { nodeLogInfo } from "./logging.js";
@@ -40,6 +41,14 @@ export function initialiseVaultConnectorFactory(context: IWorkbenchContext): voi
 		);
 		connector = new EntityStorageVaultConnector();
 		namespace = EntityStorageVaultConnector.NAMESPACE;
+	} else if (type === "hashicorp") {
+		connector = new HashicorpVaultConnector({
+			config: {
+				endpoint: context.envVars.WORKBENCH_HASHICORP_VAULT_URL,
+				token: context.envVars.WORKBENCH_HASHICORP_VAULT_TOKEN
+			}
+		});
+		namespace = HashicorpVaultConnector.NAMESPACE;
 	} else {
 		throw new GeneralError("Workbench", "serviceUnknownType", {
 			type,

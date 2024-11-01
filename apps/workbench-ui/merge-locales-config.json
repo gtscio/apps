@@ -58,6 +58,7 @@
 		"@twin.org/telemetry-service",
 		"@twin.org/vault-models",
 		"@twin.org/vault-connector-entity-storage",
+		"@twin.org/vault-connector-hashicorp",
 		"@twin.org/wallet-models",
 		"@twin.org/wallet-connector-entity-storage",
 		"@twin.org/wallet-connector-iota",
