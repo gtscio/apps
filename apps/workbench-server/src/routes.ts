@@ -1,7 +1,7 @@
 // Copyright 2024 IOTA Stiftung.
 // SPDX-License-Identifier: Apache-2.0.
 import { generateRestRoutesAuthentication } from "@twin.org/api-auth-entity-storage-service";
-import type { IRestRoute } from "@twin.org/api-models";
+import type { IRestRoute, ISocketRoute } from "@twin.org/api-models";
 import { generateRestRoutesInformation } from "@twin.org/api-service";
 import { generateRestRoutesAttestation } from "@twin.org/attestation-service";
 import { generateRestRoutesAuditableItemGraph } from "@twin.org/auditable-item-graph-service";
@@ -28,10 +28,10 @@ import { TELEMETRY_SERVICE_NAME } from "./components/telemetry.js";
 import { APP_USER_ATTESTATION_ENTRY_STORAGE_SERVICE } from "./components/userEntityStorage.js";
 
 /**
- * The routes for the application.
- * @returns The routes for the application.
+ * The REST routes for the application.
+ * @returns The REST routes for the application.
  */
-export function buildRoutes(): IRestRoute[] {
+export function buildRestRoutes(): IRestRoute[] {
 	return [
 		...generateRestRoutesInformation("", INFORMATION_SERVICE_NAME),
 		...generateRestRoutesAuthentication("authentication", AUTH_SERVICE_NAME),
@@ -49,4 +49,12 @@ export function buildRoutes(): IRestRoute[] {
 			APP_USER_ATTESTATION_ENTRY_STORAGE_SERVICE
 		)
 	];
+}
+
+/**
+ * The socket routes for the application.
+ * @returns The socket routes for the application.
+ */
+export function buildSocketRoutes(): ISocketRoute[] {
+	return [];
 }

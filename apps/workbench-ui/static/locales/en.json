@@ -53,6 +53,9 @@
         "coordinatesLatitudeRange": "The latitude value must be between -90 and 90",
         "coordinatesLongitudeNumber": "The longitude value must be a number",
         "coordinatesLongitudeRange": "The longitude value must be between -180 and 180"
+      },
+      "auditableItemGraphService": {
+        "edgeIdSameAsVertexId": "The edge id \"{id}\"can not point to the vertex it belongs to"
       }
     },
     "guard": {
@@ -258,8 +261,11 @@
       "invalid": "The JSON Web token signature could not be validated",
       "expired": "The JSON Web token has expired"
     },
-    "routeProcessor": {
-      "routeNotFound": "The web server could not find the route \"{notFoundId}\""
+    "restRouteProcessor": {
+      "routeNotFound": "The web server could not find the REST route \"{notFoundId}\""
+    },
+    "socketRouteProcessor": {
+      "routeNotFound": "The web server could not find the socket route \"{notFoundId}\""
     },
     "jwtIdentityProcessor": {
       "jwtMissing": "The JSON Web token could not be found in the authorization header or a cookie",
@@ -273,12 +279,7 @@
       "updatingFailed": "Updating the Auditable Item Graph vertex failed",
       "queryingFailed": "Querying the Auditable Item Graph failed",
       "removeImmutableFailed": "Removing the immutable data the Auditable Item Graph vertex failed",
-      "vertexNotFound": "The vertex with the Id \"{notFoundId}\" was not found",
-      "changesetCredentialRevoked": "The verification credential for the changeset has been revoked",
-      "invalidChangesetHash": "The changeset with epoch \"{epoch}\" and hash \"{hash}\" is invalid",
-      "invalidChangesetSignature": "The changeset with epoch \"{epoch}\" and hash \"{hash}\" signature does not match the changeset signature",
-      "immutableChangesetSignature": "The changeset with epoch \"{epoch}\" and hash \"{hash}\" signature does not match the immutable changeset signature",
-      "invalidChangesetCanonical": "The changeset with epoch \"{epoch}\" and hash \"{hash}\" integrity check does not match the immutable changeset integrity check"
+      "vertexNotFound": "The vertex with the Id \"{notFoundId}\" was not found"
     },
     "auditableItemStreamService": {
       "namespaceMismatch": "The namespace in the urn \"{id}\" does not match the namespace of the Auditable Item Stream service \"{namespace}\"",
@@ -395,7 +396,7 @@
       "verificationMethodNotFound": "The verification method could not be found",
       "verificationPrivateKeyNotFound": "The private key for the verification method could not be found in the vault",
       "serviceNotFound": "The service could not be found",
-      "publicKeyJwkMissing": "The verification method contains no publicKeyJwk",
+      "publicKeyJwkMissing": "The verification method contains no publicKeyJwk in method \"{method}\"",
       "jwkSignatureFailed": "The signature on the JWK failed verification",
       "createVerifiableCredentialFailed": "Creating the verifiable credential failed",
       "checkingVerifiableCredentialFailed": "Checking the verifiable credential failed",
@@ -404,7 +405,7 @@
       "expectingJwtCredential": "Expecting JWT credential in the presentation",
       "keyIndexOutOfRange": "The supplied keyIndex is not in the range of the key list",
       "createProofFailed": "Creating the signature for the data failed",
-      "methodMissing": "The verification method specified does not exist",
+      "methodMissing": "The verification method specified does not exist \"{method}\"",
       "verifyProofFailed": "Verifying the signature for the data failed",
       "revokeVerifiableCredentialsFailed": "Revoking verifiable credentials failed",
       "unrevokeVerifiableCredentialsFailed": "Unrevoking verifiable credentials failed",
@@ -432,7 +433,8 @@
       "stateControllerMissing": "The state controller address is missing from the metadata",
       "verificationMethodNotFound": "The verification method could not be found",
       "serviceNotFound": "The service could not be found",
-      "publicKeyJwkMissing": "The verification method contains no publicKeyJwk",
+      "publicKeyJwkMissing": "The verification method contains no publicKeyJwk in method \"{method}\"",
+      "verificationKeyMissing": "The verification key is missing from the vault for method \"{method}\"",
       "createVerifiableCredentialFailed": "Creating the verifiable credential failed",
       "checkingVerifiableCredentialFailed": "Checking the verifiable credential failed",
       "createVerifiablePresentationFailed": "Creating the verifiable presentation failed",
@@ -440,7 +442,7 @@
       "expectingJwtCredential": "Expecting JWT credential in the presentation",
       "keyIndexOutOfRange": "The supplied keyIndex is not in the range of the key list",
       "createProofFailed": "Creating the signature for the data failed",
-      "methodMissing": "The verification method specified does not exist",
+      "methodMissing": "The verification method specified does not exist \"{method}\"",
       "verifyProofFailed": "Verifying the signature for the data failed",
       "revokeVerifiableCredentialsFailed": "Revoking verifiable credentials failed",
       "unrevokeVerifiableCredentialsFailed": "Unrevoking verifiable credentials failed",
@@ -815,7 +817,9 @@
     "stopped": "The Web Server was stopped",
     "badRequest": "The web server could not handle the request",
     "restRouteAdded": "Added REST route \"{route}\" \"{method}\"",
-    "noProcessors": "You must configure at least one processor"
+    "socketRouteAdded": "Added socket route \"{route}\"",
+    "noRestProcessors": "You must configure at least one REST processor",
+    "noSocketProcessors": "You must configure at least one socket processor"
   },
   "auditableItemGraphService": {},
   "info": {

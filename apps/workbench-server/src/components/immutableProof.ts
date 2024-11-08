@@ -35,6 +35,7 @@ export function initialiseImmutableProofService(context: IWorkbenchContext): voi
 		vaultConnectorType: context.envVars.WORKBENCH_VAULT_CONNECTOR,
 		immutableStorageType: context.envVars.WORKBENCH_IMMUTABLE_STORAGE_CONNECTOR,
 		identityConnectorType: context.envVars.WORKBENCH_IDENTITY_CONNECTOR,
+		backgroundTaskConnectorType: context.envVars.WORKBENCH_BACKGROUND_TASK_CONNECTOR,
 		config: {
 			assertionMethodId: IMMUTABLE_PROOF_ASSERTION_METHOD_ID,
 			proofHashKeyId: IMMUTABLE_PROOF_HASH_KEY

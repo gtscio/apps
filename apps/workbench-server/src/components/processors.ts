@@ -6,8 +6,17 @@ import {
 	initSchema as initSchemaAuthEntityStorage,
 	type AuthenticationUser
 } from "@twin.org/api-auth-entity-storage-service";
-import type { IHttpRestRouteProcessor } from "@twin.org/api-models";
-import { LoggingProcessor, NodeIdentityProcessor, RouteProcessor } from "@twin.org/api-processors";
+import type {
+	IBaseRouteProcessor,
+	IRestRouteProcessor,
+	ISocketRouteProcessor
+} from "@twin.org/api-models";
+import {
+	LoggingProcessor,
+	NodeIdentityProcessor,
+	RestRouteProcessor,
+	SocketRouteProcessor
+} from "@twin.org/api-processors";
 import { ComponentFactory, GeneralError } from "@twin.org/core";
 import { nameof } from "@twin.org/nameof";
 import { initialiseEntityStorageConnector } from "./entityStorage.js";
@@ -22,20 +31,16 @@ export const AUTH_SIGNING_NAME_VAULT_KEY = "auth-signing";
  * @returns The REST route processors.
  * @throws If the processor type is unknown.
  */
-export function buildProcessors(context: IWorkbenchContext): IHttpRestRouteProcessor[] {
-	const restRouteProcessors: IHttpRestRouteProcessor[] = [];
+export function buildProcessors(context: IWorkbenchContext): {
+	restRouteProcessors: IRestRouteProcessor[];
+	socketRouteProcessors: ISocketRouteProcessor[];
+} {
+	const restRouteProcessors: IRestRouteProcessor[] = [];
+	const socketRouteProcessors: ISocketRouteProcessor[] = [];
 
-	const loggingProcessor = new LoggingProcessor({
-		loggingConnectorType: context.nodeLoggingConnectorName,
-		config: {
-			includeBody: context.debug
-		}
-	});
-	restRouteProcessors.push(loggingProcessor);
-	context.componentInstances.push({
-		instanceName: "loggingProcessor",
-		component: loggingProcessor
-	});
+	const loggingProcessors = buildLoggingProcessors(context);
+	restRouteProcessors.push(...loggingProcessors);
+	socketRouteProcessors.push(...loggingProcessors);
 
 	const nodeIdentityProcessor = new NodeIdentityProcessor();
 	context.componentInstances.push({
@@ -43,30 +48,66 @@ export function buildProcessors(context: IWorkbenchContext): IHttpRestRouteProce
 		component: nodeIdentityProcessor
 	});
 	restRouteProcessors.push(nodeIdentityProcessor);
+	socketRouteProcessors.push(nodeIdentityProcessor);
 
-	buildAuthProcessors(context, restRouteProcessors);
+	const authProcessors = buildAuthProcessors(context);
+	restRouteProcessors.push(...authProcessors);
+	socketRouteProcessors.push(...authProcessors);
 
-	const routeProcessor = new RouteProcessor({
+	const restRouteProcessor = new RestRouteProcessor({
 		config: {
 			includeErrorStack: context.debug
 		}
 	});
-	restRouteProcessors.push(routeProcessor);
-	context.componentInstances.push({ instanceName: "routeProcessor", component: routeProcessor });
+	restRouteProcessors.push(restRouteProcessor);
+	context.componentInstances.push({
+		instanceName: "restRouteProcessor",
+		component: restRouteProcessor
+	});
 
-	return restRouteProcessors;
+	const socketRouteProcessor = new SocketRouteProcessor({
+		config: {
+			includeErrorStack: context.debug
+		}
+	});
+	socketRouteProcessors.push(socketRouteProcessor);
+	context.componentInstances.push({
+		instanceName: "socketRouteProcessor",
+		component: socketRouteProcessor
+	});
+
+	return {
+		restRouteProcessors,
+		socketRouteProcessors
+	};
+}
+
+/**
+ * Build the logging processors.
+ * @param context The context for the node.
+ * @returns The logging processors.
+ */
+function buildLoggingProcessors(context: IWorkbenchContext): IBaseRouteProcessor[] {
+	const loggingProcessor = new LoggingProcessor({
+		loggingConnectorType: context.nodeLoggingConnectorName,
+		config: {
+			includeBody: context.debug
+		}
+	});
+	context.componentInstances.push({
+		instanceName: "loggingProcessor",
+		component: loggingProcessor
+	});
+	return [loggingProcessor];
 }
 
 /**
  * Build the authentication pre processors.
  * @param context The context for the node.
- * @param restRouteProcessors The REST route processors.
+ * @returns The authentication processors.
  * @throws If the auth processor type is unknown.
  */
-function buildAuthProcessors(
-	context: IWorkbenchContext,
-	restRouteProcessors: IHttpRestRouteProcessor[]
-): void {
+function buildAuthProcessors(context: IWorkbenchContext): IBaseRouteProcessor[] {
 	if (context.envVars.WORKBENCH_AUTH_PROCESSOR_TYPE === "entity-storage") {
 		initSchemaAuthEntityStorage();
 		initialiseEntityStorageConnector(
@@ -97,11 +138,13 @@ function buildAuthProcessors(
 			instanceName: "authHeaderProcessor",
 			component: authHeaderProcessor
 		});
-		restRouteProcessors.push(authHeaderProcessor);
+		return [authHeaderProcessor];
 	} else if (context.envVars.WORKBENCH_AUTH_PROCESSOR_TYPE !== "none") {
 		throw new GeneralError("Workbench", "processorUnknownType", {
 			type: context.envVars.WORKBENCH_AUTH_PROCESSOR_TYPE,
 			processorType: "authProcessor"
 		});
 	}
+
+	return [];
 }

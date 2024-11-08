@@ -84,6 +84,8 @@
 			};
 
 			const result = await attestationCreate(assertionMethod, data);
+			progress = '';
+
 			if (Is.stringValue(result?.error)) {
 				return result?.error;
 			}
@@ -100,8 +102,6 @@
 				});
 			}
 		}
-
-		progress = undefined;
 
 		return undefined;
 	}

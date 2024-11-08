@@ -10,6 +10,7 @@ import {
 } from "./components/attestation.js";
 import { initialiseAuditableItemGraphService } from "./components/auditableItemGraph.js";
 import { initialiseAuditableItemStreamService } from "./components/auditableItemStream.js";
+import { initialiseBackgroundTaskConnectorFactory } from "./components/backgroundTask.js";
 import {
 	initialiseBlobStorageConnectorFactory,
 	initialiseBlobStorageService
@@ -42,7 +43,7 @@ import { initialiseVaultConnectorFactory } from "./components/vault.js";
 import { initialiseWalletConnectorFactory, initialiseWalletStorage } from "./components/wallet.js";
 import { configure, findRootPackageFolder } from "./configure.js";
 import { initialiseLocales } from "./locales.js";
-import { buildRoutes } from "./routes.js";
+import { buildRestRoutes, buildSocketRoutes } from "./routes.js";
 import { startWebServer } from "./server.js";
 
 try {
@@ -67,6 +68,7 @@ try {
 
 	initialiseInformationService(context, serverInfo);
 
+	initialiseBackgroundTaskConnectorFactory(context);
 	initialiseVaultConnectorFactory(context);
 
 	initialiseWalletStorage(context);
@@ -103,7 +105,8 @@ try {
 
 	initialiseUserEntityStorage(context);
 
-	const processors = buildProcessors(context);
+	const { restRouteProcessors: restProcessors, socketRouteProcessors: socketProcessors } =
+		buildProcessors(context);
 
 	await bootstrap(context);
 
@@ -114,17 +117,24 @@ try {
 		}
 	}
 
-	await startWebServer(context, processors, buildRoutes(), async () => {
-		for (const instance of context.componentInstances) {
-			if (Is.function(instance.component.stop)) {
-				nodeLogInfo(I18n.formatMessage("workbench.stopping", { element: instance.instanceName }));
-				await instance.component.stop(
-					context.config.nodeIdentity,
-					context.nodeLoggingConnectorName
-				);
+	await startWebServer(
+		context,
+		restProcessors,
+		buildRestRoutes(),
+		socketProcessors,
+		buildSocketRoutes(),
+		async () => {
+			for (const instance of context.componentInstances) {
+				if (Is.function(instance.component.stop)) {
+					nodeLogInfo(I18n.formatMessage("workbench.stopping", { element: instance.instanceName }));
+					await instance.component.stop(
+						context.config.nodeIdentity,
+						context.nodeLoggingConnectorName
+					);
+				}
 			}
 		}
-	});
+	);
 } catch (err) {
 	nodeLogError(BaseError.fromError(err));
 	// eslint-disable-next-line unicorn/no-process-exit
