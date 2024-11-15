@@ -1,23 +1,11 @@
 {
 	"error": {
 		"workbench": {
-			"serviceUnknownType": "Unknown type \"{type}\" specified for \"{serviceType}\"",
-			"processorUnknownType": "Unknown processor \"{type}\" specified for \"{processorType}\"",
-			"noEnvVars": "There are no environment variables starting WORKBENCH_ the server will not start without them, please set them in the shell or create a .env file",
-			"storageFileRootNotSet": "The environment variable WORKBENCH_STORAGE_FILE_ROOT is not set",
-			"bootstrapFailed": "Bootstrap failed, please check the logs for more information"
+			"noEnvVars": "There are no environment variables starting WORKBENCH_ the server will not start without them, please set them in the shell or create a .env file"
 		}
 	},
 	"workbench": {
 		"terminateSignal": "Server terminating",
-		"debuggingEnabled": "Debugging Enabled",
-		"configuring": "Configuring {element}",
-		"configuringEntityStorage": "Configuring {element} with name \"{storageName}\" using \"{storageType}\" connector",
-		"starting": "Starting {element}",
-		"stopping": "Stopping {element}",
-		"bootstrapStarted": "Starting bootstrap process",
-		"bootstrapComplete": "Bootstrap process complete, some of the details logged will not be shown again, please record them",
-		"bootstrapping": "Bootstrap {element}",
 		"generatingMnemonic": "Generating and storing mnemonic \"{mnemonic}\"",
 		"fundingWallet": "Funding wallet \"{address}\"",
 		"generatingNodeIdentity": "Generating node identity",

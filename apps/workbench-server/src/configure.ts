@@ -1,124 +1,90 @@
 // Copyright 2024 IOTA Stiftung.
 // SPDX-License-Identifier: Apache-2.0.
 import path from "node:path";
-import { fileURLToPath } from "node:url";
 import type { IWebServerOptions } from "@twin.org/api-models";
-import { CLIUtils } from "@twin.org/cli-core";
 import { Coerce, GeneralError, Is } from "@twin.org/core";
+import type { IEngineCoreConfig, IEngineServerConfig } from "@twin.org/engine-models";
 import type { HttpMethod } from "@twin.org/web";
 import * as dotenv from "dotenv";
-import type { IWorkbenchConfig } from "./models/IWorkbenchConfig";
-import type { IWorkbenchContext } from "./models/IWorkbenchContext";
-
-export const DEFAULT_CONFIG_FILENAME = "workbench-config.json";
-export const DEFAULT_NODE_LOGGING_CONNECTOR = "node-logging";
-
-/**
- * Find the root package folder.
- * @returns The root package folder.
- */
-export function findRootPackageFolder(): string {
-	// Find the root package folder.
-	const rootPackageFolder = path.resolve(
-		path.join(path.dirname(fileURLToPath(import.meta.url)), "..", "..")
-	);
-
-	return rootPackageFolder;
-}
+import type { IWorkbenchEnvironmentVariables } from "./models/IWorkbenchEnvironmentVariables";
 
 /**
  * Handles the configuration of the application.
  * @param rootPackageFolder The root package folder.
- * @returns The context.
+ * @returns The the config for the core and the server.
  */
-export async function configure(rootPackageFolder: string): Promise<IWorkbenchContext> {
+export async function configure(rootPackageFolder: string): Promise<{
+	coreConfig: IEngineCoreConfig;
+	serverConfig: IEngineServerConfig;
+	envVars: IWorkbenchEnvironmentVariables;
+	stateFilename: string;
+}> {
 	// Import environment variables from .env files.
 	dotenv.config({
 		path: [path.join(rootPackageFolder, ".env")]
 	});
 
-	const envVars: { [id: string]: string } = {};
-	for (const envVar in process.env) {
-		if (envVar.startsWith("WORKBENCH_")) {
-			envVars[envVar] = process.env[envVar] ?? "";
-		}
-	}
+	const debug = Coerce.boolean(process.env.WORKBENCH_DEBUG) ?? false;
 
-	if (!Is.objectValue(envVars)) {
-		throw new GeneralError("Workbench", "noEnvVars");
-	}
+	const envVars: IWorkbenchEnvironmentVariables = {
+		adminUsername: Coerce.string(process.env.WORKBENCH_ADMIN_USERNAME) ?? "admin@node",
+		enableBlobEncryption:
+			Coerce.boolean(process.env.WORKBENCH_BLOB_STORAGE_ENABLE_ENCRYPTION) ?? false,
+		blobEncryptionKey:
+			Coerce.string(process.env.WORKBENCH_BLOB_ENCRYPTION_KEY) ?? "blob-encryption",
+		authSigningKey: Coerce.string(process.env.WORKBENCH_AUTH_SIGNING_KEY) ?? "auth-signing",
+		attestationAssertionMethodId:
+			Coerce.string(process.env.WORKBENCH_ATTESTATION_ASSERTION_METHOD_ID) ??
+			"attestation-assertion",
+		immutableProofHashKey:
+			Coerce.string(process.env.WORKBENCH_IMMUTABLE_PROOF_HASH_KEY) ?? "immutable-proof-hash",
+		immutableProofAssertionMethodId:
+			Coerce.string(process.env.WORKBENCH_IMMUTABLE_PROOF_ASSERTION_METHOD_ID) ??
+			"immutable-proof-assertion",
+		iotaExploreUrl: Coerce.string(process.env.WORKBENCH_IOTA_EXPLORER_URL) ?? ""
+	};
 
-	const storageFileRoot = envVars.WORKBENCH_STORAGE_FILE_ROOT;
+	const storageFileRoot = process.env.WORKBENCH_STORAGE_FILE_ROOT;
 	if (!Is.stringValue(storageFileRoot)) {
 		throw new GeneralError("Workbench", "storageFileRootNotSet");
 	}
 
+	const stateFilename = Is.stringValue(process.env.WORKBENCH_STATE_FILENAME)
+		? process.env.WORKBENCH_STATE_FILENAME
+		: "workbench-state.json";
+
 	const webServerOptions: IWebServerOptions = {
-		port: Coerce.number(envVars.WORKBENCH_PORT),
-		host: Coerce.string(envVars.WORKBENCH_HOST),
-		methods: Is.stringValue(envVars.WORKBENCH_HTTP_METHODS)
-			? (envVars.WORKBENCH_HTTP_METHODS.split(",") as HttpMethod[])
+		port: Coerce.number(process.env.WORKBENCH_PORT),
+		host: Coerce.string(process.env.WORKBENCH_HOST),
+		methods: Is.stringValue(process.env.WORKBENCH_HTTP_METHODS)
+			? (process.env.WORKBENCH_HTTP_METHODS.split(",") as HttpMethod[])
 			: undefined,
-		allowedHeaders: Is.stringValue(envVars.WORKBENCH_HTTP_ALLOWED_HEADERS)
-			? envVars.WORKBENCH_HTTP_ALLOWED_HEADERS.split(",")
+		allowedHeaders: Is.stringValue(process.env.WORKBENCH_HTTP_ALLOWED_HEADERS)
+			? process.env.WORKBENCH_HTTP_ALLOWED_HEADERS.split(",")
 			: undefined,
-		exposedHeaders: Is.stringValue(envVars.WORKBENCH_HTTP_EXPOSED_HEADERS)
-			? envVars.WORKBENCH_HTTP_EXPOSED_HEADERS.split(",")
+		exposedHeaders: Is.stringValue(process.env.WORKBENCH_HTTP_EXPOSED_HEADERS)
+			? process.env.WORKBENCH_HTTP_EXPOSED_HEADERS.split(",")
 			: undefined,
-		corsOrigins: Is.stringValue(envVars.WORKBENCH_CORS_ORIGINS)
-			? envVars.WORKBENCH_CORS_ORIGINS.split(",")
+		corsOrigins: Is.stringValue(process.env.WORKBENCH_CORS_ORIGINS)
+			? process.env.WORKBENCH_CORS_ORIGINS.split(",")
 			: undefined
 	};
 
-	const workbenchConfigFilename = envVars.WORKBENCH_CONFIG_FILENAME ?? DEFAULT_CONFIG_FILENAME;
-	const workbenchConfig: IWorkbenchConfig = (await readConfig(
-		storageFileRoot,
-		workbenchConfigFilename
-	)) ?? { bootstrappedComponents: [] };
-	workbenchConfig.bootstrappedComponents ??= [];
+	const defaultStorageType = process.env.WORKBENCH_DEFAULT_STORAGE_TYPE;
+	const authProcessorType = process.env.WORKBENCH_AUTH_PROCESSOR_TYPE;
+
+	const coreConfig: IEngineCoreConfig = {
+		debug
+	};
+
+	const serverConfig: IEngineServerConfig = {
+		web: webServerOptions
+	};
 
 	return {
-		webServerOptions,
-		rootPackageFolder,
-		debug: Coerce.boolean(envVars.WORKBENCH_DEBUG) ?? false,
+		coreConfig,
+		serverConfig,
 		envVars,
-		storageFileRoot,
-		workbenchConfigFilename,
-		config: workbenchConfig,
-		configUpdated: false,
-		nodeLoggingConnectorName:
-			envVars.WORKBENCH_NODE_LOGGING_CONNECTOR_NAME ?? DEFAULT_NODE_LOGGING_CONNECTOR,
-		componentInstances: []
+		stateFilename: path.join(storageFileRoot, stateFilename)
 	};
-}
-
-/**
- * Read the configuration.
- * @param storageFileRoot The root of the storage files.
- * @param configFilename The workbench config filename.
- * @returns The configuration.
- */
-export async function readConfig(
-	storageFileRoot: string,
-	configFilename: string
-): Promise<IWorkbenchConfig | undefined> {
-	const fullConfigFilename = path.join(storageFileRoot, configFilename);
-
-	return CLIUtils.readJsonFile<IWorkbenchConfig>(fullConfigFilename);
-}
-
-/**
- * Write the configuration.
- * @param storageFileRoot The root of the storage files.
- * @param configFilename The config filename.
- * @param config The configuration.
- */
-export async function writeConfig(
-	storageFileRoot: string,
-	configFilename: string,
-	config: IWorkbenchConfig
-): Promise<void> {
-	const fullConfigFilename = path.join(storageFileRoot, configFilename);
-
-	await CLIUtils.writeJsonFile(fullConfigFilename, config, false);
 }
