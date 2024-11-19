@@ -14,5 +14,6 @@ vitest.config.ts.timestamp*
 **/test-results
 .vercel
 .env
+.env.prod
 .vercel
 working

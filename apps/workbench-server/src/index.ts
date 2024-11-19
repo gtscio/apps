@@ -5,17 +5,31 @@ import { readFile } from "node:fs/promises";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import type { IServerInfo } from "@twin.org/api-models";
-import { BaseError, I18n, type ILocaleDictionary } from "@twin.org/core";
-import { EngineCore, FileStateStorage } from "@twin.org/engine-core";
-import { EngineServer } from "@twin.org/engine-server";
+import { BaseError, GeneralError, I18n, Is, type ILocaleDictionary } from "@twin.org/core";
+import {
+	buildEngineCoreConfiguration,
+	EngineCore,
+	EnvHelper,
+	FileStateStorage,
+	type IEngineCoreEnvironmentVariables
+} from "@twin.org/engine-core";
+import { EntityStorageComponentType, type IEngineCoreConfig } from "@twin.org/engine-models";
+import {
+	buildEngineServerConfiguration,
+	EngineServer,
+	type IEngineServerEnvironmentVariables
+} from "@twin.org/engine-server";
+import { EntitySchemaFactory, EntitySchemaHelper } from "@twin.org/entity";
+import { nameof } from "@twin.org/nameof";
+import * as dotenv from "dotenv";
 import { bootstrap } from "./bootstrap.js";
-import { configure } from "./configure.js";
+import { UserAttestationEntry } from "./entities/userAttestationEntry.js";
 import type { IWorkbenchState } from "./models/IWorkbenchState.js";
 
 try {
 	const serverInfo: IServerInfo = {
 		name: "Workbench Server",
-		version: "0.0.1-next.3"
+		version: "0.0.1-next.4"
 	};
 
 	console.log(`🌩️ ${serverInfo.name} v${serverInfo.version}`);
@@ -23,11 +37,24 @@ try {
 	const rootPackageFolder = findRootPackageFolder();
 	await initialiseLocales(rootPackageFolder);
 
-	const { coreConfig, serverConfig, envVars, stateFilename } = await configure(rootPackageFolder);
+	dotenv.config({
+		path: [path.join(rootPackageFolder, ".env")]
+	});
+
+	const envVars = EnvHelper.envToJson<
+		IEngineCoreEnvironmentVariables & IEngineServerEnvironmentVariables
+	>(process.env, "WORKBENCH_");
+	if (!Is.stringValue(envVars.storageFileRoot)) {
+		throw new GeneralError("Workbench", "storageFileRootNotSet");
+	}
+
+	const coreConfig = buildEngineCoreConfiguration(envVars);
+	extendCoreConfig(coreConfig);
+	const serverConfig = buildEngineServerConfiguration(envVars, coreConfig, serverInfo);
 
 	const engineCore = new EngineCore<IWorkbenchState>({
 		config: coreConfig,
-		stateStorage: new FileStateStorage(stateFilename),
+		stateStorage: new FileStateStorage(envVars.stateFilename),
 		customBootstrap: async (core, engineContext) => bootstrap(core, engineContext, envVars)
 	});
 
@@ -67,4 +94,25 @@ export function findRootPackageFolder(): string {
 	);
 
 	return rootPackageFolder;
+}
+
+/**
+ * Extends the core config with types specific to workbench.
+ * @param engineCoreConfig The engine core configuration.
+ */
+function extendCoreConfig(engineCoreConfig: IEngineCoreConfig): void {
+	engineCoreConfig.entityStorageComponent ??= [];
+
+	EntitySchemaFactory.register(nameof<UserAttestationEntry>(), () =>
+		EntitySchemaHelper.getSchema(UserAttestationEntry)
+	);
+
+	engineCoreConfig.entityStorageComponent.push({
+		type: EntityStorageComponentType.Service,
+		options: {
+			entityStorageType: nameof<UserAttestationEntry>(),
+			config: { includeNodeIdentity: true, includeUserIdentity: true }
+		},
+		restPath: "user-attestation"
+	});
 }

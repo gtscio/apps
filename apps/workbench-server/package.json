@@ -1,6 +1,6 @@
 {
 	"name": "@twin.org/workbench-server",
-	"version": "0.0.1-next.3",
+	"version": "0.0.1-next.4",
 	"description": "Serve APIs using the specified configuration",
 	"repository": {
 		"type": "git",
@@ -34,6 +34,7 @@
 		"@twin.org/engine-models": "next",
 		"@twin.org/engine-core": "next",
 		"@twin.org/engine-server": "next",
+		"@twin.org/entity": "next",
 		"dotenv": "16.4.5",
 		"schema-dts": "1.1.2"
 	},
