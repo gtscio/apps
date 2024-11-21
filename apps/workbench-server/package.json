@@ -41,20 +41,20 @@
 	"devDependencies": {
 		"@twin.org/merge-locales": "next",
 		"@twin.org/nameof-transformer": "next",
+		"@twin.org/nameof-vitest-plugin": "next",
 		"@twin.org/ts-to-openapi": "next",
-		"@vitest/coverage-v8": "2.1.4",
-		"@types/node": "22.8.1",
-		"concurrently": "9.0.1",
+		"@vitest/coverage-v8": "2.1.5",
+		"@types/node": "22.9.1",
+		"concurrently": "9.1.0",
 		"copyfiles": "2.4.1",
 		"cross-env": "7.0.3",
 		"nodemon": "3.1.7",
 		"rimraf": "6.0.1",
-		"rollup-plugin-typescript2": "0.36.0",
 		"ts-patch": "3.2.1",
-		"tsc-watch": "6.2.0",
-		"typedoc": "0.26.10",
-		"typedoc-plugin-markdown": "4.2.9",
+		"tsc-watch": "6.2.1",
+		"typedoc": "0.26.11",
+		"typedoc-plugin-markdown": "4.2.10",
 		"typescript": "5.6.3",
-		"vitest": "2.1.4"
+		"vitest": "2.1.5"
 	}
 }
