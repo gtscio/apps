@@ -1,17 +1,11 @@
 // Copyright 2024 IOTA Stiftung.
 // SPDX-License-Identifier: Apache-2.0.
 import { PasswordHelper, type AuthenticationUser } from "@twin.org/api-auth-entity-storage-service";
-import { CLIDisplay } from "@twin.org/cli-core";
-import {
-	Coerce,
-	Converter,
-	GeneralError,
-	I18n,
-	Is,
-	RandomHelper,
-	StringHelper
-} from "@twin.org/core";
+import { Coerce, Converter, I18n, Is, RandomHelper, StringHelper } from "@twin.org/core";
 import { Bip39, PasswordGenerator } from "@twin.org/crypto";
+import type { IEngineCoreEnvironmentVariables } from "@twin.org/engine-core";
+import type { IEngineCore, IEngineCoreContext } from "@twin.org/engine-models";
+import type { IEngineServerEnvironmentVariables } from "@twin.org/engine-server";
 import {
 	EntityStorageConnectorFactory,
 	type IEntityStorageConnector
@@ -26,138 +20,93 @@ import { VaultConnectorFactory, VaultKeyType } from "@twin.org/vault-models";
 import type { WalletAddress } from "@twin.org/wallet-connector-entity-storage";
 import { WalletConnectorFactory } from "@twin.org/wallet-models";
 import type { Person, WithContext } from "schema-dts";
-import { ATTESTATION_ASSERTION_METHOD_ID } from "./components/attestation.js";
-import { BLOB_ENCRYPTION_KEY } from "./components/blobStorage.js";
-import {
-	IMMUTABLE_PROOF_ASSERTION_METHOD_ID,
-	IMMUTABLE_PROOF_HASH_KEY
-} from "./components/immutableProof.js";
-import { nodeLogInfo } from "./components/logging.js";
-import { AUTH_SIGNING_NAME_VAULT_KEY } from "./components/processors.js";
-import { writeConfig } from "./configure.js";
-import type { IWorkbenchContext } from "./models/IWorkbenchContext.js";
-
-export const DEFAULT_NODE_ADMIN_EMAIL = "admin@node";
+import type { IWorkbenchState } from "./models/IWorkbenchState";
 
 /**
  * Bootstrap the application.
+ * @param engineCore The engine core for the node.
  * @param context The context for the node.
+ * @param envVars The environment variables for the node.
  */
-export async function bootstrap(context: IWorkbenchContext): Promise<void> {
-	try {
-		for (const instance of context.componentInstances) {
-			if (Is.function(instance.component.bootstrap)) {
-				const bootstrapName = `${instance.component.CLASS_NAME}-${instance.instanceName}`;
-
-				if (!context.config.bootstrappedComponents.includes(bootstrapName)) {
-					displayBootstrapStarted(context);
-					nodeLogInfo(
-						I18n.formatMessage("workbench.bootstrapping", {
-							element: bootstrapName
-						})
-					);
-					const result = await instance.component.bootstrap(context.nodeLoggingConnectorName);
-					if (!result) {
-						throw new GeneralError("Workbench", "bootstrapFailed");
-					}
-					context.config.bootstrappedComponents.push(bootstrapName);
-					context.configUpdated = true;
-				}
-			}
-		}
-
-		await bootstrapNodeIdentity(context);
-		await bootstrapNodeUser(context);
-		await bootstrapAuth(context);
-		await bootstrapBlobEncryption(context);
-		await bootstrapImmutableProofEncryption(context);
-		await bootstrapAttestationMethod(context);
-		await bootstrapImmutableProofMethod(context);
-	} finally {
-		if (context.configUpdated) {
-			await writeConfig(context.storageFileRoot, context.workbenchConfigFilename, context.config);
-			context.configUpdated = false;
-			CLIDisplay.task(I18n.formatMessage("workbench.bootstrapComplete"));
-			CLIDisplay.break();
-		}
-	}
-}
-
-/**
- * Display that the bootstrap has started.
- * @param context The context for the node.
- */
-function displayBootstrapStarted(context: IWorkbenchContext): void {
-	if (!context.configUpdated) {
-		CLIDisplay.break();
-		CLIDisplay.task(I18n.formatMessage("workbench.bootstrapStarted"));
-		CLIDisplay.break();
-	}
+export async function bootstrap(
+	engineCore: IEngineCore,
+	context: IEngineCoreContext<IWorkbenchState>,
+	envVars: IEngineCoreEnvironmentVariables & IEngineServerEnvironmentVariables
+): Promise<void> {
+	await bootstrapNodeIdentity(engineCore, context, envVars);
+	await bootstrapNodeUser(engineCore, context, envVars);
+	await bootstrapAuth(engineCore, context, envVars);
+	await bootstrapBlobEncryption(engineCore, context, envVars);
+	await bootstrapImmutableProofEncryption(engineCore, context, envVars);
+	await bootstrapAttestationMethod(engineCore, context, envVars);
+	await bootstrapImmutableProofMethod(engineCore, context, envVars);
 }
 
 /**
  * Bootstrap the node creating any necessary resources.
+ * @param engineCore The engine core for the node.
  * @param context The context for the node.
+ * @param envVars The environment variables for the node.
  */
-export async function bootstrapNodeIdentity(context: IWorkbenchContext): Promise<void> {
+export async function bootstrapNodeIdentity(
+	engineCore: IEngineCore,
+	context: IEngineCoreContext<IWorkbenchState>,
+	envVars: IEngineCoreEnvironmentVariables & IEngineServerEnvironmentVariables
+): Promise<void> {
 	// If there is no identity set in the node config then we need
 	// to setup the identity for the node
-	if (!Is.stringValue(context.config.nodeIdentity)) {
-		displayBootstrapStarted(context);
-
+	if (!Is.stringValue(context.state.nodeIdentity)) {
 		// When we bootstrap the node we need to generate an identity for it,
 		// But we have a chicken and egg problem in that we can't create the identity
 		// to store the mnemonic in the vault without an identity. We use a temporary identity
 		// and then replace it with the new identity later in the process.
+		const engineDefaultTypes = engineCore.getDefaultTypes();
+
 		const nodeIdentity = `bootstrap-temp-${Converter.bytesToHex(RandomHelper.generate(16))}`;
-		const vaultConnector = VaultConnectorFactory.get(context.envVars.WORKBENCH_VAULT_CONNECTOR);
+		const vaultConnector = VaultConnectorFactory.get(engineDefaultTypes.vaultConnector);
 
 		let tempSecretName;
 		try {
 			// Create a secure mnemonic and store it in the vault so that wallet operations
 			// can be performed
 			const mnemonic = Bip39.randomMnemonic();
-			nodeLogInfo(I18n.formatMessage("workbench.generatingMnemonic", { mnemonic }));
+			engineCore.logInfo(I18n.formatMessage("workbench.generatingMnemonic", { mnemonic }));
 
 			tempSecretName = `${nodeIdentity}/mnemonic`;
 			await vaultConnector.setSecret(tempSecretName, mnemonic);
 
 			// Generate an address from the wallet, this will use the mnemonic from above
-			const walletConnector = WalletConnectorFactory.get(
-				context.envVars.WORKBENCH_WALLET_CONNECTOR
-			);
+			const walletConnector = WalletConnectorFactory.get(engineDefaultTypes.walletConnector);
 			const addresses = await walletConnector.getAddresses(nodeIdentity, 0, 0, 5);
 
 			let address0 = addresses[0];
 
-			if (context.envVars.WORKBENCH_WALLET_CONNECTOR === "iota") {
-				address0 = `${context.envVars.WORKBENCH_IOTA_EXPLORER_URL}addr/${address0}`;
+			if (engineDefaultTypes.walletConnector === "iota") {
+				address0 = `${envVars.iotaExplorerEndpoint}addr/${address0}`;
 			}
 
-			nodeLogInfo(I18n.formatMessage("workbench.fundingWallet", { address: address0 }));
+			engineCore.logInfo(I18n.formatMessage("workbench.fundingWallet", { address: address0 }));
 
 			// Add some funds to the wallet from the faucet
 			await walletConnector.ensureBalance(nodeIdentity, addresses[0], 1000000000n);
 
-			nodeLogInfo(I18n.formatMessage("workbench.generatingNodeIdentity"));
+			engineCore.logInfo(I18n.formatMessage("workbench.generatingNodeIdentity"));
 
 			// Now create an identity for the node controlled by the address we just funded
-			const identityConnector = IdentityConnectorFactory.get(
-				context.envVars.WORKBENCH_IDENTITY_CONNECTOR
-			);
+			const identityConnector = IdentityConnectorFactory.get(engineDefaultTypes.identityConnector);
 			const identityDocument = await identityConnector.createDocument(nodeIdentity);
 
-			if (context.envVars.WORKBENCH_IDENTITY_CONNECTOR === "iota") {
-				nodeLogInfo(
+			if (engineDefaultTypes.identityConnector === "iota") {
+				engineCore.logInfo(
 					I18n.formatMessage("workbench.identityExplorer", {
-						url: `${process.env.WORKBENCH_IOTA_EXPLORER_URL}addr/${IotaIdentityUtils.didToAddress(identityDocument.id)}?tab=DID`
+						url: `${envVars.iotaExplorerEndpoint}addr/${IotaIdentityUtils.didToAddress(identityDocument.id)}?tab=DID`
 					})
 				);
 			}
 
 			// If we are using entity storage for wallet the identity associated with the
 			// address will be wrong, so fix it
-			if (context.envVars.WORKBENCH_WALLET_CONNECTOR === "entity-storage") {
+			if (engineDefaultTypes.walletConnector === "entity-storage") {
 				const walletAddress = EntityStorageConnectorFactory.get<
 					IEntityStorageConnector<WalletAddress>
 				>(StringHelper.kebabCase(nameof<WalletAddress>()));
@@ -174,13 +123,13 @@ export async function bootstrapNodeIdentity(context: IWorkbenchContext): Promise
 			await vaultConnector.removeSecret(tempSecretName);
 			tempSecretName = undefined;
 
-			context.config.nodeIdentity = identityDocument.id;
-			context.config.addresses = addresses;
-			context.configUpdated = true;
+			context.state.nodeIdentity = identityDocument.id;
+			context.state.addresses = addresses;
+			context.stateDirty = true;
 
-			nodeLogInfo(
+			engineCore.logInfo(
 				I18n.formatMessage("workbench.nodeIdentity", {
-					identity: context.config.nodeIdentity
+					identity: context.state.nodeIdentity
 				})
 			);
 		} finally {
@@ -196,16 +145,21 @@ export async function bootstrapNodeIdentity(context: IWorkbenchContext): Promise
 
 /**
  * Bootstrap the user.
+ * @param engineCore The engine core for the node.
  * @param context The context for the node.
+ * @param envVars The environment variables for the node.
  */
-export async function bootstrapNodeUser(context: IWorkbenchContext): Promise<void> {
+export async function bootstrapNodeUser(
+	engineCore: IEngineCore,
+	context: IEngineCoreContext<IWorkbenchState>,
+	envVars: IEngineCoreEnvironmentVariables & IEngineServerEnvironmentVariables
+): Promise<void> {
+	const engineDefaultTypes = engineCore.getDefaultTypes();
 	if (
-		context.envVars.WORKBENCH_AUTH_PROCESSOR_TYPE === "entity-storage" &&
-		Is.stringValue(context.config.nodeIdentity) &&
-		!context.config.bootstrappedComponents.includes("LoginUser")
+		engineDefaultTypes.authenticationComponent === "authentication-entity-storage" &&
+		Is.stringValue(context.state.nodeIdentity) &&
+		!context.state.bootstrappedComponents.includes("LoginUser")
 	) {
-		displayBootstrapStarted(context);
-
 		// Create the login for the node user
 		const authUserEntityStorage = EntityStorageConnectorFactory.get<
 			IEntityStorageConnector<AuthenticationUser>
@@ -218,16 +172,16 @@ export async function bootstrapNodeUser(context: IWorkbenchContext): Promise<voi
 		const hashedPassword = await PasswordHelper.hashPassword(passwordBytes, saltBytes);
 
 		const nodeAdminUser: AuthenticationUser = {
-			email: Is.email(context.envVars.WORKBENCH_ADMIN_USERNAME)
-				? context.envVars.WORKBENCH_ADMIN_USERNAME
-				: DEFAULT_NODE_ADMIN_EMAIL,
+			email: envVars.adminUsername,
 			password: hashedPassword,
 			salt: Converter.bytesToBase64(saltBytes),
-			identity: context.config.nodeIdentity
+			identity: context.state.nodeIdentity
 		};
 
-		nodeLogInfo(I18n.formatMessage("workbench.nodeAdminUserEmail", { email: nodeAdminUser.email }));
-		nodeLogInfo(
+		engineCore.logInfo(
+			I18n.formatMessage("workbench.nodeAdminUserEmail", { email: nodeAdminUser.email })
+		);
+		engineCore.logInfo(
 			I18n.formatMessage("workbench.nodeAdminUserPassword", { password: generatedPassword })
 		);
 
@@ -235,7 +189,7 @@ export async function bootstrapNodeUser(context: IWorkbenchContext): Promise<voi
 
 		// We have create a node user, now we need to create a profile for the user
 		const identityProfileConnector = IdentityProfileConnectorFactory.get(
-			context.envVars.WORKBENCH_IDENTITY_PROFILE_CONNECTOR
+			engineDefaultTypes.identityProfileConnector
 		);
 
 		if (identityProfileConnector) {
@@ -252,147 +206,168 @@ export async function bootstrapNodeUser(context: IWorkbenchContext): Promise<voi
 				email: nodeAdminUser.email
 			};
 			await identityProfileConnector.create(
-				context.config.nodeIdentity,
+				context.state.nodeIdentity,
 				publicProfile,
 				privateProfile
 			);
 		}
-		context.config.bootstrappedComponents.push("LoginUser");
-		context.configUpdated = true;
+		context.state.bootstrappedComponents.push("LoginUser");
+		context.stateDirty = true;
 	}
 }
 
 /**
  * Bootstrap the attestation verification methods.
+ * @param engineCore The engine core for the node.
  * @param context The context for the node.
+ * @param envVars The environment variables for the node.
  */
-export async function bootstrapAttestationMethod(context: IWorkbenchContext): Promise<void> {
+export async function bootstrapAttestationMethod(
+	engineCore: IEngineCore,
+	context: IEngineCoreContext<IWorkbenchState>,
+	envVars: IEngineCoreEnvironmentVariables & IEngineServerEnvironmentVariables
+): Promise<void> {
 	if (
-		Is.stringValue(context.config.nodeIdentity) &&
-		!context.config.bootstrappedComponents.includes("AttestationMethod")
+		Is.stringValue(context.state.nodeIdentity) &&
+		!context.state.bootstrappedComponents.includes("AttestationMethod")
 	) {
-		displayBootstrapStarted(context);
-
-		const identityConnector = IdentityConnectorFactory.get(
-			context.envVars.WORKBENCH_IDENTITY_CONNECTOR
-		);
+		const engineDefaultTypes = engineCore.getDefaultTypes();
+		const identityConnector = IdentityConnectorFactory.get(engineDefaultTypes.identityConnector);
 
 		// Add attestation verification method to DID, the correct node context is now in place
 		// so the keys for the verification method will be stored correctly
-		nodeLogInfo(I18n.formatMessage("workbench.addingAttestation"));
+		engineCore.logInfo(I18n.formatMessage("workbench.addingAttestation"));
 		await identityConnector.addVerificationMethod(
-			context.config.nodeIdentity,
-			context.config.nodeIdentity,
+			context.state.nodeIdentity,
+			context.state.nodeIdentity,
 			"assertionMethod",
-			ATTESTATION_ASSERTION_METHOD_ID
+			envVars.attestationAssertionMethodId
 		);
 
-		context.config.bootstrappedComponents.push("AttestationMethod");
-		context.configUpdated = true;
+		context.state.bootstrappedComponents.push("AttestationMethod");
+		context.stateDirty = true;
 	}
 }
 
 /**
  * Bootstrap the immutable proof verification methods.
+ * @param engineCore The engine core for the node.
  * @param context The context for the node.
+ * @param envVars The environment variables for the node.
  */
-export async function bootstrapImmutableProofMethod(context: IWorkbenchContext): Promise<void> {
+export async function bootstrapImmutableProofMethod(
+	engineCore: IEngineCore,
+	context: IEngineCoreContext<IWorkbenchState>,
+	envVars: IEngineCoreEnvironmentVariables & IEngineServerEnvironmentVariables
+): Promise<void> {
+	const engineDefaultTypes = engineCore.getDefaultTypes();
 	if (
-		Is.stringValue(context.config.nodeIdentity) &&
-		!context.config.bootstrappedComponents.includes("ImmutableProofMethod")
+		Is.stringValue(context.state.nodeIdentity) &&
+		!context.state.bootstrappedComponents.includes("ImmutableProofMethod")
 	) {
-		displayBootstrapStarted(context);
-
-		const identityConnector = IdentityConnectorFactory.get(
-			context.envVars.WORKBENCH_IDENTITY_CONNECTOR
-		);
+		const identityConnector = IdentityConnectorFactory.get(engineDefaultTypes.identityConnector);
 
 		// Add AIG verification method to DID, the correct node context is now in place
 		// so the keys for the verification method will be stored correctly
-		nodeLogInfo(I18n.formatMessage("workbench.addingImmutableProof"));
+		engineCore.logInfo(I18n.formatMessage("workbench.addingImmutableProof"));
 		await identityConnector.addVerificationMethod(
-			context.config.nodeIdentity,
-			context.config.nodeIdentity,
+			context.state.nodeIdentity,
+			context.state.nodeIdentity,
 			"assertionMethod",
-			IMMUTABLE_PROOF_ASSERTION_METHOD_ID
+			envVars.immutableProofAssertionMethodId
 		);
 
-		context.config.bootstrappedComponents.push("ImmutableProofMethod");
-		context.configUpdated = true;
+		context.state.bootstrappedComponents.push("ImmutableProofMethod");
+		context.stateDirty = true;
 	}
 }
 
 /**
  * Bootstrap the keys for blob encryption.
+ * @param engineCore The engine core for the node.
  * @param context The context for the node.
+ * @param envVars The environment variables for the node.
  */
-export async function bootstrapBlobEncryption(context: IWorkbenchContext): Promise<void> {
-	const enableBlobEncryption =
-		Coerce.boolean(context.envVars.WORKBENCH_BLOB_STORAGE_ENABLE_ENCRYPTION) ?? false;
+export async function bootstrapBlobEncryption(
+	engineCore: IEngineCore,
+	context: IEngineCoreContext<IWorkbenchState>,
+	envVars: IEngineCoreEnvironmentVariables & IEngineServerEnvironmentVariables
+): Promise<void> {
 	if (
-		enableBlobEncryption &&
-		Is.stringValue(context.config.nodeIdentity) &&
-		!context.config.bootstrappedComponents.includes("BlobEncryption")
+		(Coerce.boolean(envVars.blobStorageEnableEncryption) ?? false) &&
+		Is.stringValue(context.state.nodeIdentity) &&
+		!context.state.bootstrappedComponents.includes("BlobEncryption")
 	) {
-		displayBootstrapStarted(context);
+		const engineDefaultTypes = engineCore.getDefaultTypes();
 
 		// Create a new key for encrypting blobs
-		const vaultConnector = VaultConnectorFactory.get(context.envVars.WORKBENCH_VAULT_CONNECTOR);
+		const vaultConnector = VaultConnectorFactory.get(engineDefaultTypes.vaultConnector);
 
 		await vaultConnector.createKey(
-			`${context.config.nodeIdentity}/${BLOB_ENCRYPTION_KEY}`,
+			`${context.state.nodeIdentity}/${envVars.blobStorageEncryptionKey}`,
 			VaultKeyType.ChaCha20Poly1305
 		);
 
-		context.config.bootstrappedComponents.push("BlobEncryption");
-		context.configUpdated = true;
+		context.state.bootstrappedComponents.push("BlobEncryption");
+		context.stateDirty = true;
 	}
 }
 
 /**
  * Bootstrap the keys for immutable proof encryption.
+ * @param engineCore The engine core for the node.
  * @param context The context for the node.
+ * @param envVars The environment variables for the node.
  */
-export async function bootstrapImmutableProofEncryption(context: IWorkbenchContext): Promise<void> {
+export async function bootstrapImmutableProofEncryption(
+	engineCore: IEngineCore,
+	context: IEngineCoreContext<IWorkbenchState>,
+	envVars: IEngineCoreEnvironmentVariables & IEngineServerEnvironmentVariables
+): Promise<void> {
 	if (
-		Is.stringValue(context.config.nodeIdentity) &&
-		!context.config.bootstrappedComponents.includes("ImmutableProof")
+		Is.stringValue(context.state.nodeIdentity) &&
+		!context.state.bootstrappedComponents.includes("ImmutableProof")
 	) {
-		displayBootstrapStarted(context);
+		const engineDefaultTypes = engineCore.getDefaultTypes();
 
 		// Create a new key for encrypting auditable item graph data
-		const vaultConnector = VaultConnectorFactory.get(context.envVars.WORKBENCH_VAULT_CONNECTOR);
+		const vaultConnector = VaultConnectorFactory.get(engineDefaultTypes.vaultConnector);
 
 		await vaultConnector.createKey(
-			`${context.config.nodeIdentity}/${IMMUTABLE_PROOF_HASH_KEY}`,
+			`${context.state.nodeIdentity}/${envVars.immutableProofHashKeyId}`,
 			VaultKeyType.Ed25519
 		);
 
-		context.config.bootstrappedComponents.push("ImmutableProof");
-		context.configUpdated = true;
+		context.state.bootstrappedComponents.push("ImmutableProof");
+		context.stateDirty = true;
 	}
 }
 
 /**
  * Bootstrap the JWT signing key.
+ * @param engineCore The engine core for the node.
  * @param context The context for the node.
+ * @param envVars The environment variables for the node.
  */
-export async function bootstrapAuth(context: IWorkbenchContext): Promise<void> {
+export async function bootstrapAuth(
+	engineCore: IEngineCore,
+	context: IEngineCoreContext<IWorkbenchState>,
+	envVars: IEngineCoreEnvironmentVariables & IEngineServerEnvironmentVariables
+): Promise<void> {
+	const engineDefaultTypes = engineCore.getDefaultTypes();
 	if (
-		context.envVars.WORKBENCH_AUTH_PROCESSOR_TYPE === "entity-storage" &&
-		Is.stringValue(context.config.nodeIdentity) &&
-		!context.config.bootstrappedComponents.includes("JwtKey")
+		engineDefaultTypes.authenticationComponent === "authentication-entity-storage" &&
+		Is.stringValue(context.state.nodeIdentity) &&
+		!context.state.bootstrappedComponents.includes("JwtKey")
 	) {
-		displayBootstrapStarted(context);
-
 		// Create a new JWT signing key and a user login for the node
-		const vaultConnector = VaultConnectorFactory.get(context.envVars.WORKBENCH_VAULT_CONNECTOR);
+		const vaultConnector = VaultConnectorFactory.get(engineDefaultTypes.vaultConnector);
 		await vaultConnector.createKey(
-			`${context.config.nodeIdentity}/${AUTH_SIGNING_NAME_VAULT_KEY}`,
+			`${context.state.nodeIdentity}/${envVars.authSigningKeyId}`,
 			VaultKeyType.Ed25519
 		);
 
-		context.config.bootstrappedComponents.push("JwtKey");
-		context.configUpdated = true;
+		context.state.bootstrappedComponents.push("JwtKey");
+		context.stateDirty = true;
 	}
 }

@@ -1,142 +1,118 @@
 // Copyright 2024 IOTA Stiftung.
 // SPDX-License-Identifier: Apache-2.0.
+/* eslint-disable no-console */
+import { readFile } from "node:fs/promises";
+import path from "node:path";
+import { fileURLToPath } from "node:url";
 import type { IServerInfo } from "@twin.org/api-models";
-import { CLIDisplay } from "@twin.org/cli-core";
-import { BaseError, I18n, Is } from "@twin.org/core";
+import { BaseError, GeneralError, I18n, Is, type ILocaleDictionary } from "@twin.org/core";
+import {
+	buildEngineCoreConfiguration,
+	EngineCore,
+	EnvHelper,
+	FileStateStorage,
+	type IEngineCoreEnvironmentVariables
+} from "@twin.org/engine-core";
+import { EntityStorageComponentType, type IEngineCoreConfig } from "@twin.org/engine-models";
+import {
+	buildEngineServerConfiguration,
+	EngineServer,
+	type IEngineServerEnvironmentVariables
+} from "@twin.org/engine-server";
+import { EntitySchemaFactory, EntitySchemaHelper } from "@twin.org/entity";
+import { nameof } from "@twin.org/nameof";
+import * as dotenv from "dotenv";
 import { bootstrap } from "./bootstrap.js";
-import {
-	initialiseAttestationConnectorFactory,
-	initialiseAttestationService
-} from "./components/attestation.js";
-import { initialiseAuditableItemGraphService } from "./components/auditableItemGraph.js";
-import { initialiseAuditableItemStreamService } from "./components/auditableItemStream.js";
-import { initialiseBackgroundTaskConnectorFactory } from "./components/backgroundTask.js";
-import {
-	initialiseBlobStorageConnectorFactory,
-	initialiseBlobStorageService
-} from "./components/blobStorage.js";
-import { initialiseFaucetConnectorFactory } from "./components/faucet.js";
-import {
-	initialiseIdentityConnectorFactory,
-	initialiseIdentityProfileConnectorFactory,
-	initialiseIdentityProfileService,
-	initialiseIdentityService
-} from "./components/identity.js";
-import { initialiseImmutableProofService } from "./components/immutableProof.js";
-import { initialiseImmutableStorageConnectorFactory } from "./components/immutableStorage.js";
-import { initialiseInformationService } from "./components/information.js";
-import {
-	initialiseLoggingConnectorFactory,
-	initialiseLoggingService,
-	initialiseNodeLoggingConnector,
-	nodeLogError,
-	nodeLogInfo
-} from "./components/logging.js";
-import { initialiseNftConnectorFactory, initialiseNftService } from "./components/nft.js";
-import { buildProcessors } from "./components/processors.js";
-import {
-	initialiseTelemetryConnectorFactory,
-	initialiseTelemetryService
-} from "./components/telemetry.js";
-import { initialiseUserEntityStorage } from "./components/userEntityStorage.js";
-import { initialiseVaultConnectorFactory } from "./components/vault.js";
-import { initialiseWalletConnectorFactory, initialiseWalletStorage } from "./components/wallet.js";
-import { configure, findRootPackageFolder } from "./configure.js";
-import { initialiseLocales } from "./locales.js";
-import { buildRestRoutes, buildSocketRoutes } from "./routes.js";
-import { startWebServer } from "./server.js";
+import { UserAttestationEntry } from "./entities/userAttestationEntry.js";
+import type { IWorkbenchState } from "./models/IWorkbenchState.js";
 
 try {
 	const serverInfo: IServerInfo = {
 		name: "Workbench Server",
-		version: "0.0.1-next.3"
+		version: "0.0.1-next.4"
 	};
 
-	CLIDisplay.header(serverInfo.name, serverInfo.version, "🌩️ ");
+	console.log(`🌩️ ${serverInfo.name} v${serverInfo.version}`);
 
 	const rootPackageFolder = findRootPackageFolder();
 	await initialiseLocales(rootPackageFolder);
 
-	const context = await configure(rootPackageFolder);
+	dotenv.config({
+		path: [path.join(rootPackageFolder, ".env")]
+	});
 
-	if (context.debug) {
-		CLIDisplay.value(I18n.formatMessage("workbench.debuggingEnabled"), "true");
-		CLIDisplay.break();
+	const envVars = EnvHelper.envToJson<
+		IEngineCoreEnvironmentVariables & IEngineServerEnvironmentVariables
+	>(process.env, "WORKBENCH_");
+	if (!Is.stringValue(envVars.storageFileRoot)) {
+		throw new GeneralError("Workbench", "storageFileRootNotSet");
 	}
 
-	initialiseNodeLoggingConnector(context);
+	const coreConfig = buildEngineCoreConfiguration(envVars);
+	extendCoreConfig(coreConfig);
+	const serverConfig = buildEngineServerConfiguration(envVars, coreConfig, serverInfo);
 
-	initialiseInformationService(context, serverInfo);
+	const engineCore = new EngineCore<IWorkbenchState>({
+		config: coreConfig,
+		stateStorage: new FileStateStorage(envVars.stateFilename),
+		customBootstrap: async (core, engineContext) => bootstrap(core, engineContext, envVars)
+	});
 
-	initialiseBackgroundTaskConnectorFactory(context);
-	initialiseVaultConnectorFactory(context);
+	const engineServer = new EngineServer({ engineCore, server: serverConfig });
 
-	initialiseWalletStorage(context);
-	initialiseFaucetConnectorFactory(context);
-	initialiseWalletConnectorFactory(context);
+	await engineServer.start();
 
-	initialiseIdentityConnectorFactory(context);
-	initialiseIdentityService(context);
-
-	initialiseIdentityProfileConnectorFactory(context);
-	initialiseIdentityProfileService(context);
-
-	initialiseLoggingConnectorFactory(context);
-	initialiseLoggingService(context);
-
-	initialiseTelemetryConnectorFactory(context);
-	initialiseTelemetryService(context);
-
-	initialiseBlobStorageConnectorFactory(context);
-	initialiseBlobStorageService(context);
-
-	initialiseImmutableStorageConnectorFactory(context);
-
-	initialiseNftConnectorFactory(context);
-	initialiseNftService(context);
-
-	initialiseImmutableProofService(context);
-
-	initialiseAttestationConnectorFactory(context);
-	initialiseAttestationService(context);
-
-	initialiseAuditableItemGraphService(context);
-	initialiseAuditableItemStreamService(context);
-
-	initialiseUserEntityStorage(context);
-
-	const { restRouteProcessors: restProcessors, socketRouteProcessors: socketProcessors } =
-		buildProcessors(context);
-
-	await bootstrap(context);
-
-	for (const instance of context.componentInstances) {
-		if (Is.function(instance.component.start)) {
-			nodeLogInfo(I18n.formatMessage("workbench.starting", { element: instance.instanceName }));
-			await instance.component.start(context.config.nodeIdentity, context.nodeLoggingConnectorName);
-		}
+	for (const signal of ["SIGHUP", "SIGINT", "SIGTERM"]) {
+		process.on(signal, async () => {
+			await engineServer.stop();
+		});
 	}
-
-	await startWebServer(
-		context,
-		restProcessors,
-		buildRestRoutes(),
-		socketProcessors,
-		buildSocketRoutes(),
-		async () => {
-			for (const instance of context.componentInstances) {
-				if (Is.function(instance.component.stop)) {
-					nodeLogInfo(I18n.formatMessage("workbench.stopping", { element: instance.instanceName }));
-					await instance.component.stop(
-						context.config.nodeIdentity,
-						context.nodeLoggingConnectorName
-					);
-				}
-			}
-		}
-	);
 } catch (err) {
-	nodeLogError(BaseError.fromError(err));
+	console.error(BaseError.fromError(err));
 	// eslint-disable-next-line unicorn/no-process-exit
 	process.exit(1);
+}
+
+/**
+ * Initialise the locales for the application.
+ * @param rootPackageFolder The root package folder.
+ */
+export async function initialiseLocales(rootPackageFolder: string): Promise<void> {
+	const localesDirectory = path.resolve(path.join(rootPackageFolder, "dist", "locales"));
+	const enLangContent = await readFile(`${localesDirectory}/en.json`, "utf8");
+	I18n.addDictionary("en", JSON.parse(enLangContent) as ILocaleDictionary);
+}
+
+/**
+ * Find the root package folder.
+ * @returns The root package folder.
+ */
+export function findRootPackageFolder(): string {
+	// Find the root package folder.
+	const rootPackageFolder = path.resolve(
+		path.join(path.dirname(fileURLToPath(import.meta.url)), "..", "..")
+	);
+
+	return rootPackageFolder;
+}
+
+/**
+ * Extends the core config with types specific to workbench.
+ * @param engineCoreConfig The engine core configuration.
+ */
+function extendCoreConfig(engineCoreConfig: IEngineCoreConfig): void {
+	engineCoreConfig.entityStorageComponent ??= [];
+
+	EntitySchemaFactory.register(nameof<UserAttestationEntry>(), () =>
+		EntitySchemaHelper.getSchema(UserAttestationEntry)
+	);
+
+	engineCoreConfig.entityStorageComponent.push({
+		type: EntityStorageComponentType.Service,
+		options: {
+			entityStorageType: nameof<UserAttestationEntry>(),
+			config: { includeNodeIdentity: true, includeUserIdentity: true }
+		},
+		restPath: "user-attestation"
+	});
 }
