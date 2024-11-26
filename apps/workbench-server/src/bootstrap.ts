@@ -3,9 +3,8 @@
 import { PasswordHelper, type AuthenticationUser } from "@twin.org/api-auth-entity-storage-service";
 import { Coerce, Converter, I18n, Is, RandomHelper, StringHelper } from "@twin.org/core";
 import { Bip39, PasswordGenerator } from "@twin.org/crypto";
-import type { IEngineCoreEnvironmentVariables } from "@twin.org/engine-core";
 import type { IEngineCore, IEngineCoreContext } from "@twin.org/engine-models";
-import type { IEngineServerEnvironmentVariables } from "@twin.org/engine-server";
+import type { IEngineServerConfig } from "@twin.org/engine-server-types";
 import {
 	EntityStorageConnectorFactory,
 	type IEntityStorageConnector
@@ -21,6 +20,7 @@ import type { WalletAddress } from "@twin.org/wallet-connector-entity-storage";
 import { WalletConnectorFactory } from "@twin.org/wallet-models";
 import type { Person, WithContext } from "schema-dts";
 import type { IWorkbenchState } from "./models/IWorkbenchState";
+import type { IWorkbenchVariables } from "./models/IWorkbenchVariables";
 
 /**
  * Bootstrap the application.
@@ -30,8 +30,8 @@ import type { IWorkbenchState } from "./models/IWorkbenchState";
  */
 export async function bootstrap(
 	engineCore: IEngineCore,
-	context: IEngineCoreContext<IWorkbenchState>,
-	envVars: IEngineCoreEnvironmentVariables & IEngineServerEnvironmentVariables
+	context: IEngineCoreContext<IEngineServerConfig, IWorkbenchState>,
+	envVars: IWorkbenchVariables
 ): Promise<void> {
 	await bootstrapNodeIdentity(engineCore, context, envVars);
 	await bootstrapNodeUser(engineCore, context, envVars);
@@ -50,8 +50,8 @@ export async function bootstrap(
  */
 export async function bootstrapNodeIdentity(
 	engineCore: IEngineCore,
-	context: IEngineCoreContext<IWorkbenchState>,
-	envVars: IEngineCoreEnvironmentVariables & IEngineServerEnvironmentVariables
+	context: IEngineCoreContext<IEngineServerConfig, IWorkbenchState>,
+	envVars: IWorkbenchVariables
 ): Promise<void> {
 	// If there is no identity set in the node config then we need
 	// to setup the identity for the node
@@ -151,8 +151,8 @@ export async function bootstrapNodeIdentity(
  */
 export async function bootstrapNodeUser(
 	engineCore: IEngineCore,
-	context: IEngineCoreContext<IWorkbenchState>,
-	envVars: IEngineCoreEnvironmentVariables & IEngineServerEnvironmentVariables
+	context: IEngineCoreContext<IEngineServerConfig, IWorkbenchState>,
+	envVars: IWorkbenchVariables
 ): Promise<void> {
 	const engineDefaultTypes = engineCore.getDefaultTypes();
 	if (
@@ -172,7 +172,7 @@ export async function bootstrapNodeUser(
 		const hashedPassword = await PasswordHelper.hashPassword(passwordBytes, saltBytes);
 
 		const nodeAdminUser: AuthenticationUser = {
-			email: envVars.adminUsername,
+			email: envVars.adminUsername ?? "admin@node",
 			password: hashedPassword,
 			salt: Converter.bytesToBase64(saltBytes),
 			identity: context.state.nodeIdentity
@@ -224,12 +224,13 @@ export async function bootstrapNodeUser(
  */
 export async function bootstrapAttestationMethod(
 	engineCore: IEngineCore,
-	context: IEngineCoreContext<IWorkbenchState>,
-	envVars: IEngineCoreEnvironmentVariables & IEngineServerEnvironmentVariables
+	context: IEngineCoreContext<IEngineServerConfig, IWorkbenchState>,
+	envVars: IWorkbenchVariables
 ): Promise<void> {
 	if (
 		Is.stringValue(context.state.nodeIdentity) &&
-		!context.state.bootstrappedComponents.includes("AttestationMethod")
+		!context.state.bootstrappedComponents.includes("AttestationMethod") &&
+		Is.arrayValue(context.config.types.identityConnector)
 	) {
 		const engineDefaultTypes = engineCore.getDefaultTypes();
 		const identityConnector = IdentityConnectorFactory.get(engineDefaultTypes.identityConnector);
@@ -257,13 +258,14 @@ export async function bootstrapAttestationMethod(
  */
 export async function bootstrapImmutableProofMethod(
 	engineCore: IEngineCore,
-	context: IEngineCoreContext<IWorkbenchState>,
-	envVars: IEngineCoreEnvironmentVariables & IEngineServerEnvironmentVariables
+	context: IEngineCoreContext<IEngineServerConfig, IWorkbenchState>,
+	envVars: IWorkbenchVariables
 ): Promise<void> {
 	const engineDefaultTypes = engineCore.getDefaultTypes();
 	if (
 		Is.stringValue(context.state.nodeIdentity) &&
-		!context.state.bootstrappedComponents.includes("ImmutableProofMethod")
+		!context.state.bootstrappedComponents.includes("ImmutableProofMethod") &&
+		Is.arrayValue(context.config.types.identityConnector)
 	) {
 		const identityConnector = IdentityConnectorFactory.get(engineDefaultTypes.identityConnector);
 
@@ -290,8 +292,8 @@ export async function bootstrapImmutableProofMethod(
  */
 export async function bootstrapBlobEncryption(
 	engineCore: IEngineCore,
-	context: IEngineCoreContext<IWorkbenchState>,
-	envVars: IEngineCoreEnvironmentVariables & IEngineServerEnvironmentVariables
+	context: IEngineCoreContext<IEngineServerConfig, IWorkbenchState>,
+	envVars: IWorkbenchVariables
 ): Promise<void> {
 	if (
 		(Coerce.boolean(envVars.blobStorageEnableEncryption) ?? false) &&
@@ -321,12 +323,13 @@ export async function bootstrapBlobEncryption(
  */
 export async function bootstrapImmutableProofEncryption(
 	engineCore: IEngineCore,
-	context: IEngineCoreContext<IWorkbenchState>,
-	envVars: IEngineCoreEnvironmentVariables & IEngineServerEnvironmentVariables
+	context: IEngineCoreContext<IEngineServerConfig, IWorkbenchState>,
+	envVars: IWorkbenchVariables
 ): Promise<void> {
 	if (
 		Is.stringValue(context.state.nodeIdentity) &&
-		!context.state.bootstrappedComponents.includes("ImmutableProof")
+		!context.state.bootstrappedComponents.includes("ImmutableProof") &&
+		Is.arrayValue(context.config.types.immutableProofComponent)
 	) {
 		const engineDefaultTypes = engineCore.getDefaultTypes();
 
@@ -351,8 +354,8 @@ export async function bootstrapImmutableProofEncryption(
  */
 export async function bootstrapAuth(
 	engineCore: IEngineCore,
-	context: IEngineCoreContext<IWorkbenchState>,
-	envVars: IEngineCoreEnvironmentVariables & IEngineServerEnvironmentVariables
+	context: IEngineCoreContext<IEngineServerConfig, IWorkbenchState>,
+	envVars: IWorkbenchVariables
 ): Promise<void> {
 	const engineDefaultTypes = engineCore.getDefaultTypes();
 	if (

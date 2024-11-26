@@ -1,7 +1,8 @@
 {
 	"error": {
 		"workbench": {
-			"noEnvVars": "There are no environment variables starting WORKBENCH_ the server will not start without them, please set them in the shell or create a .env file"
+			"noEnvVars": "There are no environment variables starting WORKBENCH_ the server will not start without them, please set them in the shell or create a .env file",
+			"storageFileRootNotSet": "WORKBENCH_STORAGE_FILE_ROOT is not set, the server will not start without it, please set it in the shell or create a .env file"
 		}
 	},
 	"workbench": {
