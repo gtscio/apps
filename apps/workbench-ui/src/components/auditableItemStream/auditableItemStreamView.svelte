@@ -17,6 +17,7 @@
 		i18n
 	} from '@twin.org/ui-components-svelte';
 	import { onMount } from 'svelte';
+	import ImmutableProofView from '$components/immutableProof/immutableProofView.svelte';
 	import { createPrivateUrl } from '$stores/app';
 	import { auditableItemStreamGet } from '$stores/auditableItemStreams';
 
@@ -63,6 +64,9 @@
 			</div>
 			{#if Is.object(item)}
 				<Code>{JSON.stringify(item, null, 2)}</Code>
+				{#if Is.stringValue(item.proofId) && Is.empty(item.verification?.failure)}
+					<ImmutableProofView itemId={item.proofId} />
+				{/if}
 			{/if}
 		</div>
 	{/if}

@@ -31,6 +31,21 @@
 			"title": "Auditable Item Stream",
 			"id": "Id",
 			"auditableItemStreamQr": "Auditable Item Stream QR Code"
+		},
+		"immutableProofView": {
+			"title": "Immutable Proof",
+			"id": "Id",
+			"proof": "Proof",
+			"receipt": "Receipt"
+		},
+		"immutableProofReceipt": {
+			"title": "Immutable Receipt",
+			"type": "Type",
+			"id": "Id",
+			"transactionId": "Transaction Id",
+			"network": "Network",
+			"entityStorageId": "Entity Storage Id",
+			"exploreTransaction": "Explore Transaction"
 		}
 	},
 	"common": {

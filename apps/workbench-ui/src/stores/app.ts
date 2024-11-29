@@ -9,6 +9,7 @@ import { init as initAuthentication } from "./authentication";
 import { init as initBlobStorage } from "./blobStorage";
 import { init as initIdentity } from "./identity";
 import { init as initIdentityProfile } from "./identityProfile";
+import { init as initImmutableProof } from "./immutableProof";
 import { init as initInformation } from "./information";
 import { init as initIota } from "./iota";
 
@@ -48,6 +49,7 @@ export async function init(options: {
 	await initIota(options.iotaExplorerUrl);
 	await initAttestations(options.apiUrl);
 	await initAuditableItemStreams(options.apiUrl);
+	await initImmutableProof(options.apiUrl);
 }
 
 /**

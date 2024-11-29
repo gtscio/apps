@@ -148,7 +148,7 @@ export async function auditableItemStreamGet(id: string): Promise<
 > {
 	if (Is.object(auditableItemStreamClient)) {
 		try {
-			const result = await auditableItemStreamClient.get(id);
+			const result = await auditableItemStreamClient.get(id, { verifyStream: true });
 			return {
 				item: result
 			};

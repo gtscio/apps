@@ -12,6 +12,8 @@ import { UserAttestationEntry } from "./entities/userAttestationEntry.js";
  * @param engineConfig The engine engine configuration.
  */
 export function extendEngineConfig(engineConfig: IEngineConfig): void {
+	// Add a custom entity storage type for the users attestations,
+	// but only if the attestation connectors are available.
 	if (Is.arrayValue(engineConfig.types.attestationConnector)) {
 		engineConfig.types.entityStorageComponent ??= [];
 

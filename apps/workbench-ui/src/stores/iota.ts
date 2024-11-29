@@ -37,6 +37,25 @@ export function createExplorerNftUrl(nftId: string): string {
 }
 
 /**
+ * Create a transaction explorer URL.
+ * @param transactionId The transaction id to create the url for.
+ * @returns The transaction id url.
+ */
+export function createExplorerTransactionUrl(transactionId: string): string {
+	return createExplorerUrl(`transaction/${transactionId}`);
+}
+
+/**
+ * Create an output explorer URL.
+ * @param transactionId The transaction id to create the url for.
+ * @param outputIndex The output index to create the url for.
+ * @returns The transaction id url.
+ */
+export function createExplorerOutputUrl(transactionId: string, outputIndex: number): string {
+	return createExplorerUrl(`output/${transactionId}${outputIndex.toString().padStart(4, "0")}`);
+}
+
+/**
  * Create an explorer URL.
  * @param resourcePath The resource path.
  * @returns The combined explorer url base and resource path.
