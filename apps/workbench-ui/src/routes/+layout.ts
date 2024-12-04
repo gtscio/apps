@@ -5,7 +5,7 @@ import { Coerce, ErrorHelper, Guards } from "@twin.org/core";
 import { init as initApp } from "../stores/app";
 
 /**
- * Perform a load and initialize the application.
+ * Perform a load and initialise the application.
  * @param params The load params.
  * @param params.url The URL.
  */
@@ -43,8 +43,8 @@ export async function load(params: { url: URL }): Promise<void> {
 			iotaExplorerUrl: env.PUBLIC_WORKBENCH_IOTA_EXPLORER_URL
 		});
 	} catch (err) {
-		// Nothing else is initialized yet so we need to console log manually
+		// Nothing else is initialised yet so we need to console log manually
 		// eslint-disable-next-line no-console
-		console.error("Error during initialization", ErrorHelper.formatErrors(err).join("\n"));
+		console.error("Error during initialisation", ErrorHelper.formatErrors(err).join("\n"));
 	}
 }

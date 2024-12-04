@@ -7,7 +7,7 @@ import type { IDidDocument } from "@twin.org/standards-w3c-did";
 let identityClient: IdentityClient | undefined;
 
 /**
- * Initialize the identity.
+ * Initialise the identity.
  * @param apiUrl The API url.
  */
 export async function init(apiUrl: string): Promise<void> {

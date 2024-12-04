@@ -20,7 +20,7 @@ let informationClient: InformationClient | undefined;
 let healthInterval: NodeJS.Timeout | undefined;
 
 /**
- * Initialize the API information.
+ * Initialise the API information.
  * @param apiUrl The API url.
  */
 export async function init(apiUrl: string): Promise<void> {

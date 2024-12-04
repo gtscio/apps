@@ -7,6 +7,7 @@ import { init as initAttestations } from "./attestations";
 import { init as initAuditableItemStreams } from "./auditableItemStreams";
 import { init as initAuthentication } from "./authentication";
 import { init as initBlobStorage } from "./blobStorage";
+import { init as initEventBus } from "./eventBus";
 import { init as initIdentity } from "./identity";
 import { init as initIdentityProfile } from "./identityProfile";
 import { init as initImmutableProof } from "./immutableProof";
@@ -17,7 +18,7 @@ export let publicBaseUrl = "";
 export let privateBaseUrl = "";
 
 /**
- * Initialize the app.
+ * Initialise the app.
  * @param options The options for the application.
  * @param options.rootUrl The root URL.
  * @param options.localesIndex The locales index.
@@ -50,6 +51,7 @@ export async function init(options: {
 	await initAttestations(options.apiUrl);
 	await initAuditableItemStreams(options.apiUrl);
 	await initImmutableProof(options.apiUrl);
+	await initEventBus(options.apiUrl);
 }
 
 /**

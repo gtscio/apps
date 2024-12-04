@@ -8,7 +8,7 @@ import type { IJsonLdNodeObject } from "@twin.org/data-json-ld";
 let blobStorageClient: BlobStorageClient | undefined;
 
 /**
- * Initialize the blob storage.
+ * Initialise the blob storage.
  * @param apiUrl The API url.
  */
 export async function init(apiUrl: string): Promise<void> {

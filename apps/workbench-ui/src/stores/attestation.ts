@@ -8,7 +8,7 @@ import type { IDocumentAttestation } from "$models/IDocumentAttestation";
 let attestationClient: AttestationClient | undefined;
 
 /**
- * Initialize the attestation.
+ * Initialise the attestation.
  * @param apiUrl The API url.
  */
 export async function init(apiUrl: string): Promise<void> {

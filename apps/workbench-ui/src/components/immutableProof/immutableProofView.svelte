@@ -24,14 +24,12 @@
 
 	onMount(async () => {
 		error = '';
-
 		const result = await immutableProofGet(itemId);
 		if (Is.stringValue(result?.error)) {
 			error = result.error;
 		} else {
 			immutableProof = result?.item;
 		}
-
 		busy = false;
 	});
 </script>

@@ -12,7 +12,7 @@ import { findRootPackageFolder, initialiseLocales } from "./utils.js";
 try {
 	const serverInfo: IServerInfo = {
 		name: "Workbench Server",
-		version: "0.0.1-next.6"
+		version: "0.0.1-next.7"
 	};
 
 	console.log(`\u001B[4m🌩️  ${serverInfo.name} v${serverInfo.version}\u001B[24m\n`);

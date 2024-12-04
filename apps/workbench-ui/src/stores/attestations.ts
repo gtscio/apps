@@ -7,7 +7,7 @@ import type { IUserAttestationEntry } from "$models/IUserAttestationEntry";
 let userAttestationEntryClient: EntityStorageClient<IUserAttestationEntry> | undefined;
 
 /**
- * Initialize the attestations.
+ * Initialise the attestations.
  * @param apiUrl The API url.
  */
 export async function init(apiUrl: string): Promise<void> {

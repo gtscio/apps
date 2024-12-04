@@ -7,7 +7,7 @@ import { ImmutableProofClient } from "@twin.org/immutable-proof-rest-client";
 let immutableProofClient: ImmutableProofClient | undefined;
 
 /**
- * Initialize the immutable proof.
+ * Initialise the immutable proof.
  * @param apiUrl The API url.
  */
 export async function init(apiUrl: string): Promise<void> {

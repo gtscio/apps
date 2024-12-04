@@ -8,7 +8,7 @@ import type { IJsonLdNodeObject } from "@twin.org/data-json-ld";
 let auditableItemStreamClient: AuditableItemStreamClient | undefined;
 
 /**
- * Initialize the auditable item streams.
+ * Initialise the auditable item streams.
  * @param apiUrl The API url.
  */
 export async function init(apiUrl: string): Promise<void> {

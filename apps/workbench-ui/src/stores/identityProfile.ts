@@ -13,7 +13,7 @@ export const privateProfile = writable<WithContext<Person> | undefined>();
 let identityProfileClient: IdentityProfileClient | undefined;
 
 /**
- * Initialize the identity profile.
+ * Initialise the identity profile.
  * @param apiUrl The API url.
  */
 export async function init(apiUrl: string): Promise<void> {

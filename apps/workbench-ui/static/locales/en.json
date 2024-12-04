@@ -625,6 +625,66 @@
     "http://schema.org/GeoCoordinates": "Geo Coordinates",
     "http://schema.org/StructuredValue": "Structured Value"
   },
+  "info": {
+    "eventBusSocketClient": {
+      "subscribe": "Subscription created for topic \"{topic}\" with id \"{subscriptionId}\"",
+      "unsubscribe": "Subscription removed for topic \"{topic}\" with id \"{subscriptionId}\"",
+      "publish": "Event publish for topic \"{topic}\" with id \"{eventId}\", with \"{subscriptionCount}\" subscriptions"
+    },
+    "s3BlobStorageConnector": {
+      "bucketCreating": "Creating bucket \"{bucket}\"",
+      "bucketCreated": "Created bucket \"{bucket}\"",
+      "bucketExists": "Skipping create bucket \"{bucket}\" as it already exists"
+    },
+    "azureBlobStorageConnector": {
+      "containerCreating": "Creating container \"{container}\"",
+      "containerCreated": "Created container \"{container}\"",
+      "containerExists": "Skipping create container \"{container}\" as it already exists"
+    },
+    "gcpBlobStorageConnector": {
+      "bucketCreating": "Creating bucket \"{bucket}\"",
+      "bucketCreated": "Created bucket \"{bucket}\"",
+      "bucketExists": "Skipping create bucket \"{bucket}\" as it already exists"
+    },
+    "fileBlobStorageConnector": {
+      "directoryCreating": "Creating directory \"{directory}\"",
+      "directoryCreated": "Created directory \"{directory}\"",
+      "directoryExists": "Skipping create directory \"{directory}\" as it already exists"
+    },
+    "dynamoDbEntityStorageConnector": {
+      "tableCreating": "Creating table \"{tableName}\"",
+      "tableCreated": "Created table \"{tableName}\"",
+      "tableExists": "Skipping create table \"{tableName}\" as it already exists"
+    },
+    "fileEntityStorageConnector": {
+      "directoryCreating": "Creating directory \"{directory}\"",
+      "directoryCreated": "Created directory \"{directory}\"",
+      "directoryExists": "Skipping create directory \"{directory}\" as it already exists"
+    },
+    "scyllaDBTableConnector": {
+      "tableCreating": "Creating table \"{table}\"",
+      "tableCreated": "Created table \"{table}\"",
+      "tableExists": "Skipping create table \"{table}\" as it already exists",
+      "typeCreated": "Created type \"{typeName}\"",
+      "sql": "SQL: \"{sql}\""
+    },
+    "scyllaDBViewConnector": {
+      "viewCreating": "Creating view \"{view}\"",
+      "viewCreated": "Created view \"{view}\"",
+      "viewExists": "Skipping create view \"{view}\" as it already exists",
+      "typeCreated": "Created type \"{typeName}\"",
+      "sql": "SQL: \"{sql}\""
+    },
+    "entityStorageTelemetryConnector": {
+      "metricCreated": "The metric was created \"{id}\" with type \"type\" and label \"{label}\"",
+      "metricUpdated": "The metric was updated \"{id}\" with type \"type\" and label \"{label}\"",
+      "metricRemoved": "The metric was removed \"{id}\"",
+      "metricValueCreated": "The metric value was created for \"{id}\" with value \"{value}\""
+    },
+    "hashicorpVaultConnector": {
+      "hashicorpVaultConnected": "Connected to Hashicorp Vault"
+    }
+  },
   "identityRole": {
     "organization": "Organization",
     "user": "User",
@@ -834,64 +894,10 @@
     "restRouteAdded": "Added REST route \"{route}\" \"{method}\"",
     "socketRouteAdded": "Added socket route \"{route}\"",
     "noRestProcessors": "You must configure at least one REST processor",
-    "noSocketProcessors": "You must configure at least one socket processor"
+    "noSocketProcessors": "You must configure at least one socket processor",
+    "postProcessorError": "There was a failure after in a post processor for route \"{route}\""
   },
   "auditableItemGraphService": {},
-  "info": {
-    "s3BlobStorageConnector": {
-      "bucketCreating": "Creating bucket \"{bucket}\"",
-      "bucketCreated": "Created bucket \"{bucket}\"",
-      "bucketExists": "Skipping create bucket \"{bucket}\" as it already exists"
-    },
-    "azureBlobStorageConnector": {
-      "containerCreating": "Creating container \"{container}\"",
-      "containerCreated": "Created container \"{container}\"",
-      "containerExists": "Skipping create container \"{container}\" as it already exists"
-    },
-    "gcpBlobStorageConnector": {
-      "bucketCreating": "Creating bucket \"{bucket}\"",
-      "bucketCreated": "Created bucket \"{bucket}\"",
-      "bucketExists": "Skipping create bucket \"{bucket}\" as it already exists"
-    },
-    "fileBlobStorageConnector": {
-      "directoryCreating": "Creating directory \"{directory}\"",
-      "directoryCreated": "Created directory \"{directory}\"",
-      "directoryExists": "Skipping create directory \"{directory}\" as it already exists"
-    },
-    "dynamoDbEntityStorageConnector": {
-      "tableCreating": "Creating table \"{tableName}\"",
-      "tableCreated": "Created table \"{tableName}\"",
-      "tableExists": "Skipping create table \"{tableName}\" as it already exists"
-    },
-    "fileEntityStorageConnector": {
-      "directoryCreating": "Creating directory \"{directory}\"",
-      "directoryCreated": "Created directory \"{directory}\"",
-      "directoryExists": "Skipping create directory \"{directory}\" as it already exists"
-    },
-    "scyllaDBTableConnector": {
-      "tableCreating": "Creating table \"{table}\"",
-      "tableCreated": "Created table \"{table}\"",
-      "tableExists": "Skipping create table \"{table}\" as it already exists",
-      "typeCreated": "Created type \"{typeName}\"",
-      "sql": "SQL: \"{sql}\""
-    },
-    "scyllaDBViewConnector": {
-      "viewCreating": "Creating view \"{view}\"",
-      "viewCreated": "Created view \"{view}\"",
-      "viewExists": "Skipping create view \"{view}\" as it already exists",
-      "typeCreated": "Created type \"{typeName}\"",
-      "sql": "SQL: \"{sql}\""
-    },
-    "entityStorageTelemetryConnector": {
-      "metricCreated": "The metric was created \"{id}\" with type \"type\" and label \"{label}\"",
-      "metricUpdated": "The metric was updated \"{id}\" with type \"type\" and label \"{label}\"",
-      "metricRemoved": "The metric was removed \"{id}\"",
-      "metricValueCreated": "The metric value was created for \"{id}\" with value \"{value}\""
-    },
-    "hashicorpVaultConnector": {
-      "hashicorpVaultConnected": "Connected to Hashicorp Vault"
-    }
-  },
   "cli": {
     "progress": {
       "done": "Done.",

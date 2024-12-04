@@ -5,29 +5,36 @@
 	import type { IAuditableItemStream } from '@twin.org/auditable-item-stream-models';
 	import { Is } from '@twin.org/core';
 	import {
+		type IImmutableProofEventBusProofCreated,
+		ImmutableProofTopics
+	} from '@twin.org/immutable-proof-models';
+	import {
 		Button,
 		Card,
 		Code,
 		Error,
 		Heading,
 		Label,
+		P,
 		QR,
 		Span,
 		Spinner,
 		i18n
 	} from '@twin.org/ui-components-svelte';
-	import { onMount } from 'svelte';
+	import { onDestroy, onMount } from 'svelte';
 	import ImmutableProofView from '$components/immutableProof/immutableProofView.svelte';
 	import { createPrivateUrl } from '$stores/app';
 	import { auditableItemStreamGet } from '$stores/auditableItemStreams';
+	import { eventBusSubscribe, eventBusUnsubscribe } from '$stores/eventBus';
 
 	export let itemId: string;
 	export let returnUrl: string | undefined = undefined;
 	let error: string;
 	let busy = true;
 	let item: IAuditableItemStream | undefined;
+	let subscriptionId: string | undefined;
 
-	onMount(async () => {
+	async function loadStream(): Promise<void> {
 		error = '';
 		const resultVerify = await auditableItemStreamGet(itemId);
 		if (Is.stringValue(resultVerify?.error)) {
@@ -36,6 +43,38 @@
 			item = resultVerify?.item;
 		}
 		busy = false;
+	}
+
+	onMount(async () => {
+		await loadStream();
+
+		if (item?.verification?.verified === false) {
+			const result = await eventBusSubscribe<IImmutableProofEventBusProofCreated>(
+				ImmutableProofTopics.ProofCreated,
+				async event => {
+					if (event.data.id === item?.proofId) {
+						if (Is.stringValue(subscriptionId)) {
+							await eventBusUnsubscribe(subscriptionId);
+							subscriptionId = undefined;
+						}
+
+						await loadStream();
+					}
+				}
+			);
+
+			if (Is.stringValue(result?.error)) {
+				error = result.error;
+			} else {
+				subscriptionId = result?.subscriptionId;
+			}
+		}
+	});
+
+	onDestroy(async () => {
+		if (Is.stringValue(subscriptionId)) {
+			await eventBusUnsubscribe(subscriptionId);
+		}
 	});
 </script>
 
@@ -66,6 +105,11 @@
 				<Code>{JSON.stringify(item, null, 2)}</Code>
 				{#if Is.stringValue(item.proofId) && Is.empty(item.verification?.failure)}
 					<ImmutableProofView itemId={item.proofId} />
+				{:else}
+					<div class="flex flex-row gap-5">
+						<Spinner />
+						<P>Waiting for Proof creation...</P>
+					</div>
 				{/if}
 			{/if}
 		</div>
