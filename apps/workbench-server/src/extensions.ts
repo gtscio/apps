@@ -9,7 +9,7 @@ import { UserAttestationEntry } from "./entities/userAttestationEntry.js";
 
 /**
  * Extends the engine config with types specific to workbench.
- * @param engineConfig The engine engine configuration.
+ * @param engineConfig The engine configuration.
  */
 export function extendEngineConfig(engineConfig: IEngineConfig): void {
 	// Add a custom entity storage type for the users attestations,
