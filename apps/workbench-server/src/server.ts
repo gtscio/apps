@@ -1,6 +1,7 @@
 // Copyright 2024 IOTA Stiftung.
 // SPDX-License-Identifier: Apache-2.0.
 /* eslint-disable no-console */
+import path from "node:path";
 import type { IServerInfo } from "@twin.org/api-models";
 import { GeneralError, Is } from "@twin.org/core";
 import { buildEngineConfiguration, Engine } from "@twin.org/engine";
@@ -18,12 +19,14 @@ import type { IWorkbenchVariables } from "./models/IWorkbenchVariables.js";
  * Start the engine server.
  * @param serverInfo The server information.
  * @param envVars The environment variables.
+ * @param rootPackageFolder The root package folder.
  * @param stateStorage The state storage.
  * @returns The engine server.
  */
 export async function start(
 	serverInfo: IServerInfo,
 	envVars: IWorkbenchVariables,
+	rootPackageFolder: string,
 	stateStorage?: IEngineStateStorage
 ): Promise<{
 	engine: Engine<IEngineServerConfig, IWorkbenchState>;
@@ -45,7 +48,9 @@ export async function start(
 	// Extend the engine configuration with a custom type.
 	extendEngineConfig(engineConfig);
 	// Build the server configuration from the environment variables.
-	const serverConfig = buildEngineServerConfiguration(envVars, engineConfig, serverInfo);
+	const specFile = path.resolve(path.join(rootPackageFolder, "docs", "open-api", "spec.json"));
+	const serverConfig = buildEngineServerConfiguration(envVars, engineConfig, serverInfo, specFile);
+	console.log(serverConfig.types.informationComponent?.[0].options);
 
 	// Create the engine instance using file state storage and custom bootstrap.
 	const engine = new Engine<IEngineServerConfig, IWorkbenchState>({

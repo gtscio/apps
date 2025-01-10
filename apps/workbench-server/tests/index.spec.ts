@@ -34,7 +34,8 @@ describe("workbench-server", () => {
 
 		const memoryStateStorage = new MemoryStateStorage(false, {
 			nodeIdentity: "bob",
-			bootstrappedComponents: []
+			bootstrappedComponents: [],
+			componentStates: {}
 		});
 
 		const startResult = await start(
@@ -43,6 +44,7 @@ describe("workbench-server", () => {
 				version: "0.0.0"
 			},
 			config,
+			"",
 			memoryStateStorage
 		);
 
@@ -84,6 +86,7 @@ describe("workbench-server", () => {
 				version: "0.0.0"
 			},
 			config,
+			"",
 			memoryStateStorage
 		);
 

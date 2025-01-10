@@ -30,7 +30,7 @@ export async function identityGetPublic(identity: string): Promise<
 > {
 	if (Is.object(identityClient)) {
 		try {
-			const document = await identityClient.resolve(identity);
+			const document = await identityClient.identityResolve(identity);
 
 			return {
 				document

@@ -1,6 +1,6 @@
 {
 	"name": "@twin.org/workbench-ui",
-	"version": "0.0.1-next.7",
+	"version": "0.0.1-next.8",
 	"description": "UI to demonstrate the APIs",
 	"private": true,
 	"scripts": {
@@ -58,7 +58,7 @@
 		"svelte": "^5.2.7",
 		"svelte-check": "^4.0.9",
 		"tailwindcss": "^3.4.15",
-		"typescript": "^5.6.3",
+		"typescript": "^5.7.3",
 		"vite": "^5.4.11",
 		"vitest": "^2.1.5"
 	},
