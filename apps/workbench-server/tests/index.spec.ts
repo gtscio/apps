@@ -71,7 +71,7 @@ describe("workbench-server", () => {
 			identityProfileConnector: IdentityProfileConnectorType.EntityStorage,
 			nftConnector: NftConnectorType.EntityStorage,
 			immutableStorageConnector: ImmutableStorageConnectorType.EntityStorage,
-			attestationConnector: AttestationConnectorType.EntityStorage,
+			attestationConnector: AttestationConnectorType.Nft,
 			faucetConnector: FaucetConnectorType.EntityStorage,
 			walletConnector: WalletConnectorType.EntityStorage
 		};
