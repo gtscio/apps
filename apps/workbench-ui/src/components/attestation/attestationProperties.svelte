@@ -23,8 +23,8 @@
 	import { attestationCreate } from '$stores/attestation';
 	import { attestationsEntryCreate } from '$stores/attestations';
 	import { blobStorageGet, blobStorageList } from '$stores/blobStorage';
-	import { identityGetPublic } from '$stores/identity';
 	import { profileIdentity } from '$stores/identityProfile';
+	import { identityResolve } from '$stores/identityResolver';
 
 	export let returnUrl: string;
 	let validationErrors: {
@@ -108,7 +108,7 @@
 
 	onMount(async () => {
 		busy = true;
-		const identity = await identityGetPublic($profileIdentity);
+		const identity = await identityResolve($profileIdentity);
 
 		assertionMethods =
 			identity?.document?.assertionMethod?.map(am => {

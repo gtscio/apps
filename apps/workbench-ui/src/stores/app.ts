@@ -10,6 +10,7 @@ import { init as initBlobStorage } from "./blobStorage";
 import { init as initEventBus } from "./eventBus";
 import { init as initIdentity } from "./identity";
 import { init as initIdentityProfile } from "./identityProfile";
+import { init as initIdentityResolver } from "./identityResolver";
 import { init as initImmutableProof } from "./immutableProof";
 import { init as initInformation } from "./information";
 import { init as initIota } from "./iota";
@@ -44,6 +45,7 @@ export async function init(options: {
 	await initInformation(options.apiUrl);
 	await initAuthentication(options.apiUrl);
 	await initIdentityProfile(options.apiUrl);
+	await initIdentityResolver(options.apiUrl);
 	await initIdentity(options.apiUrl);
 	await initBlobStorage(options.apiUrl);
 	await initAttestation(options.apiUrl);

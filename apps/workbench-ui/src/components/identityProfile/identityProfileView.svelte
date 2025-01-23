@@ -18,8 +18,8 @@
 	} from '@twin.org/ui-components-svelte';
 	import { onMount } from 'svelte';
 	import { createPublicUrl } from '$stores/app';
-	import { identityGetPublic } from '$stores/identity';
 	import { profileGetPublic } from '$stores/identityProfile';
+	import { identityResolve } from '$stores/identityResolver';
 	import { createExplorerIdentityUrl } from '$stores/iota';
 
 	export let itemId: string;
@@ -48,7 +48,7 @@
 			displayName = ObjectHelper.propertyGet<string>(resultProfile?.profile, 'name');
 		}
 
-		const resultIdentity = await identityGetPublic(itemId);
+		const resultIdentity = await identityResolve(itemId);
 		if (Is.stringValue(resultIdentity?.error)) {
 			error += resultIdentity.error;
 		} else {

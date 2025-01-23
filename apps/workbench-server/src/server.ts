@@ -50,7 +50,6 @@ export async function start(
 	// Build the server configuration from the environment variables.
 	const specFile = path.resolve(path.join(rootPackageFolder, "docs", "open-api", "spec.json"));
 	const serverConfig = buildEngineServerConfiguration(envVars, engineConfig, serverInfo, specFile);
-	console.log(serverConfig.types.informationComponent?.[0].options);
 
 	// Create the engine instance using file state storage and custom bootstrap.
 	const engine = new Engine<IEngineServerConfig, IWorkbenchState>({

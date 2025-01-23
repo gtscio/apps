@@ -5297,7 +5297,7 @@
                 "parameters": [
                     {
                         "name": "conditions",
-                        "description": "The conditions to filter the streams, consist of property|comparison|value comma separated.",
+                        "description": "The conditions to filter the streams, JSON stringified IComparator[].",
                         "in": "query",
                         "required": false,
                         "schema": {
@@ -6745,7 +6745,7 @@
                     },
                     {
                         "name": "conditions",
-                        "description": "The conditions to filter the stream, consist of property|comparison|value comma separated.",
+                        "description": "The conditions to filter the stream, JSON stringified IComparator[].",
                         "in": "query",
                         "required": false,
                         "schema": {
@@ -6988,7 +6988,7 @@
                     },
                     {
                         "name": "conditions",
-                        "description": "The conditions to filter the stream, consist of property|comparison|value comma separated.",
+                        "description": "The conditions to filter the stream, JSON stringified IComparator[].",
                         "in": "query",
                         "required": false,
                         "schema": {
