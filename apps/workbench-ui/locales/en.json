@@ -27,6 +27,25 @@
 			"attestationObject": "Attestation Object",
 			"proof": "Proof"
 		},
+		"nftView": {
+			"title": "Nft",
+			"id": "Id",
+			"exploreNft": "Explore NFT",
+			"nftQr": "Nft QR Code",
+			"verified": "Verified",
+			"created": "Created",
+			"issuer": "Issuer",
+			"tag": "Tag",
+			"owner": "Owner",
+			"name": "Name",
+			"description": "Description",
+			"uri": "Uri",
+			"immutableMetadata": "Immutable Metadata",
+			"transferred": "Transferred",
+			"holderIdentity": "Holder Identity",
+			"nftObject": "Nft Object",
+			"proof": "Proof"
+		},
 		"auditableItemStreamView": {
 			"title": "Auditable Item Stream",
 			"id": "Id",
@@ -53,6 +72,9 @@
 			"description": "Description",
 			"dateCreated": "Date Created",
 			"dateModified": "Date Modified",
+			"nftId": "NFT Id",
+			"issuer": "Issuer",
+			"owner": "Owner",
 			"actions": "Actions"
 		}
 	},
@@ -107,6 +129,33 @@
 			"actionSuccess": "Attestation was successful",
 			"progress": "Attesting the document...",
 			"resultTitle": "Attestation Result"
+		},
+		"nft": {
+			"title": "Nfts",
+			"loading": "Loading nfts...",
+			"noItems": "No nfts found",
+			"createItem": "Create Nft",
+			"deleteTitle": "Delete Nft",
+			"deleteMessage": "Are you sure you want to delete this nft?"
+		},
+		"nftProperties": {
+			"title": "Create Nft",
+			"issuer": "Issuer",
+			"tag": "Tag",
+			"owner": "Owner",
+			"name": "Name",
+			"description": "Description",
+			"uri": "Uri",
+			"immutableMetadata": "Immutable Metadata (Optional)",
+			"selectBlob": "Select blob",
+			"nftId": "Nft Id",
+			"nftQr": "Nft QR Code",
+			"nftOf": "Nft of {blob}",
+			"signature": "Signature",
+			"action": "Mint",
+			"actionSuccess": "Minting was successful",
+			"progress": "Minting in progress...",
+			"resultTitle": "Nft Result"
 		},
 		"blob": {
 			"title": "Blobs",

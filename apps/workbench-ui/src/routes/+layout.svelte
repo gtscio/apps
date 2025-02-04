@@ -31,6 +31,11 @@
 			route: '/secure/attestation'
 		},
 		{
+			label: $i18n('navigation.nft'),
+			icon: Icons.BitcoinSolid,
+			route: '/secure/nft'
+		},
+		{
 			label: $i18n('navigation.auditable-item-streams'),
 			icon: Icons.RectangleListSolid,
 			route: '/secure/auditable-item-stream'

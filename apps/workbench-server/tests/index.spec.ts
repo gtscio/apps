@@ -103,6 +103,7 @@ describe("workbench-server", () => {
 		expect(ComponentFactory.names()).toEqual([
 			"logging",
 			"user-attestation-entry",
+			"user-nft-entry",
 			"blob",
 			"identity",
 			"identity-resolver",

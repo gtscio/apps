@@ -1,953 +1,1025 @@
 {
-  "error": {
-    "validation": {
-      "beEmpty": "{fieldName} must be empty",
-      "beNotEmpty": "{fieldName} must not be empty",
-      "beText": "{fieldName} must be text",
-      "beTextValue": "{fieldName} must contain some text",
-      "beTextMinMax": "{fieldName} must be longer than {minLength} and shorter than {maxLength} characters",
-      "beTextMin": "{fieldName} must be longer than {minLength} characters",
-      "beTextMax": "{fieldName} must be shorter than {maxLength} characters",
-      "beTextBase58": "{fieldName} must be text formatted using Base58 characters",
-      "beTextBase64": "{fieldName} must be text formatted using Base64 characters",
-      "beTextHex": "{fieldName} must be text formatted using Hex characters",
-      "beTextRegExp": "{fieldName} must be text formatted using the matching pattern {format}",
-      "beNumber": "{fieldName} must be a number",
-      "beNumberMinMax": "{fieldName} must be >= {minValue} and <= {maxValue}",
-      "beNumberMin": "{fieldName} must be >= {minValue}",
-      "beNumberMax": "{fieldName} must be <= {maxValue}",
-      "beWholeNumber": "{fieldName} must be a whole number",
-      "beWholeNumberMinMax": "{fieldName} must be a whole number >= {minValue} and <= {maxValue}",
-      "beWholeNumberMin": "{fieldName} must be a whole number >= {minValue}",
-      "beWholeNumberMax": "{fieldName} must be a whole number <= {maxValue}",
-      "beBigInteger": "{fieldName} must be a bigint",
-      "beBigIntegerMinMax": "{fieldName} must be a bigint >= {minValue} and <= {maxValue}",
-      "beBigIntegerMin": "{fieldName} must be a bigint >= {minValue}",
-      "beBigIntegerMax": "{fieldName} must be a bigint <= {maxValue}",
-      "beBoolean": "{fieldName} must be true or false",
-      "beDate": "{fieldName} must be a date",
-      "beDateTime": "{fieldName} must be a date/time",
-      "beTime": "{fieldName} must be a time",
-      "beTimestampMilliseconds": "{fieldName} must be a timestamp in milliseconds",
-      "beTimestampSeconds": "{fieldName} must be a timestamp in seconds",
-      "beObject": "{fieldName} must be an object",
-      "beArray": "{fieldName} must be an array",
-      "beArrayValue": "{fieldName} must be an array with at least one item",
-      "beIncluded": "{fieldName} is unrecognised",
-      "beByteArray": "{fieldName} must be a byte array",
-      "beUrn": "{fieldName} must be a correctly formatted urn",
-      "beUrl": "{fieldName} must be a correctly formatted url",
-      "beJSON": "{fieldName} must be correctly formatted JSON",
-      "beEmail": "{fieldName} must be a correctly formatted e-mail address",
-      "failed": "Validation failed",
-      "failedObject": "Validation of \"{objectName}\" failed",
-      "properties": {
-        "keyAlreadyExists": "The key already exists"
-      },
-      "schema": {
-        "failedValidation": "The JSON schema failed validation, {message}"
-      },
-      "geo": {
-        "coordinatesNotObject": "The geo coordinates must be an object",
-        "coordinatesLatitudeNumber": "The latitude value must be a number",
-        "coordinatesLatitudeRange": "The latitude value must be between -90 and 90",
-        "coordinatesLongitudeNumber": "The longitude value must be a number",
-        "coordinatesLongitudeRange": "The longitude value must be between -180 and 180"
-      },
-      "auditableItemGraphService": {
-        "edgeIdSameAsVertexId": "The edge id \"{id}\"can not point to the vertex it belongs to"
-      }
-    },
-    "guard": {
-      "undefined": "Property \"{property}\" must be defined, it is \"{value}\"",
-      "string": "Property \"{property}\" must be a string, it is \"{value}\"",
-      "stringEmpty": "Property \"{property}\" must have a value, it is empty",
-      "stringBase64": "Property \"{property}\" must be a base64 encoded string, it is \"{value}\"",
-      "stringBase64Url": "Property \"{property}\" must be a base64 url encoded string, it is \"{value}\"",
-      "stringBase58": "Property \"{property}\" must be a base58 encoded string, it is \"{value}\"",
-      "stringHex": "Property \"{property}\" must be a hex string, it is \"{value}\"",
-      "stringHexLength": "Property \"{property}\" must be a hex string of length \"{options}\", it is \"{value}\"",
-      "number": "Property \"{property}\" must be a number, it is \"{value}\"",
-      "integer": "Property \"{property}\" must be an integer, it is \"{value}\"",
-      "bigint": "Property \"{property}\" must be a bigint, it is \"{value}\"",
-      "boolean": "Property \"{property}\" must be a boolean, it is \"{value}\"",
-      "date": "Property \"{property}\" must be a date, it is \"{value}\"",
-      "timestampMilliseconds": "Property \"{property}\" must be a timestamp in milliseconds, it is \"{value}\"",
-      "timestampSeconds": "Property \"{property}\" must be a timestamp in seconds, it is \"{value}\"",
-      "objectUndefined": "Property \"{property}\" must be an object, it is \"undefined\"",
-      "object": "Property \"{property}\" must be an object, it is \"{value}\"",
-      "objectValue": "Property \"{property}\" must be an object, with at least one property, it is \"{value}\"",
-      "array": "Property \"{property}\" must be an array, it is \"{value}\"",
-      "arrayValue": "Property \"{property}\" must be an array with at least one item",
-      "arrayOneOf": "Property \"{property}\" must be one of [{options}], it is \"{value}\"",
-      "uint8Array": "Property \"{property}\" must be a Uint8Array, it is \"{value}\"",
-      "function": "Property \"{property}\" must be a function, it is \"{value}\"",
-      "urn": "Property \"{property}\" must be a Urn formatted string, it is \"{value}\"",
-      "url": "Property \"{property}\" must be a Url formatted string, it is \"{value}\"",
-      "email": "Property \"{property}\" must be string in e-mail format, it is \"{value}\"",
-      "length32Multiple": "Property \"{property}\" should be a multiple of 32, it is {value}",
-      "lengthEntropy": "Property \"{property}\" should be a multiple of 4, >=16 and <= 32, it is {value}",
-      "length3Multiple": "Property \"{property}\" should be a multiple of 3, it is {value}",
-      "greaterThan0": "Property \"{property}\" must be greater than zero, it is {value}"
-    },
-    "objectHelper": {
-      "failedBytesToJSON": "Failed converting bytes to JSON"
-    },
-    "common": {
-      "notImplementedMethod": "The method \"{method}\" has not been implemented",
-      "validation": "Validation failed"
-    },
-    "factory": {
-      "noUnregister": "There is no {typeName} registered with the name \"{name}\"",
-      "noGet": "The requested {typeName} \"{name}\" does not exist in the factory"
-    },
-    "bitString": {
-      "outOfRange": "The index should be >= 0 and less than the length of the bit string"
-    },
-    "base32": {
-      "invalidCharacter": "Data contains a character \"{invalidCharacter}\" which is not in the charset"
-    },
-    "base64": {
-      "length4Multiple": "Invalid length should be a multiple of 4, it is \"{value}\""
-    },
-    "base58": {
-      "invalidCharacter": "Data contains a character \"{invalidCharacter}\" which is not in the charset"
-    },
-    "fetchHelper": {
-      "decodingJSON": "Decoding JSON failed for route \"{route}\"",
-      "failureStatusText": "The request to the API failed: \"{statusText}\"",
-      "connectivity": "The request failed, the API could be offline, or there are other connectivity issues",
-      "timeout": "The request timed out",
-      "general": "A general failure occurred during the request"
-    },
-    "jwt": {
-      "noKeyOrSigner": "No key or signer was provided for JWT creation",
-      "noKeyOrVerifier": "No key or verifier was provided for JWT creation"
-    },
-    "bip39": {
-      "missingMnemonicWord": "The mnemonic contains a word not in the wordlist, \"{value}\"",
-      "checksumMismatch": "The checksum does not match \"{newChecksum}\" != \"{checksumBits}\""
-    },
-    "ed25519": {
-      "privateKeyLength": "The private key length is incorrect, it should be \"{requiredSize}\" but is \"{actualSize}\"",
-      "publicKeyLength": "The public key length is incorrect, it should be \"{requiredSize}\" but is \"{actualSize}\""
-    },
-    "secp256k1": {
-      "privateKeyLength": "The private key length is incorrect, it should be \"{requiredSize}\" but is \"{actualSize}\"",
-      "publicKeyLength": "The public key length is incorrect, it should be \"{requiredSize}\" but is \"{actualSize}\""
-    },
-    "x25519": {
-      "invalidPublicKey": "Invalid Ed25519 Public Key"
-    },
-    "blake2b": {
-      "outputLength64": "The output length should be between 1 and 64, it is \"{outputLength}\"",
-      "keyLength64": "The key length should be between 1 and 64, it is \"{keyLength}\""
-    },
-    "sha512": {
-      "bitSize": "Only 224, 256, 384 or 512 bits are supported, it is \"{bitSize}\""
-    },
-    "sha256": {
-      "bitSize": "Only 224 or 256 bits are supported, it is \"{bitSize}\""
-    },
-    "sha3": {
-      "bitSize": "Only 224, 256, 384 or 512 bits are supported, it is \"{bitSize}\""
-    },
-    "hmacSha256": {
-      "bitSize": "Only 224 or 256 bits are supported, it is \"{bitSize}\""
-    },
-    "hmacSha512": {
-      "bitSize": "Only 224, 256, 384 or 512 bits are supported, it is \"{bitSize}\""
-    },
-    "bech32": {
-      "decodeFailed": "The address contains decoding failed for address \"{bech32}\"",
-      "invalidChecksum": "The address contains an invalid checksum in address, \"{bech32}\"",
-      "separatorMisused": "The separator character '1' should only be used between hrp and data, \"{bech32}\"",
-      "lowerUpper": "The address my use either lowercase or uppercase, \"{bech32}\"",
-      "dataTooShort": "The address does not contain enough data to decode, \"{bech32}\""
-    },
-    "pbkdf2": {
-      "keyTooLong": "The requested key length \"{keyLength}\" is too long, based on the \"{macLength}\""
-    },
-    "chaCha20Poly1305": {
-      "noAadWithData": "You can not set the aad when there is already data",
-      "noAuthTag": "Can not finalise when the auth tag is not set",
-      "authenticationFailed": "The data could not be authenticated",
-      "authTagDecrypting": "Can not get the auth tag when decrypting",
-      "authTagEncrypting": "Can not set the auth tag when encrypting",
-      "noAuthTagSet": "The auth tag has not been set"
-    },
-    "bip44": {
-      "unsupportedKeyType": "The key type \"{keyType}\" is not supported"
-    },
-    "slip0010": {
-      "invalidSeed": "The seed is invalid \"{seed}\""
-    },
-    "baseRestClient": {
-      "missingRouteProp": "Missing route parameter in data \"{routeProp}\" for route \"{route}\"",
-      "decodingFailed": "Decoding JSON failed for route \"{route}\"",
-      "failureStatusText": "The request to the API failed: \"{statusText}\""
-    },
-    "entitySchemaHelper": {
-      "noIsPrimary": "Property \"entitySchema.properties\" must contain a value with isPrimary set",
-      "multipleIsPrimary": "Property \"entitySchema.properties\" contains more than one property with isPrimary set"
-    },
-    "jwtHelper": {
-      "jwtDecodeFailed": "Decoding the JWT failed",
-      "jwtPayloadMissingParam": "The JWT is missing the required parameter \"{param}\""
-    },
-    "qr": {
-      "typeNumberRange": "The typeNumber parameter should be a number >= 0 and <= 40, it is {typeNumber}",
-      "dataOverflow": "There is not enough space in the QR code to store the data, {lengthInBits} > {totalDataCount}, try increasing the typeNumber from {typeNumber}, or use 0 for auto detect",
-      "typeNumberOverflow": "There is not enough space in the QR code to store the data, {lengthInBits} > {totalDataCount}, typeNumber cannot be greater than 40"
-    },
-    "rendererOptions": {
-      "cellSizeZero": "The cellSize must be a number > 0, it is \"{cellSize}\"",
-      "marginSizeZero": "The marginSize must be a number >= 0, it is \"{marginSize}\""
-    },
-    "qRAlphaNumeric": {
-      "illegalCharacter ": "Illegal character in string \"{value}\""
-    },
-    "qRNumber": {
-      "illegalCharacter ": "Illegal character in string \"{value}\""
-    },
-    "mathHelper": {
-      "lessThanOne ": "The value can not be less than 1, it is \"{value}\""
-    },
-    "qrHelper": {
-      "correctionLevelRange ": "The errorCorrectLevel parameter should be one of the following: \"L\", \"M\", \"Q\", \"H\", it is \"{errorCorrectLevel}\"",
-      "modeRange ": "The mode parameter should be one of the following: \"Byte\", \"Numeric\", \"Alphanumeric\", it is \"{mode}\"",
-      "maskPatternRange ": "The maskPattern parameter should be a number >= 0 and <= 7, it is \"{maskPattern}\""
-    },
-    "rSBlock": {
-      "correctionLevelRange ": "The errorCorrectLevel parameter should be one of the following: \"L\", \"M\", \"Q\", \"H\", it is \"{errorCorrectLevel}\""
-    },
-    "qRDataBase": {
-      "invalidMode": "Invalid mode {mode} for typeNumber {typeNumber}",
-      "invalidTypeNumber": "Invalid typeNumber {typeNumber}, it should be less than <= 40"
-    },
-    "jpegEncoder": {
-      "invalidQuality": "Quality must be between 1 and 100, it is \"{value}\""
-    },
-    "attestationService": {
-      "noConnectors": "There are no connectors registered with the attestation factory",
-      "attestFailed": "The attestation of the data failed",
-      "verifyFailed": "The verification of the attestation failed",
-      "transferFailed": "The transfer of the attestation failed",
-      "destroyFailed": "The destruction of the attestation failed",
-      "namespaceMismatch": "The namespace in the urn \"{id}\" does not match the namespace of the attestation service \"{namespace}\""
-    },
-    "entityStorageAuthenticationService": {
-      "loginFailed": "Login failed",
-      "refreshFailed": "Refresh failed",
-      "userNotFound": "The user with the specified e-mail could not be found",
-      "passwordMismatch": "The password does not match the user's password"
-    },
-    "entityStorageAuthenticationProcessor": {
-      "initializeFailed": "The JSON Web token authentication processor could not be initialized"
-    },
-    "tokenHelper": {
-      "missing": "The JSON Web token could not be found in the authorization header",
-      "invalid": "The JSON Web token signature could not be validated",
-      "expired": "The JSON Web token has expired"
-    },
-    "restRouteProcessor": {
-      "routeNotFound": "The web server could not find the REST route \"{notFoundId}\""
-    },
-    "socketRouteProcessor": {
-      "routeNotFound": "The web server could not find the socket route \"{notFoundId}\""
-    },
-    "jwtIdentityProcessor": {
-      "jwtMissing": "The JSON Web token could not be found in the authorization header or a cookie",
-      "jwtSignatureInvalid": "The JSON Web token signature could not be validated",
-      "jwtExpired": "The JSON Web token has expired"
-    },
-    "auditableItemGraphService": {
-      "namespaceMismatch": "The namespace in the urn \"{id}\" does not match the namespace of the Auditable Item Graph service \"{namespace}\"",
-      "createFailed": "Creating the Auditable Item Graph vertex failed",
-      "getFailed": "Getting the Auditable Item Graph vertex failed",
-      "updatingFailed": "Updating the Auditable Item Graph vertex failed",
-      "queryingFailed": "Querying the Auditable Item Graph failed",
-      "removeImmutableFailed": "Removing the immutable data the Auditable Item Graph vertex failed",
-      "vertexNotFound": "The vertex with the Id \"{notFoundId}\" was not found",
-      "resourceIdMissing": "You must provide either the id, or the resourceObject must contain an id property for index \"{index}\""
-    },
-    "auditableItemStreamService": {
-      "namespaceMismatch": "The namespace in the urn \"{id}\" does not match the namespace of the Auditable Item Stream service \"{namespace}\"",
-      "createFailed": "Creating the Auditable Item Stream failed",
-      "getFailed": "Getting the Auditable Item Stream failed",
-      "updatingFailed": "Updating the Auditable Item Stream failed",
-      "removingFailed": "Removing Auditable Item Stream failed",
-      "queryingFailed": "Querying the Auditable Item Stream failed",
-      "creatingEntryFailed": "Creating entry in the Auditable Item Stream failed",
-      "updatingEntryFailed": "Updating entry in the Auditable Item Stream failed",
-      "gettingEntryFailed": "Getting entry from the Auditable Item Stream failed",
-      "gettingEntryObjectFailed": "Getting entry object from the Auditable Item Stream failed",
-      "removingEntryFailed": "Removing entry from the Auditable Item Stream failed",
-      "gettingEntriesFailed": "Getting entries from the Auditable Item Stream failed",
-      "gettingEntryObjectsFailed": "Getting entry objects from the Auditable Item Stream failed",
-      "removeImmutableFailed": "Removing immutable entry from the Auditable Item Stream failed",
-      "streamNotFound": "The stream with the Id \"{notFoundId}\" was not found",
-      "streamEntryNotFound": "The stream entry with the Id \"{notFoundId}\" was not found"
-    },
-    "s3BlobStorageConnector": {
-      "bucketCreateFailed": "Creating bucket \"{bucket}\" failed",
-      "namespaceMismatch": "The namespace in the urn \"{id}\" does not match the namespace of the blob storage \"{namespace}\"",
-      "getBlobFailed": "Failed to get blob in S3",
-      "setBlobFailed": "Failed to set blob in S3",
-      "removeBlobFailed": "Failed to remove blob in S3"
-    },
-    "azureBlobStorageConnector": {
-      "containerCreateFailed": "Creating container \"{container}\" failed",
-      "namespaceMismatch": "The namespace in the urn \"{id}\" does not match the namespace of the blob storage \"{namespace}\"",
-      "getBlobFailed": "Failed to get blob in Azure",
-      "setBlobFailed": "Failed to set blob in Azure",
-      "removeBlobFailed": "Failed to remove blob in Azure"
-    },
-    "gcpBlobStorageConnector": {
-      "bucketCreateFailed": "Creating bucket \"{bucket}\" failed",
-      "namespaceMismatch": "The namespace in the urn \"{id}\" does not match the namespace of the blob storage \"{namespace}\"",
-      "getBlobFailed": "Failed to get blob in GCP",
-      "setBlobFailed": "Failed to set blob in GCP",
-      "removeBlobFailed": "Failed to remove blob in GCP"
-    },
-    "ipfsBlobStorageConnector": {
-      "namespaceMismatch": "The namespace in the urn \"{id}\" does not match the namespace of the blob storage \"{namespace}\"",
-      "fetchFail": "Failure during IPFS request",
-      "setBlobFailed": "Failed to store blob in IPFS",
-      "getBlobFailed": "Failed to get blob from IPFS",
-      "removeBlobFailed": "Failed to remove blob from IPFS"
-    },
-    "fileBlobStorageConnector": {
-      "directoryCreateFailed": "Creating directory \"{directory}\" failed",
-      "getBlobFailed": "Unable to get blob \"{id}\"",
-      "setBlobFailed": "Unable to set blob",
-      "removeBlobFailed": "Unable to remove blob",
-      "namespaceMismatch": "The namespace in the urn \"{id}\" does not match the namespace of the blob storage \"{namespace}\""
-    },
-    "memoryBlobStorageConnector": {
-      "namespaceMismatch": "The namespace in the urn \"{id}\" does not match the namespace of the blob storage \"{namespace}\""
-    },
-    "blobStorageService": {
-      "noConnectors": "There are no connectors registered with the blob storage factory",
-      "createFailed": "There was a problem storing the blob",
-      "getFailed": "There was a problem getting the blob",
-      "updateFailed": "There was a problem updating the blob",
-      "removeFailed": "There was a problem removing the blob",
-      "namespaceMismatch": "The namespace in the urn \"{id}\" does not match the namespace of the blob storage service \"{namespace}\""
-    },
-    "commands": {
-      "common": {
-        "missingEnv": "The \"{option}\" option is configured as an environment variable, but there is no environment variable with the name \"{value}\" set.",
-        "optionInvalidHex": "The \"{option}\" does not appear to be hex. \"{value}\"",
-        "optionInvalidBase64": "The \"{option}\" does not appear to be base64. \"{value}\"",
-        "optionInvalidHexBase64": "The \"{option}\" does not appear to be hex or base64. \"{value}\"",
-        "optionInvalidBech32": "The \"{option}\" does not appear to be bech32. \"{value}\"",
-        "optionMinValue": "The \"{option}\" option must be greater than or equal to {minValue}, it is {value}.",
-        "optionMaxValue": "The \"{option}\" option must be less than or equal to {maxValue}, it is {value}."
-      }
-    },
-    "dynamoDbEntityStorageConnector": {
-      "tableCreateFailed": "Creating table \"{tableName}\" failed",
-      "tableDoesNotExist": "Table \"{tableName}\" does not exist",
-      "setFailed": "Unable to set entity \"{id}\"",
-      "getFailed": "Unable to get entity \"{id}\"",
-      "removeFailed": "Unable to remove entity \"{id}\"",
-      "queryFailed": "The query failed",
-      "comparisonNotSupported": "Comparison operator \"{comparison}\" is not supported",
-      "conditionalNotSupported": "Conditional operator \"{operator}\" is not supported",
-      "sortSingle": "You can only sort by a single property",
-      "sortNotIndexed": "The property \"{property}\" is not indexed and cannot be used for sorting"
-    },
-    "fileEntityStorageConnector": {
-      "directoryCreateFailed": "Creating directory \"{directory}\" failed"
-    },
-    "scyllaDBTableConnector": {
-      "tableCreateFailed": "Creating table \"{table}\" failed",
-      "getFailed": "Getting item with \"{id}\" failed",
-      "dropTableFailed": " \"{table}\" cannot be dropped",
-      "truncateTableFailed": " \"{table}\" cannot be dropped",
-      "removeFailed": "Removing item with \"{id}\" failed",
-      "findFailed": "Error while querying data on  \"{table}\""
-    },
-    "entityStorageService": {
-      "entityNotFound": "Could not find entity with id \"{id}\""
-    },
-    "entityStorageIdentityResolverConnector": {
-      "documentNotFound": "The document could not be found",
-      "resolveDocumentFailed": "Resolving the document failed"
-    },
-    "entityStorageIdentityConnector": {
-      "createDocumentFailed": "Creating the document failed",
-      "signatureVerificationFailed": "The document integrity check failed",
-      "missingDid": "The full id including DID is required",
-      "addVerificationMethodFailed": "Adding the verification method failed",
-      "removeVerificationMethodFailed": "Removing the verification method failed",
-      "addServiceFailed": "Adding the service failed",
-      "removeServiceFailed": "Removing the service failed",
-      "documentNotFound": "The document could not be found",
-      "documentPrivateKeyNotFound": "The private key for document could not be found in the vault",
-      "verificationMethodNotFound": "The verification method could not be found",
-      "verificationPrivateKeyNotFound": "The private key for the verification method could not be found in the vault",
-      "serviceNotFound": "The service could not be found",
-      "publicKeyJwkMissing": "The verification method contains no publicKeyJwk in method \"{method}\"",
-      "jwkSignatureFailed": "The signature on the JWK failed verification",
-      "createVerifiableCredentialFailed": "Creating the verifiable credential failed",
-      "checkingVerifiableCredentialFailed": "Checking the verifiable credential failed",
-      "createVerifiablePresentationFailed": "Creating the verifiable presentation failed",
-      "checkingVerifiablePresentationFailed": "Checking the verifiable presentation failed",
-      "expectingJwtCredential": "Expecting JWT credential in the presentation",
-      "keyIndexOutOfRange": "The supplied keyIndex is not in the range of the key list",
-      "createProofFailed": "Creating the signature for the data failed",
-      "methodMissing": "The verification method specified does not exist \"{method}\"",
-      "verifyProofFailed": "Verifying the signature for the data failed",
-      "revokeVerifiableCredentialsFailed": "Revoking verifiable credentials failed",
-      "unrevokeVerifiableCredentialsFailed": "Unrevoking verifiable credentials failed",
-      "proofType": "The proof type must be DataIntegrityProof, it is currently {proofType}",
-      "cryptosuite": "The proof cryptosuite must be eddsa-jcs-2022, it is currently {cryptosuite}"
-    },
-    "entityStorageIdentityProfileConnector": {
-      "alreadyExists": "The identity profile already exists for the identity \"{existingId}\"",
-      "createFailed": "Creating the identity profile failed \"{identity}\"",
-      "getFailed": "Getting the identity profile failed \"{notFoundId}\"",
-      "updateFailed": "Updating the identity profile failed \"{identity}\"",
-      "notFound": "The identity profile failed \"{notFoundId}\"",
-      "removeFailed": "Removing the identity profile failed \"{identity}\"",
-      "listFailed": "Failed listing identities"
-    },
-    "iotaIdentityResolverConnector": {
-      "documentNotFound": "The document could not be found",
-      "resolveDocumentFailed": "Resolving the document failed"
-    },
-    "iotaIdentityConnector": {
-      "createDocumentFailed": "Creating the document failed",
-      "missingDid": "The full id including DID is required",
-      "addVerificationMethodFailed": "Adding the verification method failed",
-      "removeVerificationMethodFailed": "Removing the verification method failed",
-      "addServiceFailed": "Adding the service failed",
-      "removeServiceFailed": "Removing the service failed",
-      "documentNotFound": "The document could not be found",
-      "stateControllerMissing": "The state controller address is missing from the metadata",
-      "verificationMethodNotFound": "The verification method could not be found",
-      "serviceNotFound": "The service could not be found",
-      "publicKeyJwkMissing": "The verification method contains no publicKeyJwk in method \"{method}\"",
-      "verificationKeyMissing": "The verification key is missing from the vault for method \"{method}\"",
-      "createVerifiableCredentialFailed": "Creating the verifiable credential failed",
-      "checkingVerifiableCredentialFailed": "Checking the verifiable credential failed",
-      "createVerifiablePresentationFailed": "Creating the verifiable presentation failed",
-      "checkingVerifiablePresentationFailed": "Checking the verifiable presentation failed",
-      "expectingJwtCredential": "Expecting JWT credential in the presentation",
-      "keyIndexOutOfRange": "The supplied keyIndex is not in the range of the key list",
-      "createProofFailed": "Creating the signature for the data failed",
-      "methodMissing": "The verification method specified does not exist \"{method}\"",
-      "verifyProofFailed": "Verifying the signature for the data failed",
-      "revokeVerifiableCredentialsFailed": "Revoking verifiable credentials failed",
-      "unrevokeVerifiableCredentialsFailed": "Unrevoking verifiable credentials failed",
-      "inclusionFailed": "The transaction generated for the identity was not included in a reasonable amount of time",
-      "insufficientFunds": "There were insufficient funds to complete the operation",
-      "walletConnectorMissing": "The wallet connector must be available to perform this operation",
-      "proofType": "The proof type must be DataIntegrityProof, it is currently {proofType}",
-      "cryptosuite": "The proof cryptosuite must be eddsa-jcs-2022, it is currently {cryptosuite}"
-    },
-    "identityService": {
-      "noConnectors": "There are no connectors registered with the identity factory",
-      "namespaceMismatch": "The namespace in the urn \"{id}\" does not match the namespace of the identity service \"{namespace}\"",
-      "connectorNotFound": "There is no connector with the namespace \"{namespace}\" registered with the identity factory",
-      "jwtDecodeFailed": "Decoding the JWT failed",
-      "identityCreateFailed": "Creating the identity failed",
-      "verificationMethodCreateFailed": "Creating the verification method failed for identity \"{identity}\"",
-      "verificationMethodRemoveFailed": "Removing the verification method failed \"{verificationMethodId}\"",
-      "serviceCreateFailed": "Creating the service failed for identity \"{identity}\", service \"{serviceId}\"",
-      "serviceRemoveFailed": "Removing the service failed \"{serviceId}\"",
-      "verifiableCredentialCreateFailed": "Creating the verifiable credential failed for method \"{verificationMethodId}\""
-    },
-    "identityResolverService": {
-      "noConnectors": "There are no connectors registered with the identity resolver factory",
-      "namespaceMismatch": "The namespace in the urn \"{id}\" does not match the namespace of the identity service \"{namespace}\"",
-      "connectorNotFound": "There is no connector with the namespace \"{namespace}\" registered with the identity factory",
-      "identityResolveFailed": "Resolving the identity failed \"{identity}\""
-    },
-    "identityProfileService": {
-      "noConnectors": "There are no connectors registered with the identity profile factory",
-      "alreadyExists": "The identity profile already exists for the identity \"{existingId}\"",
-      "createFailed": "Creating the identity profile failed \"{identity}\"",
-      "getFailed": "Getting the identity profile failed",
-      "getPublicFailed": "Getting the public identity profile failed",
-      "updateFailed": "Updating the identity profile failed \"{identity}\"",
-      "notFound": "The identity profile could not be found \"{notFoundId}\"",
-      "removeFailed": "Removing the identity profile failed \"{identity}\"",
-      "listFailed": "Failed listing identities"
-    },
-    "immutableProofService": {
-      "namespaceMismatch": "The namespace in the urn \"{id}\" does not match the namespace of the Immutable Proof service \"{namespace}\"",
-      "createFailed": "Creating the proof failed",
-      "getFailed": "Getting the proof failed",
-      "verifyFailed": "Verifying the proof failed",
-      "removeImmutableFailed": "Removing immutable entry from the Immutable Proof failed",
-      "proofNotFound": "The proof with the Id \"{notFoundId}\" was not found"
-    },
-    "entityStorageImmutableStorageConnector": {
-      "immutableStorageNotFound": "The immutable item with the Id \"{notFoundId}\" was not found",
-      "notControllerRemove": "The immutable item can only be removed by the controller",
-      "signatureFailed": "The signature verification failed",
-      "storingFailed": "Storing the item failed",
-      "gettingFailed": "Getting the item failed",
-      "removingFailed": "Removing the item failed",
-      "namespaceMismatch": "The namespace in the urn \"{id}\" does not match the namespace of the IOTA Immutable Storage connector \"{namespace}\""
-    },
-    "iotaImmutableStorageConnector": {
-      "inclusionFailed": "The transaction generated for the immutable storage was not included in a reasonable amount of time",
-      "storingFailed": "Storing the immutable item failed",
-      "gettingFailed": "Getting the immutable item failed",
-      "removingFailed": "Removing the immutable item failed",
-      "namespaceMismatch": "The namespace in the urn \"{id}\" does not match the namespace of the IOTA Immutable Storage connector \"{namespace}\"",
-      "insufficientFunds": "There were insufficient funds to complete the operation",
-      "walletConnectorMissing": "The wallet connector must be available to perform this operation"
-    },
-    "entityStorageNftConnector": {
-      "nftNotFound": "The NFT with the ID \"{notFoundId}\" was not found",
-      "notControllerTransfer": "The NFT can only be transferred by the controller",
-      "notControllerBurn": "The NFT can only be burned by the controller",
-      "notControllerUpdate": "The NFT can only be updated by the controller",
-      "signatureFailed": "The signature verification failed",
-      "mintingFailed": "Minting the NFT failed",
-      "resolvingFailed": "Resolving the NFT failed",
-      "burningFailed": "Burning the NFT failed",
-      "transferFailed": "Transferring the NFT failed",
-      "updatingFailed": "Updating the NFT failed",
-      "namespaceMismatch": "The namespace in the urn \"{id}\" does not match the namespace of the IOTA NFT connector \"{namespace}\""
-    },
-    "iotaNftConnector": {
-      "inclusionFailed": "The transaction generated for the NFT was not included in a reasonable amount of time",
-      "mintingFailed": "Minting the NFT failed",
-      "resolvingFailed": "Resolving the NFT failed",
-      "burningFailed": "Burning the NFT failed",
-      "transferFailed": "Transferring the NFT failed",
-      "updateFailed": "Updating the NFT failed",
-      "namespaceMismatch": "The namespace in the urn \"{id}\" does not match the namespace of the IOTA NFT connector \"{namespace}\"",
-      "insufficientFunds": "There were insufficient funds to complete the operation",
-      "walletConnectorMissing": "The wallet connector must be available to perform this operation"
-    },
-    "nftService": {
-      "namespaceMismatch": "The namespace in the urn \"{id}\" does not match the namespace of the NFT service \"{namespace}\"",
-      "noConnectors": "There are no connectors registered with the nft factory",
-      "mintFailed": "The minting of the NFT failed",
-      "resolveFailed": "The resolving of the NFT failed",
-      "burnFailed": "The burning of the NFT failed",
-      "transferFailed": "The transfer of the NFT failed",
-      "updateFailed": "The update of the NFT failed"
-    },
-    "entityStorageTelemetryConnector": {
-      "metricNotFound": "The metric could not be found \"{notFoundId}\"",
-      "metricAlreadyExists": "The metric already exists \"{existingId}\"",
-      "metricValueNotFound": "The metric value could not be found \"{notFoundId}\"",
-      "counterIncOnly": "A counter metric can only be incremented, or added to with an integer",
-      "upDownCounterIncOrDecOnly": "An up/down counter metric can only be incremented, decremented or adjusted with an integer",
-      "gaugeNoIncDec": "A gauge can not be incremented or decremented"
-    },
-    "entityStorageVaultConnector": {
-      "keyAlreadyExists": "The key \"{existingId}\" already exists in the vault",
-      "keyNotFound": "The key \"{notFoundId}\" was not found in the vault",
-      "secretNotFound": "The secret \"{notFoundId}\" was not found in the vault",
-      "unsupportedKeyType": "The key type \"{keyType}\" is not supported",
-      "keyTypeMismatch": "The key type \"{keyType}\" does not match the requested encryption method \"{encryptionType}\""
-    },
-    "hashicorpVaultConnector": {
-      "setSecretFailed": "Failed to set secret \"{name}\"",
-      "removeSecretFailed": "Failed to remove secret \"{name}\"",
-      "getSecretVersionsFailed": "Failed to get secret versions \"{name}\"",
-      "hashicorpVaultConnectionFailed": "Failed to connect to Hashicorp Vault",
-      "createdKeyFailed": "Failed to create key \"{name, type}\"",
-      "unsupportedKeyType": "Unsupported key type \"{type}\"",
-      "exportPublicKeyFailed": "Failed to export public key \"{name}\"",
-      "publicKeyNotFound": "Public key \"{name}\" not found",
-      "removeKeyFailed": "Failed to remove key \"{name}\"",
-      "updateKeyConfigFailed": "Failed to update key config \"{name}\"",
-      "addKeyFailed": "Failed to add key \"{name, type}\"",
-      "backupKeyNotFound": "Backup key \"{name}\" not found",
-      "backupKeyFailed": "Failed to backup key \"{name}\"",
-      "restoreKeyFailed": "Failed to restore key \"{name}\"",
-      "exportKeyFailed": "Failed to export key \"{name}\" with keyPath \"{keyPath}\"",
-      "exportKeyNotFound": "Export key with name \"{name}\" not found",
-      "getKeyFailed": "Failed to get key \"{name}\"",
-      "signDataFailed": "Failed to sign data \"{name}\"",
-      "invalidSignResponse": "Invalid sign response \"{name}\"",
-      "verifyDataFailed": "Failed to verify data \"{name}\"",
-      "invalidSignature": "Invalid signature \"{name}\"",
-      "encryptDataFailed": "Failed to encrypt data \"{name, encryptionType}\"",
-      "unsupportedEncryptionType": "Unsupported encryption type \"{encryptionType}\"",
-      "decryptDataFailed": "Failed to decrypt data \"{name, encryptionType}\"",
-      "invalidEncryptResponse": "Invalid encrypt response \"{name, encryptionType}\"",
-      "keyAlreadyExists": "Key \"{existingId}\" already exists",
-      "invalidReadKeyResponse": "Invalid read key response \"{name}\"",
-      "renameKeyFailed": "Failed to rename key from \"{name}\" to \"{newName}\"",
-      "keyTypeMismatch": "The key type \"{keyType}\" does not match the requested encryption method \"{encryptionType}\""
-    },
-    "entityStorageWalletConnector": {
-      "insufficientFunds": "There are insufficient funds in the wallet."
-    },
-    "iotaWalletConnector": {
-      "transferFailed": "The wallet transfer failed.",
-      "inclusionFailed": "The transaction generated was not included in a reasonable amount of time",
-      "insufficientFunds": "There were insufficient funds to complete the operation"
-    },
-    "iotaFaucetConnector": {
-      "fundingFailed": "Fund the address from faucet failed",
-      "insufficientFunds": "There were insufficient funds to complete the operation"
-    }
-  },
-  "errorNames": {
-    "error": "Error",
-    "generalError": "General",
-    "guardError": "Guard",
-    "conflictError": "Conflict",
-    "notFoundError": "Not Found",
-    "notSupportedError": "Not Supported",
-    "alreadyExistsError": "Already Exists",
-    "notImplementedError": "Not Implemented",
-    "validationError": "Validation",
-    "unprocessableError": "Unprocessable"
-  },
-  "validation": {
-    "defaultFieldName": "The field"
-  },
-  "errorMessages": {
-    "fetch": "Fetch"
-  },
-  "jsonLdProcessor": {
-    "compact": "The JSON-LD compaction failed",
-    "expand": "The JSON-LD expansion failed",
-    "invalidUrl": "The JSON-LD processing failed to retrieve from the following url \"{url}\"",
-    "jsonldError": "The JSON-LD processing failed due to the following error: \"{code}\""
-  },
-  "data-type-names": {
-    "http://schema.org/Text": "Text",
-    "http://schema.org/URL": "Url",
-    "http://schema.org/Integer": "Integer",
-    "http://schema.org/Float": "Float",
-    "http://schema.org/Boolean": "Boolean",
-    "http://schema.org/Date": "ISO Date",
-    "http://schema.org/DateTime": "ISO Date Time",
-    "http://schema.org/Time": "ISO Time",
-    "http://schema.org/image": "Image",
-    "http://schema.org/GeoCoordinates": "Geo Coordinates",
-    "http://schema.org/StructuredValue": "Structured Value"
-  },
-  "info": {
-    "eventBusSocketClient": {
-      "subscribe": "Subscription created for topic \"{topic}\" with id \"{subscriptionId}\"",
-      "unsubscribe": "Subscription removed for topic \"{topic}\" with id \"{subscriptionId}\"",
-      "publish": "Event publish for topic \"{topic}\" with id \"{eventId}\", with \"{subscriptionCount}\" subscriptions"
-    },
-    "s3BlobStorageConnector": {
-      "bucketCreating": "Creating bucket \"{bucket}\"",
-      "bucketCreated": "Created bucket \"{bucket}\"",
-      "bucketExists": "Skipping create bucket \"{bucket}\" as it already exists"
-    },
-    "azureBlobStorageConnector": {
-      "containerCreating": "Creating container \"{container}\"",
-      "containerCreated": "Created container \"{container}\"",
-      "containerExists": "Skipping create container \"{container}\" as it already exists"
-    },
-    "gcpBlobStorageConnector": {
-      "bucketCreating": "Creating bucket \"{bucket}\"",
-      "bucketCreated": "Created bucket \"{bucket}\"",
-      "bucketExists": "Skipping create bucket \"{bucket}\" as it already exists"
-    },
-    "fileBlobStorageConnector": {
-      "directoryCreating": "Creating directory \"{directory}\"",
-      "directoryCreated": "Created directory \"{directory}\"",
-      "directoryExists": "Skipping create directory \"{directory}\" as it already exists"
-    },
-    "dynamoDbEntityStorageConnector": {
-      "tableCreating": "Creating table \"{tableName}\"",
-      "tableCreated": "Created table \"{tableName}\"",
-      "tableExists": "Skipping create table \"{tableName}\" as it already exists"
-    },
-    "fileEntityStorageConnector": {
-      "directoryCreating": "Creating directory \"{directory}\"",
-      "directoryCreated": "Created directory \"{directory}\"",
-      "directoryExists": "Skipping create directory \"{directory}\" as it already exists"
-    },
-    "scyllaDBTableConnector": {
-      "tableCreating": "Creating table \"{table}\"",
-      "tableCreated": "Created table \"{table}\"",
-      "tableExists": "Skipping create table \"{table}\" as it already exists",
-      "typeCreated": "Created type \"{typeName}\"",
-      "sql": "SQL: \"{sql}\""
-    },
-    "scyllaDBViewConnector": {
-      "viewCreating": "Creating view \"{view}\"",
-      "viewCreated": "Created view \"{view}\"",
-      "viewExists": "Skipping create view \"{view}\" as it already exists",
-      "typeCreated": "Created type \"{typeName}\"",
-      "sql": "SQL: \"{sql}\""
-    },
-    "entityStorageTelemetryConnector": {
-      "metricCreated": "The metric was created \"{id}\" with type \"type\" and label \"{label}\"",
-      "metricUpdated": "The metric was updated \"{id}\" with type \"type\" and label \"{label}\"",
-      "metricRemoved": "The metric was removed \"{id}\"",
-      "metricValueCreated": "The metric value was created for \"{id}\" with value \"{value}\""
-    },
-    "hashicorpVaultConnector": {
-      "hashicorpVaultConnected": "Connected to Hashicorp Vault"
-    }
-  },
-  "verifiableCredentialStates": {
-    "pendingVerification": "Pending Verification",
-    "rejected": "Rejected",
-    "issued": "Issued",
-    "revoked": "Revoked"
-  },
-  "pages": {
-    "error": {
-      "title": "Error",
-      "notFound": "The requested page could not be found"
-    },
-    "login": {
-      "title": "Login",
-      "email": "E-mail",
-      "password": "Password",
-      "signIn": "Sign in",
-      "signingIn": "Signing in",
-      "noAccount": "Don't have an account yet?",
-      "signUp": "Sign up"
-    },
-    "identityProfile": {
-      "title": "Profile",
-      "qr": "Public Profile View",
-      "identity": "Identity",
-      "explore": "Explore",
-      "firstName": "First Name",
-      "lastName": "Last Name",
-      "displayName": "Display Name",
-      "displayNameDescription": "This will be the name that is displayed publicly when viewing your identity"
-    },
-    "identityPublic": {
-      "title": "Identity Public Profile",
-      "qr": "Public Profile View",
-      "identity": "Identity",
-      "schema": "Schema",
-      "displayName": "Name",
-      "explore": "Explore",
-      "didDocument": "DID Document"
-    },
-    "attestation": {
-      "title": "Attestations",
-      "loading": "Loading attestations...",
-      "noItems": "No attestations found",
-      "createItem": "Create Attestation",
-      "deleteTitle": "Delete Attestation",
-      "deleteMessage": "Are you sure you want to delete this attestation?"
-    },
-    "attestationProperties": {
-      "title": "Create Attestation",
-      "blob": "Blob",
-      "selectBlob": "Select blob",
-      "assertionMethod": "Assertion Method",
-      "selectAssertionMethod": "Select assertion method",
-      "attestationId": "Attestation Id",
-      "attestationQr": "Attestation QR Code",
-      "attestationOf": "Attestation of {blob}",
-      "signature": "Signature",
-      "action": "Attest",
-      "actionSuccess": "Attestation was successful",
-      "progress": "Attesting the document...",
-      "resultTitle": "Attestation Result"
-    },
-    "blob": {
-      "title": "Blobs",
-      "loading": "Loading blobs...",
-      "noItems": "No blobs found",
-      "createItem": "Create Blob",
-      "deleteTitle": "Delete Blob",
-      "deleteMessage": "Are you sure you want to delete this blob?"
-    },
-    "blobView": {
-      "title": "Blob Storage",
-      "id": "Id",
-      "description": "Description",
-      "fileExtension": "File Extension",
-      "encodingFormat": "Encoding Format",
-      "document": "Document",
-      "download": "Download"
-    },
-    "blobProperties": {
-      "title": "Create Blob",
-      "description": "Description",
-      "filename": "Filename",
-      "action": "Upload",
-      "actionSuccess": "Uploading was successful",
-      "progress": "Uploading to storage...",
-      "resultTitle": "Upload Result",
-      "itemQr": "Blob Storage QR Code",
-      "itemId": "Blob Id"
-    },
-    "auditableItemStream": {
-      "title": "Auditable Item Streams",
-      "loading": "Loading auditable item streams...",
-      "noItems": "No auditable item streams found",
-      "createItem": "Create Auditable Item Stream",
-      "deleteTitle": "Delete Auditable Item Stream",
-      "deleteMessage": "Are you sure you want to delete this auditable item stream?"
-    },
-    "auditableItemStreamProperties": {
-      "titleCreate": "Create Auditable Item Stream",
-      "titleModify": "Modify Auditable Item Stream",
-      "description": "Description",
-      "actionCreate": "Create",
-      "actionCreateSuccess": "Creation was successful",
-      "progressCreate": "Creating...",
-      "resultTitleCreate": "Create Result",
-      "actionUpdate": "Update",
-      "actionUpdateSuccess": "Updating was successful",
-      "progressUpdate": "Updating...",
-      "resultTitleUpdate": "Update Result",
-      "itemQr": "Auditable Item Stream QR Code",
-      "itemId": "Auditable Item Stream Id"
-    },
-    "proofView": {
-      "title": "Proof View",
-      "type": "Type",
-      "header": "Header",
-      "payload": "Payload",
-      "signature": "Signature"
-    }
-  },
-  "actions": {
-    "save": "Save",
-    "saveSuccess": "Saved successfully",
-    "open": "Open",
-    "close": "Close",
-    "back": "Back",
-    "yes": "Yes",
-    "no": "No",
-    "ok": "OK",
-    "cancel": "Cancel",
-    "modify": "Modify",
-    "delete": "Delete",
-    "view": "View",
-    "decode": "Decode"
-  },
-  "components": {
-    "serverStatus": {
-      "api": "API",
-      "notConnected": "Not connected"
-    },
-    "appFooter": {
-      "language": "Language",
-      "colorTheme": "Color theme",
-      "selectLanguage": "Select language"
-    },
-    "attestationView": {
-      "title": "Attestation",
-      "id": "Id",
-      "exploreNft": "Explore NFT",
-      "attestationQr": "Attestation QR Code",
-      "verified": "Verified",
-      "created": "Created",
-      "ownerIdentity": "Owner Identity",
-      "transferred": "Transferred",
-      "holderIdentity": "Holder Identity",
-      "attestationObject": "Attestation Object",
-      "proof": "Proof"
-    },
-    "auditableItemStreamView": {
-      "title": "Auditable Item Stream",
-      "id": "Id",
-      "auditableItemStreamQr": "Auditable Item Stream QR Code"
-    },
-    "immutableProofView": {
-      "title": "Immutable Proof",
-      "id": "Id",
-      "proof": "Proof",
-      "receipt": "Receipt"
-    },
-    "immutableProofReceipt": {
-      "title": "Immutable Receipt",
-      "type": "Type",
-      "id": "Id",
-      "transactionId": "Transaction Id",
-      "network": "Network",
-      "entityStorageId": "Entity Storage Id",
-      "exploreTransaction": "Explore Transaction"
-    }
-  },
-  "fastifyWebServer": {
-    "building": "Building Web Server",
-    "starting": "Starting Web Server at address \"{host}\" on port \"{port}\"",
-    "startFailed": "The Web Server failed to start",
-    "started": "The Web Server started on {addresses}",
-    "stopped": "The Web Server was stopped",
-    "badRequest": "The web server could not handle the request",
-    "restRouteAdded": "Added REST route \"{route}\" \"{method}\"",
-    "socketRouteAdded": "Added socket route \"{route}\"",
-    "noRestProcessors": "You must configure at least one REST processor",
-    "noSocketProcessors": "You must configure at least one socket processor",
-    "postProcessorError": "There was a failure after in a post processor for route \"{route}\""
-  },
-  "auditableItemGraphService": {},
-  "cli": {
-    "progress": {
-      "done": "Done.",
-      "error": "Error",
-      "loadingEnvFiles": "Loading env files",
-      "pleaseWait": "Please wait...",
-      "writingJsonFile": "Writing JSON file",
-      "writingEnvFile": "Writing env file",
-      "readingJsonFile": "Reading JSON file",
-      "readingEnvFile": "Reading env file"
-    },
-    "options": {
-      "lang": {
-        "param": "--lang '<'lang'>'",
-        "description": "The language to display the output in."
-      },
-      "load-env": {
-        "param": "--load-env [env...]",
-        "description": "Load the env files to initialise any environment variables."
-      },
-      "no-console": {
-        "param": "--no-console",
-        "description": "Hides the output in the console."
-      },
-      "json": {
-        "param": "--json '<'filename'>'",
-        "description": "Creates a JSON file containing the output."
-      },
-      "env": {
-        "param": "--env '<'filename'>'",
-        "description": "Creates an env file containing the output."
-      },
-      "merge-json": {
-        "param": "--merge-json",
-        "description": "If the JSON file already exists merge the data instead of overwriting."
-      },
-      "merge-env": {
-        "param": "--merge-env",
-        "description": "If the env file already exists merge the data instead of overwriting."
-      }
-    }
-  },
-  "app": {
-    "name": "Workbench"
-  },
-  "navigation": {
-    "login": "Login",
-    "logout": "Logout",
-    "dashboard": "Dashboard",
-    "telemetry": "Telemetry",
-    "logging": "Logging",
-    "blobs": "Blobs",
-    "attestations": "Attestations",
-    "auditable-item-streams": "Auditable Item Streams",
-    "nft": "NFT"
-  },
-  "common": {
-    "labels": {
-      "description": "Description",
-      "dateCreated": "Date Created",
-      "dateModified": "Date Modified",
-      "actions": "Actions"
-    }
-  }
+	"error": {
+		"validation": {
+			"beEmpty": "{fieldName} must be empty",
+			"beNotEmpty": "{fieldName} must not be empty",
+			"beText": "{fieldName} must be text",
+			"beTextValue": "{fieldName} must contain some text",
+			"beTextMinMax": "{fieldName} must be longer than {minLength} and shorter than {maxLength} characters",
+			"beTextMin": "{fieldName} must be longer than {minLength} characters",
+			"beTextMax": "{fieldName} must be shorter than {maxLength} characters",
+			"beTextBase58": "{fieldName} must be text formatted using Base58 characters",
+			"beTextBase64": "{fieldName} must be text formatted using Base64 characters",
+			"beTextHex": "{fieldName} must be text formatted using Hex characters",
+			"beTextRegExp": "{fieldName} must be text formatted using the matching pattern {format}",
+			"beNumber": "{fieldName} must be a number",
+			"beNumberMinMax": "{fieldName} must be >= {minValue} and <= {maxValue}",
+			"beNumberMin": "{fieldName} must be >= {minValue}",
+			"beNumberMax": "{fieldName} must be <= {maxValue}",
+			"beWholeNumber": "{fieldName} must be a whole number",
+			"beWholeNumberMinMax": "{fieldName} must be a whole number >= {minValue} and <= {maxValue}",
+			"beWholeNumberMin": "{fieldName} must be a whole number >= {minValue}",
+			"beWholeNumberMax": "{fieldName} must be a whole number <= {maxValue}",
+			"beBigInteger": "{fieldName} must be a bigint",
+			"beBigIntegerMinMax": "{fieldName} must be a bigint >= {minValue} and <= {maxValue}",
+			"beBigIntegerMin": "{fieldName} must be a bigint >= {minValue}",
+			"beBigIntegerMax": "{fieldName} must be a bigint <= {maxValue}",
+			"beBoolean": "{fieldName} must be true or false",
+			"beDate": "{fieldName} must be a date",
+			"beDateTime": "{fieldName} must be a date/time",
+			"beTime": "{fieldName} must be a time",
+			"beTimestampMilliseconds": "{fieldName} must be a timestamp in milliseconds",
+			"beTimestampSeconds": "{fieldName} must be a timestamp in seconds",
+			"beObject": "{fieldName} must be an object",
+			"beArray": "{fieldName} must be an array",
+			"beArrayValue": "{fieldName} must be an array with at least one item",
+			"beIncluded": "{fieldName} is unrecognised",
+			"beByteArray": "{fieldName} must be a byte array",
+			"beUrn": "{fieldName} must be a correctly formatted urn",
+			"beUrl": "{fieldName} must be a correctly formatted url",
+			"beJSON": "{fieldName} must be correctly formatted JSON",
+			"beEmail": "{fieldName} must be a correctly formatted e-mail address",
+			"failed": "Validation failed",
+			"failedObject": "Validation of \"{objectName}\" failed",
+			"properties": {
+				"keyAlreadyExists": "The key already exists"
+			},
+			"schema": {
+				"failedValidation": "The JSON schema failed validation, {message}"
+			},
+			"geo": {
+				"coordinatesNotObject": "The geo coordinates must be an object",
+				"coordinatesLatitudeNumber": "The latitude value must be a number",
+				"coordinatesLatitudeRange": "The latitude value must be between -90 and 90",
+				"coordinatesLongitudeNumber": "The longitude value must be a number",
+				"coordinatesLongitudeRange": "The longitude value must be between -180 and 180"
+			},
+			"auditableItemGraphService": {
+				"edgeIdSameAsVertexId": "The edge id \"{id}\"can not point to the vertex it belongs to"
+			}
+		},
+		"guard": {
+			"undefined": "Property \"{property}\" must be defined, it is \"{value}\"",
+			"string": "Property \"{property}\" must be a string, it is \"{value}\"",
+			"stringEmpty": "Property \"{property}\" must have a value, it is empty",
+			"stringBase64": "Property \"{property}\" must be a base64 encoded string, it is \"{value}\"",
+			"stringBase64Url": "Property \"{property}\" must be a base64 url encoded string, it is \"{value}\"",
+			"stringBase58": "Property \"{property}\" must be a base58 encoded string, it is \"{value}\"",
+			"stringHex": "Property \"{property}\" must be a hex string, it is \"{value}\"",
+			"stringHexLength": "Property \"{property}\" must be a hex string of length \"{options}\", it is \"{value}\"",
+			"stringJson": "Property \"{property}\" must be a JSON string",
+			"number": "Property \"{property}\" must be a number, it is \"{value}\"",
+			"integer": "Property \"{property}\" must be an integer, it is \"{value}\"",
+			"bigint": "Property \"{property}\" must be a bigint, it is \"{value}\"",
+			"boolean": "Property \"{property}\" must be a boolean, it is \"{value}\"",
+			"date": "Property \"{property}\" must be a date, it is \"{value}\"",
+			"timestampMilliseconds": "Property \"{property}\" must be a timestamp in milliseconds, it is \"{value}\"",
+			"timestampSeconds": "Property \"{property}\" must be a timestamp in seconds, it is \"{value}\"",
+			"objectUndefined": "Property \"{property}\" must be an object, it is \"undefined\"",
+			"object": "Property \"{property}\" must be an object, it is \"{value}\"",
+			"objectValue": "Property \"{property}\" must be an object, with at least one property, it is \"{value}\"",
+			"array": "Property \"{property}\" must be an array, it is \"{value}\"",
+			"arrayValue": "Property \"{property}\" must be an array with at least one item",
+			"arrayOneOf": "Property \"{property}\" must be one of [{options}], it is \"{value}\"",
+			"uint8Array": "Property \"{property}\" must be a Uint8Array, it is \"{value}\"",
+			"function": "Property \"{property}\" must be a function, it is \"{value}\"",
+			"urn": "Property \"{property}\" must be a Urn formatted string, it is \"{value}\"",
+			"url": "Property \"{property}\" must be a Url formatted string, it is \"{value}\"",
+			"email": "Property \"{property}\" must be string in e-mail format, it is \"{value}\"",
+			"length32Multiple": "Property \"{property}\" should be a multiple of 32, it is {value}",
+			"lengthEntropy": "Property \"{property}\" should be a multiple of 4, >=16 and <= 32, it is {value}",
+			"length3Multiple": "Property \"{property}\" should be a multiple of 3, it is {value}",
+			"greaterThan0": "Property \"{property}\" must be greater than zero, it is {value}"
+		},
+		"objectHelper": {
+			"failedBytesToJSON": "Failed converting bytes to JSON",
+			"cannotSetArrayIndex": "Cannot set property \"{property}\" using index \"{index}\" as it is not an array",
+			"cannotSetProperty": "Cannot set property \"{property}\" when the target is not an object"
+		},
+		"common": {
+			"notImplementedMethod": "The method \"{method}\" has not been implemented",
+			"validation": "Validation failed"
+		},
+		"factory": {
+			"noUnregister": "There is no {typeName} registered with the name \"{name}\"",
+			"noGet": "The requested {typeName} \"{name}\" does not exist in the factory"
+		},
+		"bitString": {
+			"outOfRange": "The index should be >= 0 and less than the length of the bit string"
+		},
+		"base32": {
+			"invalidCharacter": "Data contains a character \"{invalidCharacter}\" which is not in the charset"
+		},
+		"base64": {
+			"length4Multiple": "Invalid length should be a multiple of 4, it is \"{value}\""
+		},
+		"base58": {
+			"invalidCharacter": "Data contains a character \"{invalidCharacter}\" which is not in the charset"
+		},
+		"fetchHelper": {
+			"decodingJSON": "Decoding JSON failed for route \"{route}\"",
+			"failureStatusText": "The request to the API failed: \"{statusText}\"",
+			"connectivity": "The request failed, the API could be offline, or there are other connectivity issues",
+			"timeout": "The request timed out",
+			"general": "A general failure occurred during the request"
+		},
+		"jwt": {
+			"noKeyOrSigner": "No key or signer was provided for JWT creation",
+			"noKeyOrVerifier": "No key or verifier was provided for JWT creation"
+		},
+		"bip39": {
+			"missingMnemonicWord": "The mnemonic contains a word not in the wordlist, \"{value}\"",
+			"checksumMismatch": "The checksum does not match \"{newChecksum}\" != \"{checksumBits}\""
+		},
+		"ed25519": {
+			"privateKeyLength": "The private key length is incorrect, it should be \"{requiredSize}\" but is \"{actualSize}\"",
+			"publicKeyLength": "The public key length is incorrect, it should be \"{requiredSize}\" but is \"{actualSize}\""
+		},
+		"secp256k1": {
+			"privateKeyLength": "The private key length is incorrect, it should be \"{requiredSize}\" but is \"{actualSize}\"",
+			"publicKeyLength": "The public key length is incorrect, it should be \"{requiredSize}\" but is \"{actualSize}\""
+		},
+		"x25519": {
+			"invalidPublicKey": "Invalid Ed25519 Public Key"
+		},
+		"blake2b": {
+			"outputLength64": "The output length should be between 1 and 64, it is \"{outputLength}\"",
+			"keyLength64": "The key length should be between 1 and 64, it is \"{keyLength}\""
+		},
+		"sha512": {
+			"bitSize": "Only 224, 256, 384 or 512 bits are supported, it is \"{bitSize}\""
+		},
+		"sha256": {
+			"bitSize": "Only 224 or 256 bits are supported, it is \"{bitSize}\""
+		},
+		"sha3": {
+			"bitSize": "Only 224, 256, 384 or 512 bits are supported, it is \"{bitSize}\""
+		},
+		"hmacSha256": {
+			"bitSize": "Only 224 or 256 bits are supported, it is \"{bitSize}\""
+		},
+		"hmacSha512": {
+			"bitSize": "Only 224, 256, 384 or 512 bits are supported, it is \"{bitSize}\""
+		},
+		"bech32": {
+			"decodeFailed": "The address contains decoding failed for address \"{bech32}\"",
+			"invalidChecksum": "The address contains an invalid checksum in address, \"{bech32}\"",
+			"separatorMisused": "The separator character '1' should only be used between hrp and data, \"{bech32}\"",
+			"lowerUpper": "The address my use either lowercase or uppercase, \"{bech32}\"",
+			"dataTooShort": "The address does not contain enough data to decode, \"{bech32}\""
+		},
+		"pbkdf2": {
+			"keyTooLong": "The requested key length \"{keyLength}\" is too long, based on the \"{macLength}\""
+		},
+		"chaCha20Poly1305": {
+			"noAadWithData": "You can not set the aad when there is already data",
+			"noAuthTag": "Can not finalise when the auth tag is not set",
+			"authenticationFailed": "The data could not be authenticated",
+			"authTagDecrypting": "Can not get the auth tag when decrypting",
+			"authTagEncrypting": "Can not set the auth tag when encrypting",
+			"noAuthTagSet": "The auth tag has not been set"
+		},
+		"bip44": {
+			"unsupportedKeyType": "The key type \"{keyType}\" is not supported"
+		},
+		"slip0010": {
+			"invalidSeed": "The seed is invalid \"{seed}\""
+		},
+		"baseRestClient": {
+			"missingRouteProp": "Missing route parameter in data \"{routeProp}\" for route \"{route}\"",
+			"decodingFailed": "Decoding JSON failed for route \"{route}\"",
+			"failureStatusText": "The request to the API failed: \"{statusText}\""
+		},
+		"entitySchemaHelper": {
+			"noIsPrimary": "Property \"entitySchema.properties\" must contain a value with isPrimary set",
+			"multipleIsPrimary": "Property \"entitySchema.properties\" contains more than one property with isPrimary set"
+		},
+		"jwtHelper": {
+			"jwtDecodeFailed": "Decoding the JWT failed",
+			"jwtPayloadMissingParam": "The JWT is missing the required parameter \"{param}\""
+		},
+		"qr": {
+			"typeNumberRange": "The typeNumber parameter should be a number >= 0 and <= 40, it is {typeNumber}",
+			"dataOverflow": "There is not enough space in the QR code to store the data, {lengthInBits} > {totalDataCount}, try increasing the typeNumber from {typeNumber}, or use 0 for auto detect",
+			"typeNumberOverflow": "There is not enough space in the QR code to store the data, {lengthInBits} > {totalDataCount}, typeNumber cannot be greater than 40"
+		},
+		"rendererOptions": {
+			"cellSizeZero": "The cellSize must be a number > 0, it is \"{cellSize}\"",
+			"marginSizeZero": "The marginSize must be a number >= 0, it is \"{marginSize}\""
+		},
+		"qRAlphaNumeric": {
+			"illegalCharacter ": "Illegal character in string \"{value}\""
+		},
+		"qRNumber": {
+			"illegalCharacter ": "Illegal character in string \"{value}\""
+		},
+		"mathHelper": {
+			"lessThanOne ": "The value can not be less than 1, it is \"{value}\""
+		},
+		"qrHelper": {
+			"correctionLevelRange ": "The errorCorrectLevel parameter should be one of the following: \"L\", \"M\", \"Q\", \"H\", it is \"{errorCorrectLevel}\"",
+			"modeRange ": "The mode parameter should be one of the following: \"Byte\", \"Numeric\", \"Alphanumeric\", it is \"{mode}\"",
+			"maskPatternRange ": "The maskPattern parameter should be a number >= 0 and <= 7, it is \"{maskPattern}\""
+		},
+		"rSBlock": {
+			"correctionLevelRange ": "The errorCorrectLevel parameter should be one of the following: \"L\", \"M\", \"Q\", \"H\", it is \"{errorCorrectLevel}\""
+		},
+		"qRDataBase": {
+			"invalidMode": "Invalid mode {mode} for typeNumber {typeNumber}",
+			"invalidTypeNumber": "Invalid typeNumber {typeNumber}, it should be less than <= 40"
+		},
+		"jpegEncoder": {
+			"invalidQuality": "Quality must be between 1 and 100, it is \"{value}\""
+		},
+		"attestationService": {
+			"noConnectors": "There are no connectors registered with the attestation factory",
+			"attestFailed": "The attestation of the data failed",
+			"verifyFailed": "The verification of the attestation failed",
+			"transferFailed": "The transfer of the attestation failed",
+			"destroyFailed": "The destruction of the attestation failed",
+			"namespaceMismatch": "The namespace in the urn \"{id}\" does not match the namespace of the attestation service \"{namespace}\""
+		},
+		"entityStorageAuthenticationService": {
+			"loginFailed": "Login failed",
+			"refreshFailed": "Refresh failed",
+			"userNotFound": "The user with the specified e-mail could not be found",
+			"passwordMismatch": "The password does not match the user's password"
+		},
+		"entityStorageAuthenticationProcessor": {
+			"initializeFailed": "The JSON Web token authentication processor could not be initialized"
+		},
+		"tokenHelper": {
+			"missing": "The JSON Web token could not be found in the authorization header",
+			"invalid": "The JSON Web token signature could not be validated",
+			"expired": "The JSON Web token has expired"
+		},
+		"restRouteProcessor": {
+			"routeNotFound": "The web server could not find the REST route \"{notFoundId}\""
+		},
+		"socketRouteProcessor": {
+			"routeNotFound": "The web server could not find the socket route \"{notFoundId}\""
+		},
+		"jwtIdentityProcessor": {
+			"jwtMissing": "The JSON Web token could not be found in the authorization header or a cookie",
+			"jwtSignatureInvalid": "The JSON Web token signature could not be validated",
+			"jwtExpired": "The JSON Web token has expired"
+		},
+		"auditableItemGraphService": {
+			"namespaceMismatch": "The namespace in the urn \"{id}\" does not match the namespace of the Auditable Item Graph service \"{namespace}\"",
+			"createFailed": "Creating the Auditable Item Graph vertex failed",
+			"getFailed": "Getting the Auditable Item Graph vertex failed",
+			"updatingFailed": "Updating the Auditable Item Graph vertex failed",
+			"queryingFailed": "Querying the Auditable Item Graph failed",
+			"removeImmutableFailed": "Removing the immutable data the Auditable Item Graph vertex failed",
+			"vertexNotFound": "The vertex with the Id \"{notFoundId}\" was not found",
+			"resourceIdMissing": "You must provide either the id, or the resourceObject must contain an id property for index \"{index}\""
+		},
+		"auditableItemStreamService": {
+			"namespaceMismatch": "The namespace in the urn \"{id}\" does not match the namespace of the Auditable Item Stream service \"{namespace}\"",
+			"createFailed": "Creating the Auditable Item Stream failed",
+			"getFailed": "Getting the Auditable Item Stream failed",
+			"updatingFailed": "Updating the Auditable Item Stream failed",
+			"removingFailed": "Removing Auditable Item Stream failed",
+			"queryingFailed": "Querying the Auditable Item Stream failed",
+			"creatingEntryFailed": "Creating entry in the Auditable Item Stream failed",
+			"updatingEntryFailed": "Updating entry in the Auditable Item Stream failed",
+			"gettingEntryFailed": "Getting entry from the Auditable Item Stream failed",
+			"gettingEntryObjectFailed": "Getting entry object from the Auditable Item Stream failed",
+			"removingEntryFailed": "Removing entry from the Auditable Item Stream failed",
+			"gettingEntriesFailed": "Getting entries from the Auditable Item Stream failed",
+			"gettingEntryObjectsFailed": "Getting entry objects from the Auditable Item Stream failed",
+			"removeImmutableFailed": "Removing immutable entry from the Auditable Item Stream failed",
+			"streamNotFound": "The stream with the Id \"{notFoundId}\" was not found",
+			"streamEntryNotFound": "The stream entry with the Id \"{notFoundId}\" was not found"
+		},
+		"s3BlobStorageConnector": {
+			"bucketCreateFailed": "Creating bucket \"{bucket}\" failed",
+			"namespaceMismatch": "The namespace in the urn \"{id}\" does not match the namespace of the blob storage \"{namespace}\"",
+			"getBlobFailed": "Failed to get blob in S3",
+			"setBlobFailed": "Failed to set blob in S3",
+			"removeBlobFailed": "Failed to remove blob in S3"
+		},
+		"azureBlobStorageConnector": {
+			"containerCreateFailed": "Creating container \"{container}\" failed",
+			"namespaceMismatch": "The namespace in the urn \"{id}\" does not match the namespace of the blob storage \"{namespace}\"",
+			"getBlobFailed": "Failed to get blob in Azure",
+			"setBlobFailed": "Failed to set blob in Azure",
+			"removeBlobFailed": "Failed to remove blob in Azure"
+		},
+		"gcpBlobStorageConnector": {
+			"bucketCreateFailed": "Creating bucket \"{bucket}\" failed",
+			"namespaceMismatch": "The namespace in the urn \"{id}\" does not match the namespace of the blob storage \"{namespace}\"",
+			"getBlobFailed": "Failed to get blob in GCP",
+			"setBlobFailed": "Failed to set blob in GCP",
+			"removeBlobFailed": "Failed to remove blob in GCP"
+		},
+		"ipfsBlobStorageConnector": {
+			"namespaceMismatch": "The namespace in the urn \"{id}\" does not match the namespace of the blob storage \"{namespace}\"",
+			"fetchFail": "Failure during IPFS request",
+			"setBlobFailed": "Failed to store blob in IPFS",
+			"getBlobFailed": "Failed to get blob from IPFS",
+			"removeBlobFailed": "Failed to remove blob from IPFS"
+		},
+		"fileBlobStorageConnector": {
+			"directoryCreateFailed": "Creating directory \"{directory}\" failed",
+			"getBlobFailed": "Unable to get blob \"{id}\"",
+			"setBlobFailed": "Unable to set blob",
+			"removeBlobFailed": "Unable to remove blob",
+			"namespaceMismatch": "The namespace in the urn \"{id}\" does not match the namespace of the blob storage \"{namespace}\""
+		},
+		"memoryBlobStorageConnector": {
+			"namespaceMismatch": "The namespace in the urn \"{id}\" does not match the namespace of the blob storage \"{namespace}\""
+		},
+		"blobStorageService": {
+			"noConnectors": "There are no connectors registered with the blob storage factory",
+			"createFailed": "There was a problem storing the blob",
+			"getFailed": "There was a problem getting the blob",
+			"updateFailed": "There was a problem updating the blob",
+			"removeFailed": "There was a problem removing the blob",
+			"namespaceMismatch": "The namespace in the urn \"{id}\" does not match the namespace of the blob storage service \"{namespace}\""
+		},
+		"commands": {
+			"common": {
+				"missingEnv": "The \"{option}\" option is configured as an environment variable, but there is no environment variable with the name \"{value}\" set.",
+				"optionInvalidHex": "The \"{option}\" does not appear to be hex. \"{value}\"",
+				"optionInvalidBase64": "The \"{option}\" does not appear to be base64. \"{value}\"",
+				"optionInvalidHexBase64": "The \"{option}\" does not appear to be hex or base64. \"{value}\"",
+				"optionInvalidBech32": "The \"{option}\" does not appear to be bech32. \"{value}\"",
+				"optionMinValue": "The \"{option}\" option must be greater than or equal to {minValue}, it is {value}.",
+				"optionMaxValue": "The \"{option}\" option must be less than or equal to {maxValue}, it is {value}."
+			}
+		},
+		"dynamoDbEntityStorageConnector": {
+			"tableCreateFailed": "Creating table \"{tableName}\" failed",
+			"tableDoesNotExist": "Table \"{tableName}\" does not exist",
+			"setFailed": "Unable to set entity \"{id}\"",
+			"getFailed": "Unable to get entity \"{id}\"",
+			"removeFailed": "Unable to remove entity \"{id}\"",
+			"queryFailed": "The query failed",
+			"comparisonNotSupported": "Comparison operator \"{comparison}\" is not supported",
+			"conditionalNotSupported": "Conditional operator \"{operator}\" is not supported",
+			"sortSingle": "You can only sort by a single property",
+			"sortNotIndexed": "The property \"{property}\" is not indexed and cannot be used for sorting"
+		},
+		"fileEntityStorageConnector": {
+			"directoryCreateFailed": "Creating directory \"{directory}\" failed"
+		},
+		"scyllaDBTableConnector": {
+			"tableCreateFailed": "Creating table \"{table}\" failed",
+			"getFailed": "Getting item with \"{id}\" failed",
+			"dropTableFailed": " \"{table}\" cannot be dropped",
+			"truncateTableFailed": " \"{table}\" cannot be dropped",
+			"removeFailed": "Removing item with \"{id}\" failed",
+			"findFailed": "Error while querying data on  \"{table}\""
+		},
+		"entityStorageService": {
+			"entityNotFound": "Could not find entity with id \"{id}\""
+		},
+		"entityStorageIdentityResolverConnector": {
+			"documentNotFound": "The document could not be found",
+			"resolveDocumentFailed": "Resolving the document failed"
+		},
+		"entityStorageIdentityConnector": {
+			"createDocumentFailed": "Creating the document failed",
+			"signatureVerificationFailed": "The document integrity check failed",
+			"missingDid": "The full id including DID is required",
+			"addVerificationMethodFailed": "Adding the verification method failed",
+			"removeVerificationMethodFailed": "Removing the verification method failed",
+			"addServiceFailed": "Adding the service failed",
+			"removeServiceFailed": "Removing the service failed",
+			"documentNotFound": "The document could not be found",
+			"documentPrivateKeyNotFound": "The private key for document could not be found in the vault",
+			"verificationMethodNotFound": "The verification method could not be found",
+			"verificationPrivateKeyNotFound": "The private key for the verification method could not be found in the vault",
+			"serviceNotFound": "The service could not be found",
+			"publicKeyJwkMissing": "The verification method contains no publicKeyJwk in method \"{method}\"",
+			"jwkSignatureFailed": "The signature on the JWK failed verification",
+			"createVerifiableCredentialFailed": "Creating the verifiable credential failed",
+			"checkingVerifiableCredentialFailed": "Checking the verifiable credential failed",
+			"createVerifiablePresentationFailed": "Creating the verifiable presentation failed",
+			"checkingVerifiablePresentationFailed": "Checking the verifiable presentation failed",
+			"expectingJwtCredential": "Expecting JWT credential in the presentation",
+			"keyIndexOutOfRange": "The supplied keyIndex is not in the range of the key list",
+			"createProofFailed": "Creating the signature for the data failed",
+			"methodMissing": "The verification method specified does not exist \"{method}\"",
+			"verifyProofFailed": "Verifying the signature for the data failed",
+			"revokeVerifiableCredentialsFailed": "Revoking verifiable credentials failed",
+			"unrevokeVerifiableCredentialsFailed": "Unrevoking verifiable credentials failed",
+			"proofType": "The proof type must be DataIntegrityProof, it is currently {proofType}",
+			"cryptosuite": "The proof cryptosuite must be eddsa-jcs-2022, it is currently {cryptosuite}"
+		},
+		"entityStorageIdentityProfileConnector": {
+			"alreadyExists": "The identity profile already exists for the identity \"{existingId}\"",
+			"createFailed": "Creating the identity profile failed \"{identity}\"",
+			"getFailed": "Getting the identity profile failed \"{notFoundId}\"",
+			"updateFailed": "Updating the identity profile failed \"{identity}\"",
+			"notFound": "The identity profile failed \"{notFoundId}\"",
+			"removeFailed": "Removing the identity profile failed \"{identity}\"",
+			"listFailed": "Failed listing identities"
+		},
+		"iotaIdentityResolverConnector": {
+			"documentNotFound": "The document could not be found",
+			"resolveDocumentFailed": "Resolving the document failed"
+		},
+		"iotaIdentityConnector": {
+			"createDocumentFailed": "Creating the document failed",
+			"missingDid": "The full id including DID is required",
+			"addVerificationMethodFailed": "Adding the verification method failed",
+			"removeVerificationMethodFailed": "Removing the verification method failed",
+			"addServiceFailed": "Adding the service failed",
+			"removeServiceFailed": "Removing the service failed",
+			"documentNotFound": "The document could not be found",
+			"stateControllerMissing": "The state controller address is missing from the metadata",
+			"verificationMethodNotFound": "The verification method could not be found",
+			"serviceNotFound": "The service could not be found",
+			"publicKeyJwkMissing": "The verification method contains no publicKeyJwk in method \"{method}\"",
+			"verificationKeyMissing": "The verification key is missing from the vault for method \"{method}\"",
+			"createVerifiableCredentialFailed": "Creating the verifiable credential failed",
+			"checkingVerifiableCredentialFailed": "Checking the verifiable credential failed",
+			"createVerifiablePresentationFailed": "Creating the verifiable presentation failed",
+			"checkingVerifiablePresentationFailed": "Checking the verifiable presentation failed",
+			"expectingJwtCredential": "Expecting JWT credential in the presentation",
+			"keyIndexOutOfRange": "The supplied keyIndex is not in the range of the key list",
+			"createProofFailed": "Creating the signature for the data failed",
+			"methodMissing": "The verification method specified does not exist \"{method}\"",
+			"verifyProofFailed": "Verifying the signature for the data failed",
+			"revokeVerifiableCredentialsFailed": "Revoking verifiable credentials failed",
+			"unrevokeVerifiableCredentialsFailed": "Unrevoking verifiable credentials failed",
+			"inclusionFailed": "The transaction generated for the identity was not included in a reasonable amount of time",
+			"insufficientFunds": "There were insufficient funds to complete the operation",
+			"walletConnectorMissing": "The wallet connector must be available to perform this operation",
+			"proofType": "The proof type must be DataIntegrityProof, it is currently {proofType}",
+			"cryptosuite": "The proof cryptosuite must be eddsa-jcs-2022, it is currently {cryptosuite}"
+		},
+		"identityService": {
+			"noConnectors": "There are no connectors registered with the identity factory",
+			"namespaceMismatch": "The namespace in the urn \"{id}\" does not match the namespace of the identity service \"{namespace}\"",
+			"connectorNotFound": "There is no connector with the namespace \"{namespace}\" registered with the identity factory",
+			"jwtDecodeFailed": "Decoding the JWT failed",
+			"identityCreateFailed": "Creating the identity failed",
+			"verificationMethodCreateFailed": "Creating the verification method failed for identity \"{identity}\"",
+			"verificationMethodRemoveFailed": "Removing the verification method failed \"{verificationMethodId}\"",
+			"serviceCreateFailed": "Creating the service failed for identity \"{identity}\", service \"{serviceId}\"",
+			"serviceRemoveFailed": "Removing the service failed \"{serviceId}\"",
+			"verifiableCredentialCreateFailed": "Creating the verifiable credential failed for method \"{verificationMethodId}\"",
+			"verifiableCredentialVerifyFailed": "Verifying the verifiable credential failed",
+			"verifiableCredentialRevokeFailed": "Revoking the verifiable credential failed for document \"{issuerIdentity}\" with index \"{credentialIndex}\"",
+			"verifiableCredentialUnrevokeFailed": "Unrevoking the verifiable credential failed for document \"{issuerIdentity}\" with index \"{credentialIndex}\"",
+			"verifiablePresentationCreateFailed": "Creating the verifiable presentation failed for method \"{verificationMethodId}\"",
+			"verifiablePresentationVerifyFailed": "Verifying the verifiable presentation failed",
+			"proofCreateFailed": "Creating the proof failed for method \"{verificationMethodId}\"",
+			"proofVerifyFailed": "Verifying the proof failed"
+		},
+		"identityResolverService": {
+			"noConnectors": "There are no connectors registered with the identity resolver factory",
+			"namespaceMismatch": "The namespace in the urn \"{id}\" does not match the namespace of the identity service \"{namespace}\"",
+			"connectorNotFound": "There is no connector with the namespace \"{namespace}\" registered with the identity factory",
+			"identityResolveFailed": "Resolving the identity failed \"{identity}\""
+		},
+		"identityProfileService": {
+			"noConnectors": "There are no connectors registered with the identity profile factory",
+			"alreadyExists": "The identity profile already exists for the identity \"{existingId}\"",
+			"createFailed": "Creating the identity profile failed \"{identity}\"",
+			"getFailed": "Getting the identity profile failed",
+			"getPublicFailed": "Getting the public identity profile failed",
+			"updateFailed": "Updating the identity profile failed \"{identity}\"",
+			"notFound": "The identity profile could not be found \"{notFoundId}\"",
+			"removeFailed": "Removing the identity profile failed \"{identity}\"",
+			"listFailed": "Failed listing identities"
+		},
+		"immutableProofService": {
+			"namespaceMismatch": "The namespace in the urn \"{id}\" does not match the namespace of the Immutable Proof service \"{namespace}\"",
+			"createFailed": "Creating the proof failed",
+			"getFailed": "Getting the proof failed",
+			"verifyFailed": "Verifying the proof failed",
+			"removeImmutableFailed": "Removing immutable entry from the Immutable Proof failed",
+			"proofNotFound": "The proof with the Id \"{notFoundId}\" was not found"
+		},
+		"entityStorageImmutableStorageConnector": {
+			"immutableStorageNotFound": "The immutable item with the Id \"{notFoundId}\" was not found",
+			"notControllerRemove": "The immutable item can only be removed by the controller",
+			"signatureFailed": "The signature verification failed",
+			"storingFailed": "Storing the item failed",
+			"gettingFailed": "Getting the item failed",
+			"removingFailed": "Removing the item failed",
+			"namespaceMismatch": "The namespace in the urn \"{id}\" does not match the namespace of the IOTA Immutable Storage connector \"{namespace}\""
+		},
+		"iotaImmutableStorageConnector": {
+			"inclusionFailed": "The transaction generated for the immutable storage was not included in a reasonable amount of time",
+			"storingFailed": "Storing the immutable item failed",
+			"gettingFailed": "Getting the immutable item failed",
+			"removingFailed": "Removing the immutable item failed",
+			"namespaceMismatch": "The namespace in the urn \"{id}\" does not match the namespace of the IOTA Immutable Storage connector \"{namespace}\"",
+			"insufficientFunds": "There were insufficient funds to complete the operation",
+			"walletConnectorMissing": "The wallet connector must be available to perform this operation"
+		},
+		"entityStorageNftConnector": {
+			"nftNotFound": "The NFT with the ID \"{notFoundId}\" was not found",
+			"notControllerTransfer": "The NFT can only be transferred by the controller",
+			"notControllerBurn": "The NFT can only be burned by the controller",
+			"notControllerUpdate": "The NFT can only be updated by the controller",
+			"signatureFailed": "The signature verification failed",
+			"mintingFailed": "Minting the NFT failed",
+			"resolvingFailed": "Resolving the NFT failed",
+			"burningFailed": "Burning the NFT failed",
+			"transferFailed": "Transferring the NFT failed",
+			"updatingFailed": "Updating the NFT failed",
+			"namespaceMismatch": "The namespace in the urn \"{id}\" does not match the namespace of the IOTA NFT connector \"{namespace}\""
+		},
+		"iotaNftConnector": {
+			"inclusionFailed": "The transaction generated for the NFT was not included in a reasonable amount of time",
+			"mintingFailed": "Minting the NFT failed",
+			"resolvingFailed": "Resolving the NFT failed",
+			"burningFailed": "Burning the NFT failed",
+			"transferFailed": "Transferring the NFT failed",
+			"updateFailed": "Updating the NFT failed",
+			"namespaceMismatch": "The namespace in the urn \"{id}\" does not match the namespace of the IOTA NFT connector \"{namespace}\"",
+			"insufficientFunds": "There were insufficient funds to complete the operation",
+			"walletConnectorMissing": "The wallet connector must be available to perform this operation"
+		},
+		"nftService": {
+			"namespaceMismatch": "The namespace in the urn \"{id}\" does not match the namespace of the NFT service \"{namespace}\"",
+			"noConnectors": "There are no connectors registered with the nft factory",
+			"mintFailed": "The minting of the NFT failed",
+			"resolveFailed": "The resolving of the NFT failed",
+			"burnFailed": "The burning of the NFT failed",
+			"transferFailed": "The transfer of the NFT failed",
+			"updateFailed": "The update of the NFT failed"
+		},
+		"entityStorageTelemetryConnector": {
+			"metricNotFound": "The metric could not be found \"{notFoundId}\"",
+			"metricAlreadyExists": "The metric already exists \"{existingId}\"",
+			"metricValueNotFound": "The metric value could not be found \"{notFoundId}\"",
+			"counterIncOnly": "A counter metric can only be incremented, or added to with an integer",
+			"upDownCounterIncOrDecOnly": "An up/down counter metric can only be incremented, decremented or adjusted with an integer",
+			"gaugeNoIncDec": "A gauge can not be incremented or decremented"
+		},
+		"entityStorageVaultConnector": {
+			"keyAlreadyExists": "The key \"{existingId}\" already exists in the vault",
+			"keyNotFound": "The key \"{notFoundId}\" was not found in the vault",
+			"secretNotFound": "The secret \"{notFoundId}\" was not found in the vault",
+			"unsupportedKeyType": "The key type \"{keyType}\" is not supported",
+			"keyTypeMismatch": "The key type \"{keyType}\" does not match the requested encryption method \"{encryptionType}\""
+		},
+		"hashicorpVaultConnector": {
+			"setSecretFailed": "Failed to set secret \"{name}\"",
+			"removeSecretFailed": "Failed to remove secret \"{name}\"",
+			"getSecretVersionsFailed": "Failed to get secret versions \"{name}\"",
+			"hashicorpVaultConnectionFailed": "Failed to connect to Hashicorp Vault",
+			"createdKeyFailed": "Failed to create key \"{name, type}\"",
+			"unsupportedKeyType": "Unsupported key type \"{type}\"",
+			"exportPublicKeyFailed": "Failed to export public key \"{name}\"",
+			"publicKeyNotFound": "Public key \"{name}\" not found",
+			"removeKeyFailed": "Failed to remove key \"{name}\"",
+			"updateKeyConfigFailed": "Failed to update key config \"{name}\"",
+			"addKeyFailed": "Failed to add key \"{name, type}\"",
+			"backupKeyNotFound": "Backup key \"{name}\" not found",
+			"backupKeyFailed": "Failed to backup key \"{name}\"",
+			"restoreKeyFailed": "Failed to restore key \"{name}\"",
+			"exportKeyFailed": "Failed to export key \"{name}\" with keyPath \"{keyPath}\"",
+			"exportKeyNotFound": "Export key with name \"{name}\" not found",
+			"getKeyFailed": "Failed to get key \"{name}\"",
+			"signDataFailed": "Failed to sign data \"{name}\"",
+			"invalidSignResponse": "Invalid sign response \"{name}\"",
+			"verifyDataFailed": "Failed to verify data \"{name}\"",
+			"invalidSignature": "Invalid signature \"{name}\"",
+			"encryptDataFailed": "Failed to encrypt data \"{name, encryptionType}\"",
+			"unsupportedEncryptionType": "Unsupported encryption type \"{encryptionType}\"",
+			"decryptDataFailed": "Failed to decrypt data \"{name, encryptionType}\"",
+			"invalidEncryptResponse": "Invalid encrypt response \"{name, encryptionType}\"",
+			"keyAlreadyExists": "Key \"{existingId}\" already exists",
+			"invalidReadKeyResponse": "Invalid read key response \"{name}\"",
+			"renameKeyFailed": "Failed to rename key from \"{name}\" to \"{newName}\"",
+			"keyTypeMismatch": "The key type \"{keyType}\" does not match the requested encryption method \"{encryptionType}\""
+		},
+		"entityStorageWalletConnector": {
+			"insufficientFunds": "There are insufficient funds in the wallet."
+		},
+		"iotaWalletConnector": {
+			"transferFailed": "The wallet transfer failed.",
+			"inclusionFailed": "The transaction generated was not included in a reasonable amount of time",
+			"insufficientFunds": "There were insufficient funds to complete the operation"
+		},
+		"iotaFaucetConnector": {
+			"fundingFailed": "Fund the address from faucet failed",
+			"insufficientFunds": "There were insufficient funds to complete the operation"
+		}
+	},
+	"errorNames": {
+		"error": "Error",
+		"generalError": "General",
+		"guardError": "Guard",
+		"conflictError": "Conflict",
+		"notFoundError": "Not Found",
+		"notSupportedError": "Not Supported",
+		"alreadyExistsError": "Already Exists",
+		"notImplementedError": "Not Implemented",
+		"validationError": "Validation",
+		"unprocessableError": "Unprocessable"
+	},
+	"validation": {
+		"defaultFieldName": "The field"
+	},
+	"errorMessages": {
+		"fetch": "Fetch"
+	},
+	"jsonLdProcessor": {
+		"compact": "The JSON-LD compaction failed",
+		"expand": "The JSON-LD expansion failed",
+		"invalidUrl": "The JSON-LD processing failed to retrieve from the following url \"{url}\"",
+		"jsonldError": "The JSON-LD processing failed due to the following error: \"{code}\""
+	},
+	"data-type-names": {
+		"http://schema.org/Text": "Text",
+		"http://schema.org/URL": "Url",
+		"http://schema.org/Integer": "Integer",
+		"http://schema.org/Float": "Float",
+		"http://schema.org/Boolean": "Boolean",
+		"http://schema.org/Date": "ISO Date",
+		"http://schema.org/DateTime": "ISO Date Time",
+		"http://schema.org/Time": "ISO Time",
+		"http://schema.org/image": "Image",
+		"http://schema.org/GeoCoordinates": "Geo Coordinates",
+		"http://schema.org/StructuredValue": "Structured Value",
+		"http://schema": {
+			"org/Text": "Text",
+			"org/URL": "Url",
+			"org/Integer": "Integer",
+			"org/Float": "Float",
+			"org/Boolean": "Boolean",
+			"org/Date": "ISO Date",
+			"org/DateTime": "ISO Date Time",
+			"org/Time": "ISO Time",
+			"org/image": "Image",
+			"org/GeoCoordinates": "Geo Coordinates",
+			"org/StructuredValue": "Structured Value"
+		}
+	},
+	"info": {
+		"eventBusSocketClient": {
+			"subscribe": "Subscription created for topic \"{topic}\" with id \"{subscriptionId}\"",
+			"unsubscribe": "Subscription removed for topic \"{topic}\" with id \"{subscriptionId}\"",
+			"publish": "Event publish for topic \"{topic}\" with id \"{eventId}\", with \"{subscriptionCount}\" subscriptions"
+		},
+		"s3BlobStorageConnector": {
+			"bucketCreating": "Creating bucket \"{bucket}\"",
+			"bucketCreated": "Created bucket \"{bucket}\"",
+			"bucketExists": "Skipping create bucket \"{bucket}\" as it already exists"
+		},
+		"azureBlobStorageConnector": {
+			"containerCreating": "Creating container \"{container}\"",
+			"containerCreated": "Created container \"{container}\"",
+			"containerExists": "Skipping create container \"{container}\" as it already exists"
+		},
+		"gcpBlobStorageConnector": {
+			"bucketCreating": "Creating bucket \"{bucket}\"",
+			"bucketCreated": "Created bucket \"{bucket}\"",
+			"bucketExists": "Skipping create bucket \"{bucket}\" as it already exists"
+		},
+		"fileBlobStorageConnector": {
+			"directoryCreating": "Creating directory \"{directory}\"",
+			"directoryCreated": "Created directory \"{directory}\"",
+			"directoryExists": "Skipping create directory \"{directory}\" as it already exists"
+		},
+		"dynamoDbEntityStorageConnector": {
+			"tableCreating": "Creating table \"{tableName}\"",
+			"tableCreated": "Created table \"{tableName}\"",
+			"tableExists": "Skipping create table \"{tableName}\" as it already exists"
+		},
+		"fileEntityStorageConnector": {
+			"directoryCreating": "Creating directory \"{directory}\"",
+			"directoryCreated": "Created directory \"{directory}\"",
+			"directoryExists": "Skipping create directory \"{directory}\" as it already exists"
+		},
+		"scyllaDBTableConnector": {
+			"tableCreating": "Creating table \"{table}\"",
+			"tableCreated": "Created table \"{table}\"",
+			"tableExists": "Skipping create table \"{table}\" as it already exists",
+			"typeCreated": "Created type \"{typeName}\"",
+			"sql": "SQL: \"{sql}\""
+		},
+		"scyllaDBViewConnector": {
+			"viewCreating": "Creating view \"{view}\"",
+			"viewCreated": "Created view \"{view}\"",
+			"viewExists": "Skipping create view \"{view}\" as it already exists",
+			"typeCreated": "Created type \"{typeName}\"",
+			"sql": "SQL: \"{sql}\""
+		},
+		"entityStorageTelemetryConnector": {
+			"metricCreated": "The metric was created \"{id}\" with type \"type\" and label \"{label}\"",
+			"metricUpdated": "The metric was updated \"{id}\" with type \"type\" and label \"{label}\"",
+			"metricRemoved": "The metric was removed \"{id}\"",
+			"metricValueCreated": "The metric value was created for \"{id}\" with value \"{value}\""
+		},
+		"hashicorpVaultConnector": {
+			"hashicorpVaultConnected": "Connected to Hashicorp Vault"
+		}
+	},
+	"verifiableCredentialStates": {
+		"pendingVerification": "Pending Verification",
+		"rejected": "Rejected",
+		"issued": "Issued",
+		"revoked": "Revoked"
+	},
+	"pages": {
+		"error": {
+			"title": "Error",
+			"notFound": "The requested page could not be found"
+		},
+		"login": {
+			"title": "Login",
+			"email": "E-mail",
+			"password": "Password",
+			"signIn": "Sign in",
+			"signingIn": "Signing in",
+			"noAccount": "Don't have an account yet?",
+			"signUp": "Sign up"
+		},
+		"identityProfile": {
+			"title": "Profile",
+			"qr": "Public Profile View",
+			"identity": "Identity",
+			"explore": "Explore",
+			"firstName": "First Name",
+			"lastName": "Last Name",
+			"displayName": "Display Name",
+			"displayNameDescription": "This will be the name that is displayed publicly when viewing your identity"
+		},
+		"identityPublic": {
+			"title": "Identity Public Profile",
+			"qr": "Public Profile View",
+			"identity": "Identity",
+			"schema": "Schema",
+			"displayName": "Name",
+			"explore": "Explore",
+			"didDocument": "DID Document"
+		},
+		"attestation": {
+			"title": "Attestations",
+			"loading": "Loading attestations...",
+			"noItems": "No attestations found",
+			"createItem": "Create Attestation",
+			"deleteTitle": "Delete Attestation",
+			"deleteMessage": "Are you sure you want to delete this attestation?"
+		},
+		"attestationProperties": {
+			"title": "Create Attestation",
+			"blob": "Blob",
+			"selectBlob": "Select blob",
+			"assertionMethod": "Assertion Method",
+			"selectAssertionMethod": "Select assertion method",
+			"attestationId": "Attestation Id",
+			"attestationQr": "Attestation QR Code",
+			"attestationOf": "Attestation of {blob}",
+			"signature": "Signature",
+			"action": "Attest",
+			"actionSuccess": "Attestation was successful",
+			"progress": "Attesting the document...",
+			"resultTitle": "Attestation Result"
+		},
+		"nft": {
+			"title": "Nfts",
+			"loading": "Loading nfts...",
+			"noItems": "No nfts found",
+			"createItem": "Create Nft",
+			"deleteTitle": "Delete Nft",
+			"deleteMessage": "Are you sure you want to delete this nft?"
+		},
+		"nftProperties": {
+			"title": "Create Nft",
+			"issuer": "Issuer",
+			"tag": "Tag",
+			"owner": "Owner",
+			"name": "Name",
+			"description": "Description",
+			"uri": "Uri",
+			"immutableMetadata": "Immutable Metadata (Optional)",
+			"selectBlob": "Select blob",
+			"nftId": "Nft Id",
+			"nftQr": "Nft QR Code",
+			"nftOf": "Nft of {blob}",
+			"signature": "Signature",
+			"action": "Mint",
+			"actionSuccess": "Minting was successful",
+			"progress": "Minting in progress...",
+			"resultTitle": "Nft Result"
+		},
+		"blob": {
+			"title": "Blobs",
+			"loading": "Loading blobs...",
+			"noItems": "No blobs found",
+			"createItem": "Create Blob",
+			"deleteTitle": "Delete Blob",
+			"deleteMessage": "Are you sure you want to delete this blob?"
+		},
+		"blobView": {
+			"title": "Blob Storage",
+			"id": "Id",
+			"description": "Description",
+			"fileExtension": "File Extension",
+			"encodingFormat": "Encoding Format",
+			"document": "Document",
+			"download": "Download"
+		},
+		"blobProperties": {
+			"title": "Create Blob",
+			"description": "Description",
+			"filename": "Filename",
+			"action": "Upload",
+			"actionSuccess": "Uploading was successful",
+			"progress": "Uploading to storage...",
+			"resultTitle": "Upload Result",
+			"itemQr": "Blob Storage QR Code",
+			"itemId": "Blob Id"
+		},
+		"auditableItemStream": {
+			"title": "Auditable Item Streams",
+			"loading": "Loading auditable item streams...",
+			"noItems": "No auditable item streams found",
+			"createItem": "Create Auditable Item Stream",
+			"deleteTitle": "Delete Auditable Item Stream",
+			"deleteMessage": "Are you sure you want to delete this auditable item stream?"
+		},
+		"auditableItemStreamProperties": {
+			"titleCreate": "Create Auditable Item Stream",
+			"titleModify": "Modify Auditable Item Stream",
+			"description": "Description",
+			"actionCreate": "Create",
+			"actionCreateSuccess": "Creation was successful",
+			"progressCreate": "Creating...",
+			"resultTitleCreate": "Create Result",
+			"actionUpdate": "Update",
+			"actionUpdateSuccess": "Updating was successful",
+			"progressUpdate": "Updating...",
+			"resultTitleUpdate": "Update Result",
+			"itemQr": "Auditable Item Stream QR Code",
+			"itemId": "Auditable Item Stream Id"
+		},
+		"proofView": {
+			"title": "Proof View",
+			"type": "Type",
+			"header": "Header",
+			"payload": "Payload",
+			"signature": "Signature"
+		}
+	},
+	"actions": {
+		"save": "Save",
+		"saveSuccess": "Saved successfully",
+		"open": "Open",
+		"close": "Close",
+		"back": "Back",
+		"yes": "Yes",
+		"no": "No",
+		"ok": "OK",
+		"cancel": "Cancel",
+		"modify": "Modify",
+		"delete": "Delete",
+		"view": "View",
+		"decode": "Decode"
+	},
+	"components": {
+		"serverStatus": {
+			"api": "API",
+			"notConnected": "Not connected"
+		},
+		"appFooter": {
+			"language": "Language",
+			"colorTheme": "Color theme",
+			"selectLanguage": "Select language"
+		},
+		"attestationView": {
+			"title": "Attestation",
+			"id": "Id",
+			"exploreNft": "Explore NFT",
+			"attestationQr": "Attestation QR Code",
+			"verified": "Verified",
+			"created": "Created",
+			"ownerIdentity": "Owner Identity",
+			"transferred": "Transferred",
+			"holderIdentity": "Holder Identity",
+			"attestationObject": "Attestation Object",
+			"proof": "Proof"
+		},
+		"nftView": {
+			"title": "Nft",
+			"id": "Id",
+			"exploreNft": "Explore NFT",
+			"nftQr": "Nft QR Code",
+			"verified": "Verified",
+			"created": "Created",
+			"issuer": "Issuer",
+			"tag": "Tag",
+			"owner": "Owner",
+			"name": "Name",
+			"description": "Description",
+			"uri": "Uri",
+			"immutableMetadata": "Immutable Metadata",
+			"transferred": "Transferred",
+			"holderIdentity": "Holder Identity",
+			"nftObject": "Nft Object",
+			"proof": "Proof"
+		},
+		"auditableItemStreamView": {
+			"title": "Auditable Item Stream",
+			"id": "Id",
+			"auditableItemStreamQr": "Auditable Item Stream QR Code"
+		},
+		"immutableProofView": {
+			"title": "Immutable Proof",
+			"id": "Id",
+			"proof": "Proof",
+			"receipt": "Receipt"
+		},
+		"immutableProofReceipt": {
+			"title": "Immutable Receipt",
+			"type": "Type",
+			"id": "Id",
+			"transactionId": "Transaction Id",
+			"network": "Network",
+			"entityStorageId": "Entity Storage Id",
+			"exploreTransaction": "Explore Transaction"
+		}
+	},
+	"fastifyWebServer": {
+		"building": "Building Web Server",
+		"starting": "Starting Web Server at address \"{host}\" on port \"{port}\"",
+		"startFailed": "The Web Server failed to start",
+		"started": "The Web Server started on {addresses}",
+		"stopped": "The Web Server was stopped",
+		"badRequest": "The web server could not handle the request",
+		"restRouteAdded": "Added REST route \"{route}\" \"{method}\"",
+		"socketRouteAdded": "Added socket route \"{route}\"",
+		"noRestProcessors": "You must configure at least one REST processor",
+		"noSocketProcessors": "You must configure at least one socket processor",
+		"postProcessorError": "There was a failure after in a post processor for route \"{route}\""
+	},
+	"auditableItemGraphService": {},
+	"cli": {
+		"progress": {
+			"done": "Done.",
+			"error": "Error",
+			"loadingEnvFiles": "Loading env files",
+			"pleaseWait": "Please wait...",
+			"writingJsonFile": "Writing JSON file",
+			"writingEnvFile": "Writing env file",
+			"readingJsonFile": "Reading JSON file",
+			"readingEnvFile": "Reading env file"
+		},
+		"options": {
+			"lang": {
+				"param": "--lang '<'lang'>'",
+				"description": "The language to display the output in."
+			},
+			"load-env": {
+				"param": "--load-env [env...]",
+				"description": "Load the env files to initialise any environment variables."
+			},
+			"no-console": {
+				"param": "--no-console",
+				"description": "Hides the output in the console."
+			},
+			"json": {
+				"param": "--json '<'filename'>'",
+				"description": "Creates a JSON file containing the output."
+			},
+			"env": {
+				"param": "--env '<'filename'>'",
+				"description": "Creates an env file containing the output."
+			},
+			"merge-json": {
+				"param": "--merge-json",
+				"description": "If the JSON file already exists merge the data instead of overwriting."
+			},
+			"merge-env": {
+				"param": "--merge-env",
+				"description": "If the env file already exists merge the data instead of overwriting."
+			}
+		}
+	},
+	"app": {
+		"name": "Workbench"
+	},
+	"navigation": {
+		"login": "Login",
+		"logout": "Logout",
+		"dashboard": "Dashboard",
+		"telemetry": "Telemetry",
+		"logging": "Logging",
+		"blobs": "Blobs",
+		"attestations": "Attestations",
+		"auditable-item-streams": "Auditable Item Streams",
+		"nft": "NFT"
+	},
+	"common": {
+		"labels": {
+			"description": "Description",
+			"dateCreated": "Date Created",
+			"dateModified": "Date Modified",
+			"nftId": "NFT Id",
+			"issuer": "Issuer",
+			"owner": "Owner",
+			"actions": "Actions"
+		}
+	}
 }
