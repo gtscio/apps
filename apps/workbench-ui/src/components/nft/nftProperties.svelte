@@ -37,6 +37,9 @@
 	let description: string | undefined = '';
 	let uri: string | undefined = '';
 	let owner: string | undefined = '';
+	let newMetadataKey: string | undefined = undefined;
+	let newMetadataValue: string | undefined = undefined;
+	let metadata: unknown | undefined = undefined;
 	let item:
 		| Partial<{
 				issuer?: string;
@@ -92,7 +95,7 @@
 				immutableMetadata.uri = uri ?? '';
 			}
 
-			const result = await nftMint(issuer, tag, immutableMetadata);
+			const result = await nftMint(issuer, tag, immutableMetadata, metadata);
 			progress = '';
 
 			if (Is.stringValue(result?.error)) {
@@ -121,7 +124,7 @@
 		if (Is.stringValue(itemId) && Is.stringValue(owner)) {
 			progress = $i18n('pages.nftProperties.progress');
 
-			const result = await nftTransfer(itemId, owner);
+			const result = await nftTransfer(itemId, owner, metadata);
 			progress = '';
 
 			if (Is.stringValue(result?.error)) {
@@ -144,12 +147,24 @@
 		return undefined;
 	}
 
+	function addMetadata(): void {
+		if(Is.stringValue(newMetadataKey) && Is.stringValue(newMetadataValue)) {
+			if(Is.undefined(metadata)) {
+				metadata = {};
+			}
+			(metadata as { [key: string]: unknown })[newMetadataKey] = newMetadataValue;
+			newMetadataKey = undefined;
+			newMetadataValue = undefined;
+		}
+	}
+
 	onMount(async () => {
 		busy = true;
 		issuer = $profileIdentity;
 		if (!Is.undefined(itemId)) {
 			transferView = true;
 			item = await nftResolve(itemId);
+			metadata = item?.metadata;
 		}
 		busy = false;
 	});
@@ -182,7 +197,45 @@
 						disabled={busy}
 					></Input>
 					<ValidationError validationErrors={validationErrors.owner} />
+				</Label><Label>
+					{$i18n('pages.nftProperties.metadata')}
 				</Label>
+				{#if Is.objectValue(metadata)}
+					{#each Object.keys(metadata) as key}
+						<div>
+							<Label class="flex flex-row gap-2">
+								<b>{key}:</b> {metadata[key]}
+							</Label>
+						</div>
+					{/each}
+				{/if}
+				<div class="flex flex-row gap-2">
+					<Label>
+						{$i18n('pages.nftProperties.newMetadataKey')}
+						<Input
+							name="newMetadataKey"
+							placeholder={$i18n('pages.nftProperties.newMetadataKey')}
+							color="default"
+							bind:value={newMetadataKey}
+							disabled={busy}
+						></Input>
+					</Label>
+					<Label>
+						{$i18n('pages.nftProperties.newMetadataValue')}
+						<Input
+							name="newMetadataValue"
+							placeholder={$i18n('pages.nftProperties.newMetadataValue')}
+							color="default"
+							bind:value={newMetadataValue}
+							disabled={busy}
+						></Input>
+					</Label>
+				</div>
+				<div class="text-right mb-5">
+					<Button class="w-40" on:click={addMetadata}>
+						{$i18n('pages.nftProperties.addMetadata')}
+					</Button>
+				</div>
 			{/snippet}
 			{#snippet afterAction()}
 				{#if Is.stringValue(progress)}
@@ -257,6 +310,45 @@
 						disabled={busy}
 					></Input>
 				</Label>
+				<Label>
+					{$i18n('pages.nftProperties.metadata')}
+				</Label>
+				{#if Is.objectValue(metadata)}
+					{#each Object.keys(metadata) as key}
+						<div>
+							<Label class="flex flex-row gap-2">
+								<b>{key}:</b> {metadata[key]}
+							</Label>
+						</div>
+					{/each}
+				{/if}
+				<div class="flex flex-row gap-2">
+					<Label>
+						{$i18n('pages.nftProperties.newMetadataKey')}
+						<Input
+							name="newMetadataKey"
+							placeholder={$i18n('pages.nftProperties.newMetadataKey')}
+							color="default"
+							bind:value={newMetadataKey}
+							disabled={busy}
+						></Input>
+					</Label>
+					<Label>
+						{$i18n('pages.nftProperties.newMetadataValue')}
+						<Input
+							name="newMetadataValue"
+							placeholder={$i18n('pages.nftProperties.newMetadataValue')}
+							color="default"
+							bind:value={newMetadataValue}
+							disabled={busy}
+						></Input>
+					</Label>
+				</div>
+				<div class="text-right mb-5">
+					<Button class="w-40" on:click={addMetadata}>
+						{$i18n('pages.nftProperties.addMetadata')}
+					</Button>
+				</div>
 			{/snippet}
 			{#snippet afterAction()}
 				{#if Is.stringValue(progress)}

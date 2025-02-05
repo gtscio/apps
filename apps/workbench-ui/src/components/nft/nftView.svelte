@@ -98,8 +98,22 @@
 				{#if Is.object(item?.immutableMetadata)}
 					{#each Object.keys(item?.immutableMetadata) as key}
 						<Label class="flex flex-row gap-2">
-							{$i18n(`components.nftView.${key}`)}
+							{$i18n(`components.nftView.${key}`)}:
 							<Span>{item?.immutableMetadata[key]}</Span>
+						</Label>
+					{/each}
+				{/if}
+			{/if}
+
+			{#if !Is.undefined(item?.metadata)}
+				<Label class="mb-2 mt-5">
+					{$i18n('components.nftView.metadata')}
+				</Label>
+				{#if Is.object(item?.metadata)}
+					{#each Object.keys(item?.metadata) as key}
+						<Label class="flex flex-row gap-2">
+							{key}:
+							<Span>{item?.metadata[key]}</Span>
 						</Label>
 					{/each}
 				{/if}

@@ -123,7 +123,7 @@
 				<TableHeadCell>{$i18n('pages.nftProperties.tag')}</TableHeadCell>
 				<TableHeadCell>{$i18n('pages.nftProperties.issuer')}</TableHeadCell>
 				<TableHeadCell>{$i18n('pages.nftProperties.owner')}</TableHeadCell>
-				<TableHeadCell>{$i18n('pages.nftProperties.actions')}</TableHeadCell>
+				<TableHeadCell>{$i18n('common.labels.actions')}</TableHeadCell>
 			</TableHead>
 			<TableBody>
 				{#each items as item}
