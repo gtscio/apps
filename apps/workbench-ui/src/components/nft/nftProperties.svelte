@@ -148,8 +148,8 @@
 	}
 
 	function addMetadata(): void {
-		if(Is.stringValue(newMetadataKey) && Is.stringValue(newMetadataValue)) {
-			if(Is.undefined(metadata)) {
+		if (Is.stringValue(newMetadataKey) && Is.stringValue(newMetadataValue)) {
+			if (Is.undefined(metadata)) {
 				metadata = {};
 			}
 			(metadata as { [key: string]: unknown })[newMetadataKey] = newMetadataValue;
@@ -204,7 +204,8 @@
 					{#each Object.keys(metadata) as key}
 						<div>
 							<Label class="flex flex-row gap-2">
-								<b>{key}:</b> {metadata[key]}
+								<b>{key}:</b>
+								{metadata[key]}
 							</Label>
 						</div>
 					{/each}
@@ -231,7 +232,7 @@
 						></Input>
 					</Label>
 				</div>
-				<div class="text-right mb-5">
+				<div class="mb-5 text-right">
 					<Button class="w-40" on:click={addMetadata}>
 						{$i18n('pages.nftProperties.addMetadata')}
 					</Button>
@@ -317,7 +318,8 @@
 					{#each Object.keys(metadata) as key}
 						<div>
 							<Label class="flex flex-row gap-2">
-								<b>{key}:</b> {metadata[key]}
+								<b>{key}:</b>
+								{metadata[key]}
 							</Label>
 						</div>
 					{/each}
@@ -344,7 +346,7 @@
 						></Input>
 					</Label>
 				</div>
-				<div class="text-right mb-5">
+				<div class="mb-5 text-right">
 					<Button class="w-40" on:click={addMetadata}>
 						{$i18n('pages.nftProperties.addMetadata')}
 					</Button>
