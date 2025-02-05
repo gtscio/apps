@@ -21,6 +21,7 @@
 	} from '@twin.org/ui-components-svelte';
 	import { onMount } from 'svelte';
 	import type { IUserNftEntry } from '$models/IUserNftEntry';
+	import { nftBurn } from '$stores/nft';
 	import { nftEntryList, nftsEntryRemove } from '$stores/nfts';
 
 	let items: IUserNftEntry[] | undefined;
@@ -86,6 +87,7 @@
 	async function remove(): Promise<void> {
 		if (Is.stringValue(confirmationId)) {
 			modalIsBusy = true;
+			await nftBurn(confirmationId);
 			await nftsEntryRemove(confirmationId);
 			await loadData();
 			confirmationId = '';
@@ -109,32 +111,42 @@
 				<P class={isError ? 'text-red-600' : ''}>{status}</P>
 			{/if}
 		</div>
-		<Button on:click={() => goto('/secure/nft/create')} disabled={busy}
-			>{$i18n('pages.nft.createItem')}</Button
+		<Button on:click={() => goto('/secure/nft/mint')} disabled={busy}
+			>{$i18n('pages.nft.mintItem')}</Button
 		>
 	</div>
 
 	{#if Is.arrayValue(items)}
 		<Table>
 			<TableHead>
-				<TableHeadCell>{$i18n('common.labels.nftId')}</TableHeadCell>
-				<TableHeadCell>{$i18n('common.labels.issuer')}</TableHeadCell>
-				<TableHeadCell>{$i18n('common.labels.owner')}</TableHeadCell>
-				<TableHeadCell>{$i18n('common.labels.actions')}</TableHeadCell>
+				<TableHeadCell>{$i18n('pages.nftProperties.nftId')}</TableHeadCell>
+				<TableHeadCell>{$i18n('pages.nftProperties.tag')}</TableHeadCell>
+				<TableHeadCell>{$i18n('pages.nftProperties.issuer')}</TableHeadCell>
+				<TableHeadCell>{$i18n('pages.nftProperties.owner')}</TableHeadCell>
+				<TableHeadCell>{$i18n('pages.nftProperties.actions')}</TableHeadCell>
 			</TableHead>
 			<TableBody>
 				{#each items as item}
 					<TableBodyRow>
 						<TableBodyCell class="whitespace-normal">{item.nftId}</TableBodyCell>
+						<TableBodyCell>{item.tag}</TableBodyCell>
 						<TableBodyCell>{item.issuer}</TableBodyCell>
 						<TableBodyCell>{item.owner}</TableBodyCell>
-						<TableBodyCell class="flex flex-row gap-2"
-							><Button size="xs" color="plain" on:click={() => goto(`/secure/nft/${item.id}`)}
-								><Icons.EyeSolid /></Button
-							><Button size="xs" color="plain" on:click={async () => removePrompt(item.id)}
-								><Icons.TrashBinSolid /></Button
-							></TableBodyCell
-						>
+						<TableBodyCell class="flex flex-row gap-2">
+							<Button size="xs" color="plain" on:click={() => goto(`/secure/nft/${item.id}`)}>
+								<Icons.EyeSolid />
+							</Button>
+							<Button
+								size="xs"
+								color="plain"
+								on:click={() => goto(`/secure/nft/transfer/${item.id}`)}
+							>
+								<Icons.ArrowRightOutline />
+							</Button>
+							<Button size="xs" color="plain" on:click={async () => removePrompt(item.id)}>
+								<Icons.TrashBinSolid />
+							</Button>
+						</TableBodyCell>
 					</TableBodyRow>
 				{/each}
 			</TableBody>

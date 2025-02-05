@@ -48,7 +48,7 @@ export async function nftMint(
 }
 
 /**
- * Verify an nft data.
+ * Verify a nft data.
  * @param nftId The id of the nft.
  * @returns The id of the nft or an error if one occurred.
  */
@@ -67,6 +67,46 @@ export async function nftResolve(nftId: string): Promise<
 		try {
 			const result = await nftClient.resolve(nftId);
 			return result;
+		} catch (err) {
+			return {
+				error: ErrorHelper.formatErrors(err).join("\n")
+			};
+		}
+	}
+}
+
+/**
+ * Burn a nft data.
+ * @param nftId The id of the nft.
+ * @returns Undefined or an error if one occurred.
+ */
+export async function nftBurn(nftId: string): Promise<undefined | { error: string }> {
+	if (Is.object(nftClient)) {
+		try {
+			await nftClient.burn(nftId);
+			return undefined;
+		} catch (err) {
+			return {
+				error: ErrorHelper.formatErrors(err).join("\n")
+			};
+		}
+	}
+}
+
+/**
+ * Transfer a nft data.
+ * @param nftId The id of the nft.
+ * @param recipient The recipient of the nft.
+ * @returns Undefined or an error if one occurred.
+ */
+export async function nftTransfer(
+	nftId: string,
+	recipient: string
+): Promise<undefined | { error: string }> {
+	if (Is.object(nftClient)) {
+		try {
+			await nftClient.transfer(nftId, recipient);
+			return undefined;
 		} catch (err) {
 			return {
 				error: ErrorHelper.formatErrors(err).join("\n")
