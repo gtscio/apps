@@ -56,7 +56,7 @@ export async function nftEntryList(cursor?: string): Promise<
  * @param entry The entry to add.
  * @returns The nothing unless there was an error.
  */
-export async function nftsEntryCreate(entry: IUserNftEntry): Promise<
+export async function nftsEntrySet(entry: IUserNftEntry): Promise<
 	| {
 			error?: string;
 	  }

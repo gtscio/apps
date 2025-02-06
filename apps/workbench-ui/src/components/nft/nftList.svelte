@@ -139,7 +139,7 @@
 							<Button
 								size="xs"
 								color="plain"
-								on:click={() => goto(`/secure/nft/transfer/${item.id}`)}
+								on:click={() => goto(`/secure/nft/${item.id}/transfer`)}
 							>
 								<Icons.ArrowRightOutline />
 							</Button>
