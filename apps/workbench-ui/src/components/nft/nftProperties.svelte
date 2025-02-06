@@ -21,7 +21,6 @@
 	import { nftMint } from '$stores/nft';
 	import { nftsEntrySet } from '$stores/nfts';
 
-	export let itemId: string | undefined;
 	export let returnUrl: string;
 	let validationErrors: {
 		[field in 'issuer' | 'tag' | 'owner']?: IValidationFailure[] | undefined;
@@ -29,6 +28,7 @@
 	let busy = false;
 	let signature: string | undefined;
 	let progress: string | undefined;
+	let itemId: string | undefined;
 	let issuer: string | undefined = '';
 	let tag: string | undefined = '';
 	let name: string | undefined = '';

@@ -4,4 +4,4 @@
 	import NftProperties from '$components/nft/nftProperties.svelte';
 </script>
 
-<NftProperties itemId={undefined} returnUrl="/secure/nft" />
+<NftProperties returnUrl="/secure/nft" />
