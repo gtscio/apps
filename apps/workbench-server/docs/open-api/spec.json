@@ -4854,7 +4854,6 @@
 							"examples": {
 								"nftMintExample": {
 									"value": {
-										"issuer": "tst1prctjk5ck0dutnsunnje6u90jk5htx03qznjjmkd6843pzltlgz87srjzzv",
 										"tag": "MY-NFT",
 										"immutableMetadata": {
 											"docName": "bill-of-lading",
@@ -4978,8 +4977,8 @@
 								"examples": {
 									"nftResolveResponseExample": {
 										"value": {
-											"issuer": "tst1prctjk5ck0dutnsunnje6u90jk5htx03qznjjmkd6843pzltlgz87srjzzv",
-											"owner": "tst1prctjk5ck0dutnsunnje6u90jk5htx03qznjjmkd6843pzltlgz87srjzzv",
+											"issuer": "did:iota:tst:0x85ef62ea94fc4eeeeeddf6acc3b566e988e613081d0b93cc54ed831ed4c18d44",
+											"owner": "did:iota:tst:0x85ef62ea94fc4eeeeeddf6acc3b566e988e613081d0b93cc54ed831ed4c18d44",
 											"tag": "MY-NFT",
 											"immutableMetadata": {
 												"docName": "bill-of-lading",
@@ -5285,7 +5284,8 @@
 							"examples": {
 								"nftTransferExample": {
 									"value": {
-										"recipient": "tst1prctjk5ck0dutnsunnje6u90jk5htx03qznjjmkd6843pzltlgz87srjzzv",
+										"recipientIdentity": "did:iota:tst:0x85ef62ea94fc4eeeeeddf6acc3b566e988e613081d0b93cc54ed831ed4c18d44",
+										"recipientAddress": "tst1prctjk5ck0dutnsunnje6u90jk5htx03qznjjmkd6843pzltlgz87srjzzv",
 										"metadata": {
 											"data": "AAAAA"
 										}
@@ -10411,10 +10411,6 @@
 			"NftMintRequest": {
 				"type": "object",
 				"properties": {
-					"issuer": {
-						"type": "string",
-						"description": "The issuer for the NFT, will also be the initial owner."
-					},
 					"tag": {
 						"type": "string",
 						"description": "The tag for the NFT."
@@ -10431,7 +10427,6 @@
 					}
 				},
 				"required": [
-					"issuer",
 					"tag"
 				],
 				"additionalProperties": false,
@@ -10470,16 +10465,21 @@
 			"NftTransferRequest": {
 				"type": "object",
 				"properties": {
-					"recipient": {
+					"recipientIdentity": {
 						"type": "string",
-						"description": "The recipient for the NFT."
+						"description": "The recipient identity for the NFT."
+					},
+					"recipientAddress": {
+						"type": "string",
+						"description": "The recipient address for the NFT."
 					},
 					"metadata": {
 						"description": "The metadata for the NFT."
 					}
 				},
 				"required": [
-					"recipient"
+					"recipientIdentity",
+					"recipientAddress"
 				],
 				"additionalProperties": false,
 				"description": "The data to be used in the transfer."
