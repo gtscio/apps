@@ -20,11 +20,14 @@
 	export let itemId: string | undefined;
 	export let returnUrl: string;
 	let validationErrors: {
-		[field in 'issuer' | 'tag' | 'owner']?: IValidationFailure[] | undefined;
+		[field in 'issuer' | 'tag' | 'recipientIdentity' | 'recipientAddress']?:
+			| IValidationFailure[]
+			| undefined;
 	} = {};
 	let busy = false;
 	let progress: string | undefined;
-	let owner: string | undefined = '';
+	let recipientIdentity: string | undefined = '';
+	let recipientAddress: string | undefined = '';
 	let newMetadataKey: string | undefined = undefined;
 	let newMetadataValue: string | undefined = undefined;
 	let metadata: unknown | undefined = undefined;
@@ -41,10 +44,17 @@
 
 	async function validate(validationFailures: IValidationFailure[]): Promise<void> {
 		Validation.notEmpty(
-			'owner',
-			Is.stringValue(owner) ? owner : undefined,
+			'recipientIdentity',
+			Is.stringValue(recipientIdentity) ? recipientIdentity : undefined,
 			validationFailures,
-			$i18n('pages.nftProperties.owner')
+			$i18n('pages.nftProperties.recipientIdentity')
+		);
+
+		Validation.notEmpty(
+			'recipientAddress',
+			Is.stringValue(recipientAddress) ? recipientAddress : undefined,
+			validationFailures,
+			$i18n('pages.nftProperties.recipientAddress')
 		);
 	}
 
@@ -53,10 +63,14 @@
 	}
 
 	async function action(): Promise<string | undefined> {
-		if (Is.stringValue(itemId) && Is.stringValue(owner)) {
+		if (
+			Is.stringValue(itemId) &&
+			Is.stringValue(recipientIdentity) &&
+			Is.stringValue(recipientAddress)
+		) {
 			progress = $i18n('pages.nftProperties.progress');
 
-			const result = await nftTransfer(itemId, owner, metadata);
+			const result = await nftTransfer(itemId, recipientIdentity, recipientAddress, metadata);
 			progress = '';
 
 			if (Is.stringValue(result?.error)) {
@@ -68,7 +82,7 @@
 				nftId: itemId,
 				issuer: item?.issuer ?? '',
 				tag: item?.tag ?? '',
-				owner
+				owner: recipientIdentity
 			});
 
 			await goto(`/secure/nft/${itemId}`);
@@ -111,20 +125,32 @@
 	>
 		{#snippet fields()}
 			<Label>
-				Current {$i18n('pages.nftProperties.owner')}:
+				{$i18n('pages.nftProperties.owner')}:
 				<Span>{item?.owner}</Span>
 			</Label>
 			<Label>
-				New {$i18n('pages.nftProperties.owner')}
+				{$i18n('pages.nftProperties.recipientIdentity')}
 				<Input
-					name="owner"
-					placeholder={$i18n('pages.nftProperties.owner')}
-					color={Is.arrayValue(validationErrors.owner) ? 'error' : 'default'}
-					bind:value={owner}
+					name="recipientIdentity"
+					placeholder={$i18n('pages.nftProperties.recipientIdentity')}
+					color={Is.arrayValue(validationErrors.recipientIdentity) ? 'error' : 'default'}
+					bind:value={recipientIdentity}
 					disabled={busy}
 				></Input>
-				<ValidationError validationErrors={validationErrors.owner} />
-			</Label><Label>
+				<ValidationError validationErrors={validationErrors.recipientIdentity} />
+			</Label>
+			<Label>
+				{$i18n('pages.nftProperties.recipientAddress')}
+				<Input
+					name="recipientAddress"
+					placeholder={$i18n('pages.nftProperties.recipientAddress')}
+					color={Is.arrayValue(validationErrors.recipientAddress) ? 'error' : 'default'}
+					bind:value={recipientAddress}
+					disabled={busy}
+				></Input>
+				<ValidationError validationErrors={validationErrors.recipientAddress} />
+			</Label>
+			<Label>
 				{$i18n('pages.nftProperties.metadata')}
 			</Label>
 			{#if Is.objectValue(metadata)}

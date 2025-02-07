@@ -17,17 +17,17 @@ export async function init(apiUrl: string): Promise<void> {
 
 /**
  * Mint NFT.
- * @param issuer The issuer of the nft.
  * @param tag The tag of the nft.
  * @param immutableMetadata The immutable metadata of the nft.
  * @param metadata The metadata of the nft.
+ * @param namespace The namespace of the nft.
  * @returns The nft information or an error if one occurred.
  */
 export async function nftMint(
-	issuer: string,
 	tag: string,
 	immutableMetadata?: unknown,
-	metadata?: unknown
+	metadata?: unknown,
+	namespace?: string
 ): Promise<
 	| {
 			error?: string;
@@ -37,7 +37,7 @@ export async function nftMint(
 > {
 	if (Is.object(nftClient)) {
 		try {
-			const nftId = await nftClient.mint(issuer, tag, immutableMetadata, metadata);
+			const nftId = await nftClient.mint(tag, immutableMetadata, metadata, namespace);
 			return {
 				nftId
 			};
@@ -98,18 +98,20 @@ export async function nftBurn(nftId: string): Promise<undefined | { error: strin
 /**
  * Transfer a nft data.
  * @param nftId The id of the nft.
- * @param recipient The recipient of the nft.
+ * @param recipientIdentity The recipient identity.
+ * @param recipientAddress The recipient address.
  * @param metadata The metadata of the nft.
  * @returns Undefined or an error if one occurred.
  */
 export async function nftTransfer(
 	nftId: string,
-	recipient: string,
+	recipientIdentity: string,
+	recipientAddress: string,
 	metadata?: unknown
 ): Promise<undefined | { error: string }> {
 	if (Is.object(nftClient)) {
 		try {
-			await nftClient.transfer(nftId, recipient, metadata);
+			await nftClient.transfer(nftId, recipientIdentity, recipientAddress, metadata);
 			return undefined;
 		} catch (err) {
 			return {

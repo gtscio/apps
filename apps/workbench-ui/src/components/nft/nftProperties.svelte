@@ -18,6 +18,7 @@
 	} from '@twin.org/ui-components-svelte';
 	import { onMount } from 'svelte';
 	import { createPublicUrl } from '$stores/app';
+	import { profileIdentity } from '$stores/identityProfile';
 	import { nftMint } from '$stores/nft';
 	import { nftsEntrySet } from '$stores/nfts';
 
@@ -29,7 +30,7 @@
 	let signature: string | undefined;
 	let progress: string | undefined;
 	let itemId: string | undefined;
-	let issuer: string | undefined = '';
+	let namespace: string | undefined = undefined;
 	let tag: string | undefined = '';
 	let name: string | undefined = '';
 	let description: string | undefined = '';
@@ -39,13 +40,6 @@
 	let metadata: unknown | undefined = undefined;
 
 	async function validate(validationFailures: IValidationFailure[]): Promise<void> {
-		Validation.notEmpty(
-			'issuer',
-			Is.stringValue(issuer) ? issuer : undefined,
-			validationFailures,
-			$i18n('pages.nftProperties.issuer')
-		);
-
 		Validation.notEmpty(
 			'tag',
 			Is.stringValue(tag) ? tag : undefined,
@@ -62,7 +56,7 @@
 		signature = undefined;
 		itemId = undefined;
 
-		if (Is.stringValue(issuer) && Is.stringValue(tag)) {
+		if (Is.stringValue(tag)) {
 			progress = $i18n('pages.nftProperties.progress');
 			let immutableMetadata: { [key: string]: unknown } | undefined = undefined;
 			if (Is.stringValue(name) || Is.stringValue(description) || Is.stringValue(uri)) {
@@ -72,7 +66,7 @@
 				immutableMetadata.uri = uri ?? '';
 			}
 
-			const result = await nftMint(issuer, tag, immutableMetadata, metadata);
+			const result = await nftMint(tag, immutableMetadata, metadata, namespace);
 			progress = '';
 
 			if (Is.stringValue(result?.error)) {
@@ -85,9 +79,9 @@
 				await nftsEntrySet({
 					id: itemId,
 					nftId: itemId,
-					issuer,
+					issuer: $profileIdentity,
 					tag,
-					owner: issuer
+					owner: $profileIdentity
 				});
 			}
 		}
@@ -124,16 +118,6 @@
 			bind:busy
 		>
 			{#snippet fields()}
-				<Label>
-					{$i18n('pages.nftProperties.issuer')}
-					<Input
-						name="issuer"
-						placeholder={$i18n('pages.nftProperties.issuer')}
-						color={Is.arrayValue(validationErrors.issuer) ? 'error' : 'default'}
-						bind:value={issuer}
-					></Input>
-					<ValidationError validationErrors={validationErrors.issuer} />
-				</Label>
 				<Label>
 					{$i18n('pages.nftProperties.tag')}
 					<Input
@@ -175,6 +159,16 @@
 						placeholder={$i18n('pages.nftProperties.uri')}
 						color="default"
 						bind:value={uri}
+						disabled={busy}
+					></Input>
+				</Label>
+				<Label>
+					{$i18n('pages.nftProperties.namespace')}
+					<Input
+						name="namespace"
+						placeholder={$i18n('pages.nftProperties.namespace')}
+						color="default"
+						bind:value={namespace}
 						disabled={busy}
 					></Input>
 				</Label>
