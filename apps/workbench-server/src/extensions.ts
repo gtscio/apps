@@ -6,6 +6,7 @@ import { EntityStorageComponentType, type IEngineConfig } from "@twin.org/engine
 import { EntitySchemaFactory, EntitySchemaHelper } from "@twin.org/entity";
 import { nameof } from "@twin.org/nameof";
 import { UserAttestationEntry } from "./entities/userAttestationEntry.js";
+import { UserNftEntry } from "./entities/userNftEntry.js";
 
 /**
  * Extends the engine config with types specific to workbench.
@@ -28,6 +29,25 @@ export function extendEngineConfig(engineConfig: IEngineConfig): void {
 				config: { includeNodeIdentity: true, includeUserIdentity: true }
 			},
 			restPath: "user-attestation"
+		});
+	}
+
+	// Add a custom entity storage type for the users nfts,
+	// but only if the nft connectors are available.
+	if (Is.arrayValue(engineConfig.types.nftConnector)) {
+		engineConfig.types.entityStorageComponent ??= [];
+
+		EntitySchemaFactory.register(nameof<UserNftEntry>(), () =>
+			EntitySchemaHelper.getSchema(UserNftEntry)
+		);
+
+		engineConfig.types.entityStorageComponent.push({
+			type: EntityStorageComponentType.Service,
+			options: {
+				entityStorageType: nameof<UserNftEntry>(),
+				config: { includeNodeIdentity: true, includeUserIdentity: true }
+			},
+			restPath: "user-nft"
 		});
 	}
 }
