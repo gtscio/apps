@@ -39,6 +39,7 @@
 		"@twin.org/identity-rest-client": "next",
 		"@twin.org/immutable-proof-models": "next",
 		"@twin.org/immutable-proof-rest-client": "next",
+		"@twin.org/logging-rest-client": "next",
 		"@twin.org/nft-rest-client": "next",
 		"@twin.org/nft-models": "next",
 		"@twin.org/qr": "next",

@@ -47,6 +47,9 @@
 			"nftObject": "Nft Object",
 			"proof": "Proof"
 		},
+		"loggingView": {
+			"title": "Logging"
+		},
 		"auditableItemStreamView": {
 			"title": "Auditable Item Stream",
 			"id": "Id",
