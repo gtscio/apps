@@ -865,6 +865,23 @@
 			"itemQr": "Auditable Item Stream QR Code",
 			"itemId": "Auditable Item Stream Id"
 		},
+		"logging": {
+			"title": "Logging",
+			"search": "Search"
+		},
+		"loggingProperties": {
+			"title": "Logging",
+			"level": "Level",
+			"source": "Source",
+			"message": "Message",
+			"error": "Error",
+			"ts": "Timestamp",
+			"pageSize": "Page Size",
+			"action": "Search",
+			"actionSuccess": "Search was successful",
+			"progress": "Searching...",
+			"word": "Word"
+		},
 		"proofView": {
 			"title": "Proof View",
 			"type": "Type",

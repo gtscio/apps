@@ -1,7 +1,7 @@
 // Copyright 2024 IOTA Stiftung.
 // SPDX-License-Identifier: Apache-2.0.
 import { ErrorHelper, Is } from "@twin.org/core";
-import type {	ILogEntry } from "@twin.org/logging-models";
+import type { ILogEntry, LogLevel } from "@twin.org/logging-models";
 import { LoggingClient } from "@twin.org/logging-rest-client";
 
 let loggingClient: LoggingClient | undefined;
@@ -18,21 +18,35 @@ export async function init(apiUrl: string): Promise<void> {
 
 /**
  * Verify a logging data.
+ * @param level The level of the logging.
+ * @param source The source of the logging.
+ * @param cursor The current cursor.
+ * @param pageSize The page size.
  * @returns The id of the logging or an error if one occurred.
  */
-export async function loggingResolve(): Promise<
+export async function loggingResolve(
+	level?: LogLevel,
+	source?: string,
+	cursor?: string,
+	pageSize?: number
+): Promise<
 	| {
-		error?: string;
-		entities?: ILogEntry[];
-    cursor?: string;
+			error?: string;
+			entities?: ILogEntry[];
+			cursor?: string;
 	  }
 	| undefined
 > {
 	if (Is.object(loggingClient)) {
 		try {
-			const result = await loggingClient.query();
-			// eslint-disable-next-line no-console
-			console.log("result", result);
+			const result = await loggingClient.query(
+				level,
+				source,
+				undefined,
+				undefined,
+				cursor,
+				pageSize
+			);
 			return result;
 		} catch (err) {
 			return {

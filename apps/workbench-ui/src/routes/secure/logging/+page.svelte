@@ -4,4 +4,4 @@
 	import LoggingView from '$components/logging/loggingView.svelte';
 </script>
 
-<LoggingView/>
+<LoggingView />
