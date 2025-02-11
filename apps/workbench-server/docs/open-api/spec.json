@@ -2913,7 +2913,7 @@
 									"value": {
 										"blob": "VGhlIHF1aWNrIGJyb3duIGZveCBqdW1wcyBvdmVyIHRoZSBsYXp5IGRvZw==",
 										"metadata": {
-											"@context": "http://schema.org/",
+											"@context": "https://schema.org",
 											"@type": "DigitalDocument",
 											"name": "myfile.pdf"
 										}
@@ -3093,7 +3093,7 @@
 													"blobSize": 42,
 													"fileExtension": "pdf",
 													"metadata": {
-														"@context": "http://schema.org/",
+														"@context": "https://schema.org",
 														"@type": "DigitalDocument",
 														"name": "myfile.pdf"
 													},
@@ -3128,7 +3128,7 @@
 													"blobSize": 42,
 													"fileExtension": "pdf",
 													"metadata": {
-														"@context": "http://schema.org/",
+														"@context": "https://schema.org",
 														"@type": "DigitalDocument",
 														"name": "myfile.pdf"
 													},
@@ -3288,7 +3288,7 @@
 											"blobSize": 42,
 											"fileExtension": "pdf",
 											"metadata": {
-												"@context": "http://schema.org/",
+												"@context": "https://schema.org",
 												"@type": "DigitalDocument",
 												"name": "myfile.pdf"
 											},
@@ -3315,7 +3315,7 @@
 											"blobSize": 42,
 											"fileExtension": "pdf",
 											"metadata": {
-												"@context": "http://schema.org/",
+												"@context": "https://schema.org",
 												"@type": "DigitalDocument",
 												"name": "myfile.pdf"
 											},
@@ -3442,7 +3442,7 @@
 								"blobStorageUpdateRequestExample": {
 									"value": {
 										"metadata": {
-											"@context": "http://schema.org/",
+											"@context": "https://schema.org",
 											"@type": "DigitalDocument",
 											"name": "myfile.pdf"
 										}
@@ -5758,7 +5758,7 @@
 				"parameters": [
 					{
 						"name": "id",
-						"description": "The attestation id to verify.",
+						"description": "The attestation id to transfer.",
 						"in": "path",
 						"required": true,
 						"schema": {
@@ -5784,7 +5784,8 @@
 							"examples": {
 								"attestationTransferRequestExample": {
 									"value": {
-										"holderIdentity": "did:iota:tst:0x06ae1034f9f4af1b408a0b54e877bb476259666a14f221400d3746aecefa7105"
+										"holderIdentity": "did:iota:tst:0x06ae1034f9f4af1b408a0b54e877bb476259666a14f221400d3746aecefa7105",
+										"holderAddress": "tst1prctjk5ck0dutnsunnje6u90jk5htx03qznjjmkd6843pzltlgz87srjzzv"
 									}
 								}
 							}
@@ -8743,10 +8744,15 @@
 					"holderIdentity": {
 						"type": "string",
 						"description": "The new holder identity."
+					},
+					"holderAddress": {
+						"type": "string",
+						"description": "The new holder address."
 					}
 				},
 				"required": [
-					"holderIdentity"
+					"holderIdentity",
+					"holderAddress"
 				],
 				"additionalProperties": false,
 				"description": "The parameters to be used in the transfer."

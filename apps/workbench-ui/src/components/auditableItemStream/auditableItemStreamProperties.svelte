@@ -5,7 +5,7 @@
 	import type { IAuditableItemStream } from '@twin.org/auditable-item-stream-models';
 	import { Is, ObjectHelper, Validation, type IValidationFailure } from '@twin.org/core';
 	import type { IJsonLdNodeObject } from '@twin.org/data-json-ld';
-	import { SchemaOrgTypes } from '@twin.org/data-schema-org';
+	import { SchemaOrgTypes } from '@twin.org/standards-schema-org';
 	import {
 		Button,
 		Card,
