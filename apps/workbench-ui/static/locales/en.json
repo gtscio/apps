@@ -867,7 +867,15 @@
 		},
 		"logging": {
 			"title": "Logging",
-			"search": "Search"
+			"search": "Search",
+			"loading": "Loading logs...",
+			"noItems": "No logs found",
+			"action": "Filter",
+			"actions": "Actions",
+			"progress": "Searching...",
+			"copyAllClipboard": "Copy all log to clipboard",
+			"copyDataClipboard": "Copy the data body to clipboard",
+			"copyErrorClipboard": "Copy the error to clipboard"
 		},
 		"loggingProperties": {
 			"title": "Logging",
@@ -876,11 +884,10 @@
 			"message": "Message",
 			"error": "Error",
 			"ts": "Timestamp",
+			"data": "Data",
 			"pageSize": "Page Size",
-			"action": "Search",
-			"actionSuccess": "Search was successful",
-			"progress": "Searching...",
-			"word": "Word"
+			"timeStart": "From Date",
+			"timeEnd": "To Date"
 		},
 		"proofView": {
 			"title": "Proof View",

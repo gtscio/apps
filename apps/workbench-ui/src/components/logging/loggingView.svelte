@@ -18,20 +18,24 @@
 		Label,
 		Input,
 		Button,
-		Select
+		Select,
+		Card,
+		Icons
 	} from '@twin.org/ui-components-svelte';
+	import { Tooltip } from 'flowbite-svelte';
 	import { onMount } from 'svelte';
-	import { loggingResolve } from '$stores/logging';
+	import { loggingQuery } from '$stores/logging';
 
 	let entities: ILogEntry[] | undefined;
-	const cursorStack: string[] = ['@start'];
+	let cursorStack: string[] = ['@start'];
 	let cursorStackIndex: number = 0;
 	let busy = false;
 	let status = '';
 	let level: LogLevel | undefined = undefined;
 	let source: string | undefined = undefined;
+	let timeStart: string | undefined = undefined;
+	let timeEnd: string | undefined = undefined;
 	let pageSize = 50;
-	let word = '';
 	let isError = false;
 	let canGoBackwards = true;
 	let canGoForwards = true;
@@ -41,9 +45,13 @@
 		status = $i18n('pages.logging.loading');
 		busy = true;
 		isError = false;
-		const result = await loggingResolve(
+		const validTimeStart = timeStart ? new Date(timeStart).getTime() : undefined;
+		const validTimeEnd = timeEnd ? new Date(timeEnd).getTime() : undefined;
+		const result = await loggingQuery(
 			level,
 			source,
+			validTimeStart,
+			validTimeEnd,
 			cursorStack[cursorStackIndex]?.startsWith('@') ? undefined : cursorStack[cursorStackIndex],
 			pageSize
 		);
@@ -80,6 +88,25 @@
 		await loadData();
 	}
 
+	async function action(): Promise<void> {
+		cursorStackIndex = 0;
+		cursorStack = ['@start'];
+		if (source === '') {
+			source = undefined;
+		}
+		if (!Is.number(pageSize) || pageSize < 1) {
+			pageSize = 50;
+		}
+
+		if (timeStart === '') {
+			timeStart = undefined;
+		}
+		if (timeEnd === '') {
+			timeEnd = undefined;
+		}
+		await loadData();
+	}
+
 	onMount(async () => {
 		await loadData();
 	});
@@ -97,8 +124,8 @@
 			{/if}
 		</div>
 	</div>
-	<div class="border-radius-2 w-full border border-gray-600 p-4">
-		<div class="flex flex-row gap-2">
+	<Card class="w-full max-w-full rounded-lg border border-gray-300 p-4">
+		<div class="block flex-row gap-2 lg:flex">
 			<Label>
 				{$i18n('pages.loggingProperties.pageSize')}
 				<Input
@@ -130,20 +157,32 @@
 				></Input>
 			</Label>
 			<Label>
-				{$i18n('pages.loggingProperties.word')}
+				{$i18n('pages.loggingProperties.timeStart')}
 				<Input
-					name="word"
-					placeholder={$i18n('pages.loggingProperties.word')}
+					name="timeStart"
+					placeholder={$i18n('pages.loggingProperties.timeStart')}
 					color="default"
-					bind:value={word}
+					bind:value={timeStart}
+					type="date"
+					disabled={busy}
+				></Input>
+			</Label>
+			<Label>
+				{$i18n('pages.loggingProperties.timeEnd')}
+				<Input
+					name="timeEnd"
+					placeholder={$i18n('pages.loggingProperties.timeEnd')}
+					color="default"
+					bind:value={timeEnd}
+					type="date"
 					disabled={busy}
 				></Input>
 			</Label>
 		</div>
-		<Button class="mt-4" on:click={async () => loadData()} disabled={busy}>
-			{$i18n('pages.loggingProperties.action')}
+		<Button class="mt-4 max-w-20" on:click={async () => action()} disabled={busy}>
+			{$i18n('pages.logging.action')}
 		</Button>
-	</div>
+	</Card>
 
 	{#if Is.arrayValue(entities)}
 		<Table>
@@ -154,6 +193,7 @@
 				<TableHeadCell>{$i18n('pages.loggingProperties.error')}</TableHeadCell>
 				<TableHeadCell>{$i18n('pages.loggingProperties.data')}</TableHeadCell>
 				<TableHeadCell>{$i18n('pages.loggingProperties.ts')}</TableHeadCell>
+				<TableHeadCell>{$i18n('pages.logging.actions')}</TableHeadCell>
 			</TableHead>
 			<TableBody>
 				{#each entities as item}
@@ -161,7 +201,13 @@
 						<TableBodyCell class="whitespace-normal">{item.level}</TableBodyCell>
 						<TableBodyCell>{item.source}</TableBodyCell>
 						<TableBodyCell>{item.message}</TableBodyCell>
-						<TableBodyCell>{item.error}</TableBodyCell>
+						<TableBodyCell>
+							{#if item.error && JSON.stringify(item.error).length > 50}
+								{JSON.stringify(item.error).slice(0, 50)}...
+							{:else}
+								{JSON.stringify(item.error)}
+							{/if}
+						</TableBodyCell>
 						<TableBodyCell>
 							{#if item.data && JSON.stringify(item.data).length > 50}
 								{JSON.stringify(item.data).slice(0, 50)}...
@@ -170,6 +216,32 @@
 							{/if}
 						</TableBodyCell>
 						<TableBodyCell>{item.ts ? new Date(item.ts) : ''}</TableBodyCell>
+						<TableBodyCell class="flex flex-row gap-2">
+							<Button
+								size="xs"
+								color="plain"
+								on:click={async () => navigator.clipboard.writeText(JSON.stringify(item))}
+							>
+								<Icons.ClipboardListOutline />
+							</Button>
+							<Tooltip>{$i18n('pages.logging.copyAllClipboard')}</Tooltip>
+							<Button
+								size="xs"
+								color="plain"
+								on:click={async () => navigator.clipboard.writeText(JSON.stringify(item.data))}
+							>
+								<Icons.ClipboardCheckOutline />
+							</Button>
+							<Tooltip>{$i18n('pages.logging.copyDataClipboard')}</Tooltip>
+							<Button
+								size="xs"
+								color="plain"
+								on:click={async () => navigator.clipboard.writeText(JSON.stringify(item.error))}
+							>
+								<Icons.ExclamationCircleOutline />
+							</Button>
+							<Tooltip>{$i18n('pages.logging.copyErrorClipboard')}</Tooltip>
+						</TableBodyCell>
 					</TableBodyRow>
 				{/each}
 			</TableBody>

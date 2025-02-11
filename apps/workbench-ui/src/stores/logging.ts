@@ -17,16 +17,20 @@ export async function init(apiUrl: string): Promise<void> {
 }
 
 /**
- * Verify a logging data.
+ * Query logging data.
  * @param level The level of the logging.
  * @param source The source of the logging.
+ * @param timeStart The start time.
+ * @param timeEnd The end time.
  * @param cursor The current cursor.
  * @param pageSize The page size.
- * @returns The id of the logging or an error if one occurred.
+ * @returns An array with the entities found and the current cursor.
  */
-export async function loggingResolve(
+export async function loggingQuery(
 	level?: LogLevel,
 	source?: string,
+	timeStart?: number,
+	timeEnd?: number,
 	cursor?: string,
 	pageSize?: number
 ): Promise<
@@ -39,14 +43,7 @@ export async function loggingResolve(
 > {
 	if (Is.object(loggingClient)) {
 		try {
-			const result = await loggingClient.query(
-				level,
-				source,
-				undefined,
-				undefined,
-				cursor,
-				pageSize
-			);
+			const result = await loggingClient.query(level, source, timeStart, timeEnd, cursor, pageSize);
 			return result;
 		} catch (err) {
 			return {
