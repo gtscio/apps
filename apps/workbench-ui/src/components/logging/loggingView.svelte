@@ -20,9 +20,9 @@
 		Button,
 		Select,
 		Card,
-		Icons
+		Icons,
+		Tooltip
 	} from '@twin.org/ui-components-svelte';
-	import { Tooltip } from 'flowbite-svelte';
 	import { onMount } from 'svelte';
 	import { loggingQuery } from '$stores/logging';
 
@@ -105,6 +105,13 @@
 			timeEnd = undefined;
 		}
 		await loadData();
+	}
+
+	async function copyData(data?: object): Promise<void> {
+		if (!data) {
+			return;
+		}
+		await navigator.clipboard.writeText(JSON.stringify(data));
 	}
 
 	onMount(async () => {
@@ -217,27 +224,15 @@
 						</TableBodyCell>
 						<TableBodyCell>{item.ts ? new Date(item.ts) : ''}</TableBodyCell>
 						<TableBodyCell class="flex flex-row gap-2">
-							<Button
-								size="xs"
-								color="plain"
-								on:click={async () => navigator.clipboard.writeText(JSON.stringify(item))}
-							>
+							<Button size="xs" color="plain" on:click={async () => copyData(item)}>
 								<Icons.ClipboardListOutline />
 							</Button>
 							<Tooltip>{$i18n('pages.logging.copyAllClipboard')}</Tooltip>
-							<Button
-								size="xs"
-								color="plain"
-								on:click={async () => navigator.clipboard.writeText(JSON.stringify(item.data))}
-							>
+							<Button size="xs" color="plain" on:click={async () => copyData(item.data)}>
 								<Icons.ClipboardCheckOutline />
 							</Button>
 							<Tooltip>{$i18n('pages.logging.copyDataClipboard')}</Tooltip>
-							<Button
-								size="xs"
-								color="plain"
-								on:click={async () => navigator.clipboard.writeText(JSON.stringify(item.error))}
-							>
+							<Button size="xs" color="plain" on:click={async () => copyData(item.error)}>
 								<Icons.ExclamationCircleOutline />
 							</Button>
 							<Tooltip>{$i18n('pages.logging.copyErrorClipboard')}</Tooltip>

@@ -46,7 +46,6 @@
 		"@twin.org/standards-w3c-did": "next",
 		"@twin.org/ui-components-svelte": "next",
 		"@twin.org/web": "next",
-		"flowbite-svelte": "^0.47.4",
 		"schema-dts": "1.1.2"
 	},
 	"devDependencies": {
