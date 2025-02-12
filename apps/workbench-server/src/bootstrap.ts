@@ -5,11 +5,12 @@ import { Coerce, Converter, I18n, Is, RandomHelper, StringHelper } from "@twin.o
 import { Bip39, PasswordGenerator } from "@twin.org/crypto";
 import type { IEngineCore, IEngineCoreContext } from "@twin.org/engine-models";
 import type { IEngineServerConfig } from "@twin.org/engine-server-types";
+import { IdentityConnectorType, WalletConnectorType } from "@twin.org/engine-types";
 import {
 	EntityStorageConnectorFactory,
 	type IEntityStorageConnector
 } from "@twin.org/entity-storage-models";
-import { IotaIdentityUtils } from "@twin.org/identity-connector-iota";
+import { IotaStardustIdentityUtils } from "@twin.org/identity-connector-iota-stardust";
 import {
 	IdentityConnectorFactory,
 	IdentityProfileConnectorFactory
@@ -81,8 +82,8 @@ export async function bootstrapNodeIdentity(
 
 			let address0 = addresses[0];
 
-			if (engineDefaultTypes.walletConnector === "iota") {
-				address0 = `${envVars.iotaExplorerEndpoint}addr/${address0}`;
+			if (engineDefaultTypes.walletConnector === WalletConnectorType.IotaStardust) {
+				address0 = `${envVars.iotaStardustExplorerEndpoint}addr/${address0}`;
 			}
 
 			engineCore.logInfo(I18n.formatMessage("workbench.fundingWallet", { address: address0 }));
@@ -96,10 +97,10 @@ export async function bootstrapNodeIdentity(
 			const identityConnector = IdentityConnectorFactory.get(engineDefaultTypes.identityConnector);
 			const identityDocument = await identityConnector.createDocument(nodeIdentity);
 
-			if (engineDefaultTypes.identityConnector === "iota") {
+			if (engineDefaultTypes.identityConnector === IdentityConnectorType.IotaStardust) {
 				engineCore.logInfo(
 					I18n.formatMessage("workbench.identityExplorer", {
-						url: `${envVars.iotaExplorerEndpoint}addr/${IotaIdentityUtils.didToAddress(identityDocument.id)}?tab=DID`
+						url: `${envVars.iotaStardustExplorerEndpoint}addr/${IotaStardustIdentityUtils.didToAddress(identityDocument.id)}?tab=DID`
 					})
 				);
 			}

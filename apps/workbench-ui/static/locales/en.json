@@ -231,6 +231,13 @@
 		"jpegEncoder": {
 			"invalidQuality": "Quality must be between 1 and 100, it is \"{value}\""
 		},
+		"nftAttestationConnector": {
+			"attestingFailed": "Attesting the data failed",
+			"verificationFailed": "Verifying the attestation failed",
+			"transferFailed": "Transferring the attestation failed",
+			"destroyFailed": "Destroying the attestation failed",
+			"namespaceMismatch": "The namespace in the urn \"{id}\" does not match the namespace of the NFT Attestation connector \"{namespace}\""
+		},
 		"attestationService": {
 			"noConnectors": "There are no connectors registered with the attestation factory",
 			"attestFailed": "The attestation of the data failed",
@@ -451,6 +458,40 @@
 			"proofType": "The proof type must be DataIntegrityProof, it is currently {proofType}",
 			"cryptosuite": "The proof cryptosuite must be eddsa-jcs-2022, it is currently {cryptosuite}"
 		},
+		"iotaStardustIdentityResolverConnector": {
+			"documentNotFound": "The document could not be found",
+			"resolveDocumentFailed": "Resolving the document failed"
+		},
+		"iotaStardustIdentityConnector": {
+			"createDocumentFailed": "Creating the document failed",
+			"missingDid": "The full id including DID is required",
+			"addVerificationMethodFailed": "Adding the verification method failed",
+			"removeVerificationMethodFailed": "Removing the verification method failed",
+			"addServiceFailed": "Adding the service failed",
+			"removeServiceFailed": "Removing the service failed",
+			"documentNotFound": "The document could not be found",
+			"stateControllerMissing": "The state controller address is missing from the metadata",
+			"verificationMethodNotFound": "The verification method could not be found",
+			"serviceNotFound": "The service could not be found",
+			"publicKeyJwkMissing": "The verification method contains no publicKeyJwk in method \"{method}\"",
+			"verificationKeyMissing": "The verification key is missing from the vault for method \"{method}\"",
+			"createVerifiableCredentialFailed": "Creating the verifiable credential failed",
+			"checkingVerifiableCredentialFailed": "Checking the verifiable credential failed",
+			"createVerifiablePresentationFailed": "Creating the verifiable presentation failed",
+			"checkingVerifiablePresentationFailed": "Checking the verifiable presentation failed",
+			"expectingJwtCredential": "Expecting JWT credential in the presentation",
+			"keyIndexOutOfRange": "The supplied keyIndex is not in the range of the key list",
+			"createProofFailed": "Creating the signature for the data failed",
+			"methodMissing": "The verification method specified does not exist \"{method}\"",
+			"verifyProofFailed": "Verifying the signature for the data failed",
+			"revokeVerifiableCredentialsFailed": "Revoking verifiable credentials failed",
+			"unrevokeVerifiableCredentialsFailed": "Unrevoking verifiable credentials failed",
+			"inclusionFailed": "The transaction generated for the identity was not included in a reasonable amount of time",
+			"insufficientFunds": "There were insufficient funds to complete the operation",
+			"walletConnectorMissing": "The wallet connector must be available to perform this operation",
+			"proofType": "The proof type must be DataIntegrityProof, it is currently {proofType}",
+			"cryptosuite": "The proof cryptosuite must be eddsa-jcs-2022, it is currently {cryptosuite}"
+		},
 		"identityService": {
 			"noConnectors": "There are no connectors registered with the identity factory",
 			"namespaceMismatch": "The namespace in the urn \"{id}\" does not match the namespace of the identity service \"{namespace}\"",
@@ -505,6 +546,25 @@
 			"namespaceMismatch": "The namespace in the urn \"{id}\" does not match the namespace of the IOTA Immutable Storage connector \"{namespace}\""
 		},
 		"iotaImmutableStorageConnector": {
+			"namespaceMismatch": "The namespace in the urn \"{id}\" does not match the namespace of the IOTA Immutable Storage connector \"{namespace}\"",
+			"storingFailed": "Storing the immutable item failed",
+			"gettingFailed": "Getting the immutable item failed",
+			"removingFailed": "Removing the immutable item failed",
+			"packageIdNotFound": "The package ID \"{id}\" was not found",
+			"storingTransactionFailed": "The transaction to store the data failed",
+			"removingTransactionFailed": "The transaction to remove the data failed",
+			"objectNotFound": "The object was not found",
+			"notAuthorized": "The controller address \"{controllerAddress}\" does not match the creator \"{creator}\" of the object",
+			"invalidIdFormat": "The immutable storage URN \"{id}\" has an invalid format",
+			"connectorNotStarted": "Please call start() before using this connector. Package ID: \"{packageId}\" is missing.",
+			"deployTransactionFailed": "Deploying the contract failed with error: \"{error}\"",
+			"startFailed": "Failed to start the IOTA Immutable Storage connector.",
+			"invalidGasBudget": "The gas budget must be greater than 0"
+		},
+		"iotaImmutableStorageUtils": {
+			"invalidImmutableStorageIdFormat": "The immutable storage ID \"{id}\" has an invalid format"
+		},
+		"iotaStardustImmutableStorageConnector": {
 			"inclusionFailed": "The transaction generated for the immutable storage was not included in a reasonable amount of time",
 			"storingFailed": "Storing the immutable item failed",
 			"gettingFailed": "Getting the immutable item failed",
@@ -527,6 +587,23 @@
 			"namespaceMismatch": "The namespace in the urn \"{id}\" does not match the namespace of the IOTA NFT connector \"{namespace}\""
 		},
 		"iotaNftConnector": {
+			"mintingFailed": "Minting the NFT failed",
+			"resolvingFailed": "Resolving the NFT failed",
+			"burningFailed": "Burning the NFT failed",
+			"transferFailed": "Transferring the NFT failed",
+			"updateFailed": "Updating the NFT failed",
+			"namespaceMismatch": "The namespace in the urn \"{id}\" does not match the namespace of the IOTA NFT connector \"{namespace}\"",
+			"failedToGetNftId": "Failed to get NFT ID from mint response",
+			"nftNotFound": "The NFT \"{nftId}\" was not found",
+			"nftOwnerNftFound": "The owner for NFT \"{nftId}\" was not found",
+			"startFailed": "Failed to start the IOTA NFT connector",
+			"deployTransactionFailed": "Deploying the contract failed with error: \"{error}\"",
+			"connectorNotStarted": "Please call start() before using this connector. Package ID: \"{packageId}\" is missing."
+		},
+		"iotaNftUtils": {
+			"invalidNftIdFormat": "The NFT ID \"{id}\" has an invalid format"
+		},
+		"iotaStardustNftConnector": {
 			"inclusionFailed": "The transaction generated for the NFT was not included in a reasonable amount of time",
 			"mintingFailed": "Minting the NFT failed",
 			"resolvingFailed": "Resolving the NFT failed",
@@ -596,11 +673,17 @@
 			"insufficientFunds": "There are insufficient funds in the wallet."
 		},
 		"iotaWalletConnector": {
+			"transferFailed": "The wallet transfer failed."
+		},
+		"iotaFaucetConnector": {
+			"fundingFailed": "Fund the address from faucet failed"
+		},
+		"iotaStardustWalletConnector": {
 			"transferFailed": "The wallet transfer failed.",
 			"inclusionFailed": "The transaction generated was not included in a reasonable amount of time",
 			"insufficientFunds": "There were insufficient funds to complete the operation"
 		},
-		"iotaFaucetConnector": {
+		"iotaStardustFaucetConnector": {
 			"fundingFailed": "Fund the address from faucet failed",
 			"insufficientFunds": "There were insufficient funds to complete the operation"
 		}
@@ -628,32 +711,6 @@
 		"expand": "The JSON-LD expansion failed",
 		"invalidUrl": "The JSON-LD processing failed to retrieve from the following url \"{url}\"",
 		"jsonldError": "The JSON-LD processing failed due to the following error: \"{code}\""
-	},
-	"data-type-names": {
-		"http://schema.org/Text": "Text",
-		"http://schema.org/URL": "Url",
-		"http://schema.org/Integer": "Integer",
-		"http://schema.org/Float": "Float",
-		"http://schema.org/Boolean": "Boolean",
-		"http://schema.org/Date": "ISO Date",
-		"http://schema.org/DateTime": "ISO Date Time",
-		"http://schema.org/Time": "ISO Time",
-		"http://schema.org/image": "Image",
-		"http://schema.org/GeoCoordinates": "Geo Coordinates",
-		"http://schema.org/StructuredValue": "Structured Value",
-		"http://schema": {
-			"org/Text": "Text",
-			"org/URL": "Url",
-			"org/Integer": "Integer",
-			"org/Float": "Float",
-			"org/Boolean": "Boolean",
-			"org/Date": "ISO Date",
-			"org/DateTime": "ISO Date Time",
-			"org/Time": "ISO Time",
-			"org/image": "Image",
-			"org/GeoCoordinates": "Geo Coordinates",
-			"org/StructuredValue": "Structured Value"
-		}
 	},
 	"info": {
 		"eventBusSocketClient": {
@@ -705,6 +762,16 @@
 			"typeCreated": "Created type \"{typeName}\"",
 			"sql": "SQL: \"{sql}\""
 		},
+		"iotaImmutableStorageConnector": {
+			"contractAlreadyDeployed": "Contract already deployed",
+			"contractDeploymentStarted": "Contract deployment started",
+			"contractDeploymentCompleted": "Contract deployment completed"
+		},
+		"iotaNftConnector": {
+			"contractAlreadyDeployed": "Contract already deployed",
+			"contractDeploymentStarted": "Contract deployment started",
+			"contractDeploymentCompleted": "Contract deployment completed"
+		},
 		"entityStorageTelemetryConnector": {
 			"metricCreated": "The metric was created \"{id}\" with type \"type\" and label \"{label}\"",
 			"metricUpdated": "The metric was updated \"{id}\" with type \"type\" and label \"{label}\"",
@@ -720,6 +787,32 @@
 		"rejected": "Rejected",
 		"issued": "Issued",
 		"revoked": "Revoked"
+	},
+	"data-type-names": {
+		"http://schema.org/Text": "Text",
+		"http://schema.org/URL": "Url",
+		"http://schema.org/Integer": "Integer",
+		"http://schema.org/Float": "Float",
+		"http://schema.org/Boolean": "Boolean",
+		"http://schema.org/Date": "ISO Date",
+		"http://schema.org/DateTime": "ISO Date Time",
+		"http://schema.org/Time": "ISO Time",
+		"http://schema.org/image": "Image",
+		"http://schema.org/GeoCoordinates": "Geo Coordinates",
+		"http://schema.org/StructuredValue": "Structured Value",
+		"http://schema": {
+			"org/Text": "Text",
+			"org/URL": "Url",
+			"org/Integer": "Integer",
+			"org/Float": "Float",
+			"org/Boolean": "Boolean",
+			"org/Date": "ISO Date",
+			"org/DateTime": "ISO Date Time",
+			"org/Time": "ISO Time",
+			"org/image": "Image",
+			"org/GeoCoordinates": "Geo Coordinates",
+			"org/StructuredValue": "Structured Value"
+		}
 	},
 	"pages": {
 		"error": {
@@ -977,6 +1070,13 @@
 			"network": "Network",
 			"entityStorageId": "Entity Storage Id",
 			"exploreTransaction": "Explore Transaction"
+		}
+	},
+	"nftAttestationConnector": {
+		"verificationFailures": {
+			"noData": "There is no data in the resolved NFT",
+			"proofFailed": "The proof of the attestation could not be verified",
+			"revoked": "The proof of the attestation has been revoked"
 		}
 	},
 	"fastifyWebServer": {
