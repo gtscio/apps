@@ -47,6 +47,9 @@
 			"nftObject": "Nft Object",
 			"proof": "Proof"
 		},
+		"loggingView": {
+			"title": "Logging"
+		},
 		"auditableItemStreamView": {
 			"title": "Auditable Item Stream",
 			"id": "Id",
@@ -215,6 +218,30 @@
 			"resultTitleUpdate": "Update Result",
 			"itemQr": "Auditable Item Stream QR Code",
 			"itemId": "Auditable Item Stream Id"
+		},
+		"logging": {
+			"title": "Logging",
+			"search": "Search",
+			"loading": "Loading logs...",
+			"noItems": "No logs found",
+			"action": "Filter",
+			"actions": "Actions",
+			"progress": "Searching...",
+			"copyAllClipboard": "Copy all log to clipboard",
+			"copyDataClipboard": "Copy the data body to clipboard",
+			"copyErrorClipboard": "Copy the error to clipboard"
+		},
+		"loggingProperties": {
+			"title": "Logging",
+			"level": "Level",
+			"source": "Source",
+			"message": "Message",
+			"error": "Error",
+			"ts": "Timestamp",
+			"data": "Data",
+			"pageSize": "Page Size",
+			"timeStart": "From Date",
+			"timeEnd": "To Date"
 		},
 		"proofView": {
 			"title": "Proof View",

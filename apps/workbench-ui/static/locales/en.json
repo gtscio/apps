@@ -598,7 +598,9 @@
 			"nftOwnerNftFound": "The owner for NFT \"{nftId}\" was not found",
 			"startFailed": "Failed to start the IOTA NFT connector",
 			"deployTransactionFailed": "Deploying the contract failed with error: \"{error}\"",
-			"connectorNotStarted": "Please call start() before using this connector. Package ID: \"{packageId}\" is missing."
+			"connectorNotStarted": "Please call start() before using this connector. Package ID: \"{packageId}\" is missing.",
+			"invalidImmutableMetadata": "The immutable metadata for NFT \"{nftId}\" is invalid",
+			"invalidMetadata": "The metadata for NFT \"{nftId}\" is invalid"
 		},
 		"iotaNftUtils": {
 			"invalidNftIdFormat": "The NFT ID \"{id}\" has an invalid format"
@@ -958,6 +960,30 @@
 			"itemQr": "Auditable Item Stream QR Code",
 			"itemId": "Auditable Item Stream Id"
 		},
+		"logging": {
+			"title": "Logging",
+			"search": "Search",
+			"loading": "Loading logs...",
+			"noItems": "No logs found",
+			"action": "Filter",
+			"actions": "Actions",
+			"progress": "Searching...",
+			"copyAllClipboard": "Copy all log to clipboard",
+			"copyDataClipboard": "Copy the data body to clipboard",
+			"copyErrorClipboard": "Copy the error to clipboard"
+		},
+		"loggingProperties": {
+			"title": "Logging",
+			"level": "Level",
+			"source": "Source",
+			"message": "Message",
+			"error": "Error",
+			"ts": "Timestamp",
+			"data": "Data",
+			"pageSize": "Page Size",
+			"timeStart": "From Date",
+			"timeEnd": "To Date"
+		},
 		"proofView": {
 			"title": "Proof View",
 			"type": "Type",
@@ -1023,6 +1049,9 @@
 			"holderIdentity": "Holder Identity",
 			"nftObject": "Nft Object",
 			"proof": "Proof"
+		},
+		"loggingView": {
+			"title": "Logging"
 		},
 		"auditableItemStreamView": {
 			"title": "Auditable Item Stream",

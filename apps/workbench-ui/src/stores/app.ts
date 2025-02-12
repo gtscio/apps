@@ -14,6 +14,7 @@ import { init as initIdentityResolver } from "./identityResolver";
 import { init as initImmutableProof } from "./immutableProof";
 import { init as initInformation } from "./information";
 import { init as initIota } from "./iota";
+import { init as initLogging } from "./logging";
 import { init as initNft } from "./nft";
 import { init as initNfts } from "./nfts";
 
@@ -56,6 +57,7 @@ export async function init(options: {
 	await initAuditableItemStreams(options.apiUrl);
 	await initImmutableProof(options.apiUrl);
 	await initEventBus(options.apiUrl);
+	await initLogging(options.apiUrl);
 	await initNft(options.apiUrl);
 	await initNfts(options.apiUrl);
 }

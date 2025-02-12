@@ -41,6 +41,11 @@
 			route: '/secure/auditable-item-stream'
 		},
 		{
+			label: $i18n('navigation.logging'),
+			icon: Icons.BookOpenOutline,
+			route: '/secure/logging'
+		},
+		{
 			label: $i18n('navigation.logout'),
 			icon: Icons.LockOpenSolid,
 			route: '/authentication/logout'
