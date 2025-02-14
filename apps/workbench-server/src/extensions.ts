@@ -6,6 +6,7 @@ import { EntityStorageComponentType, type IEngineConfig } from "@twin.org/engine
 import { EntitySchemaFactory, EntitySchemaHelper } from "@twin.org/entity";
 import { nameof } from "@twin.org/nameof";
 import { UserAttestationEntry } from "./entities/userAttestationEntry.js";
+import { UserImmutableStorageEntry } from "./entities/userImmutableStorageEntry.js";
 import { UserNftEntry } from "./entities/userNftEntry.js";
 
 /**
@@ -28,6 +29,7 @@ export function extendEngineConfig(engineConfig: IEngineConfig): void {
 				entityStorageType: nameof<UserAttestationEntry>(),
 				config: { includeNodeIdentity: true, includeUserIdentity: true }
 			},
+			overrideInstanceType: nameof<UserAttestationEntry>(),
 			restPath: "user-attestation"
 		});
 	}
@@ -47,7 +49,28 @@ export function extendEngineConfig(engineConfig: IEngineConfig): void {
 				entityStorageType: nameof<UserNftEntry>(),
 				config: { includeNodeIdentity: true, includeUserIdentity: true }
 			},
+			overrideInstanceType: nameof<UserNftEntry>(),
 			restPath: "user-nft"
+		});
+	}
+
+	// Add a custom entity storage type for the users nfts,
+	// but only if the nft connectors are available.
+	if (Is.arrayValue(engineConfig.types.immutableStorageConnector)) {
+		engineConfig.types.entityStorageComponent ??= [];
+
+		EntitySchemaFactory.register(nameof<UserImmutableStorageEntry>(), () =>
+			EntitySchemaHelper.getSchema(UserImmutableStorageEntry)
+		);
+
+		engineConfig.types.entityStorageComponent.push({
+			type: EntityStorageComponentType.Service,
+			options: {
+				entityStorageType: nameof<UserImmutableStorageEntry>(),
+				config: { includeNodeIdentity: true, includeUserIdentity: true }
+			},
+			overrideInstanceType: nameof<UserImmutableStorageEntry>(),
+			restPath: "user-immutable"
 		});
 	}
 }

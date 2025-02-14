@@ -12,6 +12,8 @@ import { init as initIdentity } from "./identity";
 import { init as initIdentityProfile } from "./identityProfile";
 import { init as initIdentityResolver } from "./identityResolver";
 import { init as initImmutableProof } from "./immutableProof";
+import { init as initImmutableStorage } from "./immutableStorage";
+import { init as initImmutableStorages } from "./immutableStorages";
 import { init as initInformation } from "./information";
 import { init as initIota } from "./iota";
 import { init as initLogging } from "./logging";
@@ -60,6 +62,8 @@ export async function init(options: {
 	await initLogging(options.apiUrl);
 	await initNft(options.apiUrl);
 	await initNfts(options.apiUrl);
+	await initImmutableStorage(options.apiUrl);
+	await initImmutableStorages(options.apiUrl);
 }
 
 /**
