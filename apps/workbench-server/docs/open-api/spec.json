@@ -9217,7 +9217,27 @@
 				"type": "object",
 				"properties": {
 					"@context": {
-						"$ref": "https://schema.twindev.org/json-ld/JsonLdContextDefinitionRoot"
+						"anyOf": [
+							{
+								"type": "string",
+								"const": "https://www.w3.org/ns/did/v1"
+							},
+							{
+								"type": "array",
+								"minItems": 2,
+								"items": [
+									{
+										"type": "string",
+										"const": "https://www.w3.org/ns/did/v1"
+									},
+									{
+										"$ref": "https://schema.twindev.org/json-ld/JsonLdContextDefinitionElement"
+									}
+								],
+								"maxItems": 2
+							}
+						],
+						"description": "The context for the document."
 					},
 					"id": {
 						"type": "string",
@@ -9395,16 +9415,17 @@
 							},
 							{
 								"type": "array",
-								"minItems": 1,
+								"minItems": 2,
 								"items": [
 									{
 										"type": "string",
 										"const": "https://w3id.org/security/data-integrity/v2"
+									},
+									{
+										"$ref": "https://schema.twindev.org/json-ld/JsonLdContextDefinitionElement"
 									}
 								],
-								"additionalItems": {
-									"type": "string"
-								}
+								"maxItems": 2
 							}
 						],
 						"description": "JSON-LD Context."
@@ -9551,16 +9572,17 @@
 							},
 							{
 								"type": "array",
-								"minItems": 1,
+								"minItems": 2,
 								"items": [
 									{
 										"type": "string",
 										"const": "https://www.w3.org/ns/credentials/v2"
+									},
+									{
+										"$ref": "https://schema.twindev.org/json-ld/JsonLdContextDefinitionElement"
 									}
 								],
-								"additionalItems": {
-									"type": "string"
-								}
+								"maxItems": 2
 							}
 						],
 						"description": "The context for the verifiable credential."
@@ -9570,10 +9592,17 @@
 						"description": "The identifier for the verifiable credential."
 					},
 					"type": {
-						"type": "array",
-						"items": {
-							"type": "string"
-						},
+						"anyOf": [
+							{
+								"type": "string"
+							},
+							{
+								"type": "array",
+								"items": {
+									"type": "string"
+								}
+							}
+						],
 						"description": "The types of the data stored in the verifiable credential."
 					},
 					"credentialSubject": {
@@ -9601,6 +9630,28 @@
 						"type": "string",
 						"description": "The date the verifiable credential was issued."
 					},
+					"validFrom": {
+						"type": "string",
+						"description": "The date the verifiable credential is valid from."
+					},
+					"validUntil": {
+						"type": "string",
+						"description": "The date the verifiable credential is valid until."
+					},
+					"evidence": {
+						"anyOf": [
+							{
+								"$ref": "https://schema.twindev.org/json-ld/JsonLdNodeObject"
+							},
+							{
+								"type": "array",
+								"items": {
+									"$ref": "https://schema.twindev.org/json-ld/JsonLdNodeObject"
+								}
+							}
+						],
+						"description": "Evidence associated with the Credential."
+					},
 					"proof": {
 						"anyOf": [
 							{
@@ -9622,7 +9673,7 @@
 					"credentialSubject"
 				],
 				"additionalProperties": false,
-				"description": "Interface describing a verifiable credential."
+				"description": "Interface describing a verifiable credential. https://www.w3.org/TR/vc-data-model-2.0"
 			},
 			"DidVerifiablePresentation": {
 				"type": "object",
@@ -9635,16 +9686,17 @@
 							},
 							{
 								"type": "array",
-								"minItems": 1,
+								"minItems": 2,
 								"items": [
 									{
 										"type": "string",
 										"const": "https://www.w3.org/ns/credentials/v2"
+									},
+									{
+										"$ref": "https://schema.twindev.org/json-ld/JsonLdContextDefinitionElement"
 									}
 								],
-								"additionalItems": {
-									"type": "string"
-								}
+								"maxItems": 2
 							}
 						],
 						"description": "The context for the verifiable presentation."

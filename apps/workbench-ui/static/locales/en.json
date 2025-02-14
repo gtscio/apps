@@ -791,18 +791,18 @@
 		"revoked": "Revoked"
 	},
 	"data-type-names": {
-		"http://schema.org/Text": "Text",
-		"http://schema.org/URL": "Url",
-		"http://schema.org/Integer": "Integer",
-		"http://schema.org/Float": "Float",
-		"http://schema.org/Boolean": "Boolean",
-		"http://schema.org/Date": "ISO Date",
-		"http://schema.org/DateTime": "ISO Date Time",
-		"http://schema.org/Time": "ISO Time",
-		"http://schema.org/image": "Image",
-		"http://schema.org/GeoCoordinates": "Geo Coordinates",
-		"http://schema.org/StructuredValue": "Structured Value",
-		"http://schema": {
+		"https://schema.org/Text": "Text",
+		"https://schema.org/URL": "Url",
+		"https://schema.org/Integer": "Integer",
+		"https://schema.org/Float": "Float",
+		"https://schema.org/Boolean": "Boolean",
+		"https://schema.org/Date": "ISO Date",
+		"https://schema.org/DateTime": "ISO Date Time",
+		"https://schema.org/Time": "ISO Time",
+		"https://schema.org/image": "Image",
+		"https://schema.org/GeoCoordinates": "Geo Coordinates",
+		"https://schema.org/StructuredValue": "Structured Value",
+		"https://schema": {
 			"org/Text": "Text",
 			"org/URL": "Url",
 			"org/Integer": "Integer",
@@ -936,6 +936,39 @@
 			"resultTitle": "Upload Result",
 			"itemQr": "Blob Storage QR Code",
 			"itemId": "Blob Id"
+		},
+		"immutableStorage": {
+			"title": "Immutable Storage",
+			"loading": "Loading immutable storage...",
+			"noItems": "No immutable storage found",
+			"createItem": "Create Immutable Storage",
+			"deleteTitle": "Delete Immutable Storage",
+			"deleteMessage": "Are you sure you want to delete this immutable storage?",
+			"qr": "Public Profile View",
+			"copyDataClipboard": "Copy data to clipboard"
+		},
+		"immutableStorageView": {
+			"title": "Immutable Storage",
+			"id": "Id",
+			"description": "Description",
+			"fileExtension": "File Extension",
+			"encodingFormat": "Encoding Format",
+			"document": "Document",
+			"download": "Download",
+			"receipt": "Receipt"
+		},
+		"immutableStorageProperties": {
+			"title": "Create Immutable Storage",
+			"description": "Description",
+			"textContent": "Text Content",
+			"progress": "Uploading to storage...",
+			"action": "Upload",
+			"actionSuccess": "Uploading was successful",
+			"resultTitle": "Upload Result",
+			"itemQr": "Immutable Storage QR Code",
+			"itemId": "Immutable Storage Id",
+			"data": "Data",
+			"id": "Id"
 		},
 		"auditableItemStream": {
 			"title": "Auditable Item Streams",
@@ -1149,7 +1182,8 @@
 		"blobs": "Blobs",
 		"attestations": "Attestations",
 		"auditable-item-streams": "Auditable Item Streams",
-		"nft": "NFT"
+		"nft": "NFT",
+		"immutable-storage": "Immutable Storage"
 	},
 	"common": {
 		"labels": {
