@@ -73,7 +73,7 @@
 					</Label>
 					<Label>
 						{$i18n('pages.immutableStorageView.receipt')}
-						<Span>{JSON.stringify(receipt, null, 2)}</Span>
+						<pre>{JSON.stringify(receipt, null, 2)}</pre>
 					</Label>
 					{#if Is.stringValue(description)}
 						<Label>
