@@ -22,7 +22,10 @@
 	import { onMount } from 'svelte';
 	import type { IUserImmutableStorageEntry } from '../../models/IUserImmutableStorageEntry';
 	import { immutableStorageRemove } from '$stores/immutableStorage';
-	import { immutableStorageEntryList } from '$stores/immutableStorages';
+	import {
+		immutableStorageEntryList,
+		immutableStorageEntryRemove
+	} from '$stores/immutableStorages';
 
 	let items: IUserImmutableStorageEntry[] | undefined;
 	const cursorStack: string[] = ['@start'];
@@ -88,6 +91,7 @@
 		if (Is.stringValue(confirmationId)) {
 			modalIsBusy = true;
 			await immutableStorageRemove(confirmationId);
+			await immutableStorageEntryRemove(confirmationId);
 			await loadData();
 			confirmationId = '';
 			modalIsBusy = false;

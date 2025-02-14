@@ -944,7 +944,8 @@
 			"createItem": "Create Immutable Storage",
 			"deleteTitle": "Delete Immutable Storage",
 			"deleteMessage": "Are you sure you want to delete this immutable storage?",
-			"qr": "Public Profile View"
+			"qr": "Public Profile View",
+			"copyDataClipboard": "Copy data to clipboard"
 		},
 		"immutableStorageView": {
 			"title": "Immutable Storage",
@@ -959,7 +960,7 @@
 		"immutableStorageProperties": {
 			"title": "Create Immutable Storage",
 			"description": "Description",
-			"textContent": "Text Content (base64 encoded)",
+			"textContent": "Text Content",
 			"progress": "Uploading to storage...",
 			"action": "Upload",
 			"actionSuccess": "Uploading was successful",

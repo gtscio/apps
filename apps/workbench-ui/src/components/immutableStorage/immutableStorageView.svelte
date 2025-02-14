@@ -14,17 +14,16 @@
 		Label,
 		QR,
 		Span,
-		Spinner
+		Spinner,
+		Tooltip
 	} from '@twin.org/ui-components-svelte';
 	import { onMount } from 'svelte';
 	import { createPrivateUrl } from '$stores/app';
-	import { createDownloadLink } from '$stores/blobStorage';
 	import { immutableStorageGet } from '$stores/immutableStorage';
 
 	export let itemId: string | undefined = undefined;
 	let receipt: IJsonLdNodeObject | undefined;
 	let description: string | undefined;
-	let immutableDownloadUrl: string;
 	let error: string;
 	let includeText: string | undefined;
 	let busy = true;
@@ -38,7 +37,6 @@
 				error = result.error;
 			} else {
 				receipt = result?.receipt;
-				immutableDownloadUrl = createDownloadLink(itemId, true);
 				description = ObjectHelper.propertyGet(receipt, 'receipt');
 				const storedData = ObjectHelper.propertyGet(result, 'data');
 
@@ -54,7 +52,7 @@
 		if (!data) {
 			return;
 		}
-		await navigator.clipboard.writeText(JSON.stringify(data));
+		await navigator.clipboard.writeText(data);
 	}
 </script>
 
@@ -73,6 +71,10 @@
 						{$i18n('pages.immutableStorageView.id')}
 						<Span>{itemId}</Span>
 					</Label>
+					<Label>
+						{$i18n('pages.immutableStorageView.receipt')}
+						<Span>{JSON.stringify(receipt, null, 2)}</Span>
+					</Label>
 					{#if Is.stringValue(description)}
 						<Label>
 							{$i18n('pages.immutableStorageView.description')}
@@ -87,7 +89,7 @@
 				/>
 			</div>
 		</div>
-		{#if Is.stringValue(immutableDownloadUrl) || Is.stringValue(includeText)}
+		{#if Is.stringValue(includeText)}
 			<div class="flex h-full w-full flex-col gap-2">
 				<div class="flex flex-row justify-between align-bottom">
 					<Label class="mt-1">{$i18n('pages.immutableStorageView.document')}</Label>
@@ -95,6 +97,7 @@
 						<Button size="xs" color="plain" on:click={async () => copyData(includeText)}>
 							<Icons.ClipboardListOutline />
 						</Button>
+						<Tooltip>{$i18n('pages.immutableStorage.copyDataClipboard')}</Tooltip>
 					</div>
 				</div>
 				<div class="h-full w-full rounded-md border dark:border-neutral-700">

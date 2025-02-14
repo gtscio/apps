@@ -32,8 +32,6 @@ export async function immutableStorageUpload(data: Uint8Array): Promise<
 	if (Is.object(immutableStorageClient)) {
 		try {
 			const response = await immutableStorageClient.store(data);
-			// eslint-disable-next-line no-console
-			console.log("CLIENT", response);
 			return response;
 		} catch (err) {
 			return {

@@ -44,15 +44,6 @@
 			validationFailures,
 			$i18n('pages.immutableStorageProperties.textContent')
 		);
-		Validation.string(
-			'textContent',
-			Is.stringBase64(textContent) ? textContent : undefined,
-			validationFailures,
-			$i18n('pages.immutableStorageProperties.textContent'),
-			{
-				format: 'base64'
-			}
-		);
 	}
 
 	async function close(): Promise<void> {
@@ -64,7 +55,7 @@
 
 		progress = $i18n('pages.immutableStorageProperties.progress');
 
-		const data = Converter.base64ToBytes(textContent);
+		const data = Converter.utf8ToBytes(textContent);
 		const result = await immutableStorageUpload(data);
 
 		progress = undefined;
